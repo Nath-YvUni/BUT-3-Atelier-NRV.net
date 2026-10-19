@@ -1,0 +1,115 @@
+@startuml
+title NRV.net - Modèle
+
+class Festival {
+  - nom : string
+  - dateDebut : DateTime
+  - dateFin : DateTime
+}
+
+class Soiree {
+  - nom : string
+  - thematique : string
+  - dateHeureDebut : DateTime
+  - capacite : int
+  + estComplete() : bool
+}
+
+class Lieu {
+  - nom : string
+  - adresse : string
+}
+
+class Spectacle {
+  - titre : string
+  - description : string
+  - urlsImages : array
+  - urlVideo : string
+  - horairePrevisionnel : DateTime
+}
+
+class Artiste {
+  - nom : string
+}
+
+class StyleMusical {
+  - libelle : string
+}
+
+class Visiteur {
+  + consulterProgramme() : array
+}
+
+class Utilisateur {
+  - nom : string
+  - email : string
+  - motDePasse : string
+  + sInscrire() : bool
+  + seConnecter() : bool
+}
+
+class Gestionnaire {
+  + ajouterSpectacle() : void
+  + ajouterSoiree() : void
+  + consulterStatistiques() : array
+}
+
+class Panier {
+  + ajouterBillet() : void
+  + supprimerBillet() : void
+  + calculerTotal() : float
+}
+
+class LignePanier {
+  - quantite : int
+}
+
+class Tarif {
+  - categorie : string
+  - prix : float
+}
+
+class Commande {
+  - reference : string
+  - date : DateTime
+  - statut : string
+  - montantTotal : float
+  + payer() : bool
+}
+
+class Billet {
+  - reference : string
+  - token : string
+  - prix : float
+  + imprimer() : void
+}
+
+class PassTroisJours {
+  - tauxRemise : float
+  + calculerMontant() : float
+}
+
+Festival "1" <-- "1..*" Soiree : organise
+Lieu "1" <-- "0..*" Soiree : accueille
+Soiree "1" <-- "2..3" Spectacle : programme
+Spectacle "0..*" --> "1..*" Artiste : interprété par
+Spectacle "0..*" --> "1..*" StyleMusical : de style
+
+Visiteur <|-- Utilisateur
+Utilisateur <|-- Gestionnaire
+
+Utilisateur "1" <-- "0..1" Panier : possède
+Panier "0..*" --> "0..*" Soiree : concerne
+(Panier, Soiree) .. LignePanier
+LignePanier "0..*" --> "1" Tarif : au tarif
+Panier "0..1" <-- "0..*" PassTroisJours : contient
+PassTroisJours "0..*" --> "3" Soiree : couvre
+Utilisateur "1" <-- "0..*" Commande : passe
+Panier "1" <-- "0..1" Commande : devient
+Commande "0..1" <-- "0..*" PassTroisJours : inclut
+Commande "1" <-- "0..*" Billet : génère
+Soiree "1" <-- "0..*" Billet : donne accès à
+Tarif "1" <-- "0..*" Billet : au tarif
+PassTroisJours "0..1" <-- "3" Billet : regroupe
+
+@enduml
