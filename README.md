@@ -24,7 +24,12 @@ Prérequis : Docker et Docker Compose.
    docker compose up -d --build
    ```
 
-4. **Accéder aux services** :
+4. **Créer les tables** dans Adminer (http://localhost:8880) :
+   - Système : `PostgreSQL`, serveur : `nrv.db`, identifiants de `nrv.env`, base : `nrv`
+   - **Importer** → choisir `app/sql/nrv.schema.sql` → **Exécuter**
+   - Puis de la même façon `app/sql/nrv.data.sql` pour le jeu de données de test (mot de passe des comptes : `password`)
+
+5. **Accéder aux services** :
 
    | Service | URL / port |
    |---|---|
