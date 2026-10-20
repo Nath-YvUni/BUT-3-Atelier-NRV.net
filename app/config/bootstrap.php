@@ -21,9 +21,7 @@ $errorHandler->registerErrorRenderer('application/json', function ($exception, $
     return json_encode(['message' => $exception->getMessage()], JSON_UNESCAPED_UNICODE);
 });
 
-$app->group("api/spectacles", function (\Slim\Routing\RouteCollectorProxy $group) {
-    $group->get("", GetSpectaclesAction::class)->setName("spectacles");
-});
+$app->get("/api/spectacles", GetSpectaclesAction::class)->setName("spectacles");
 
 
 return $app;
