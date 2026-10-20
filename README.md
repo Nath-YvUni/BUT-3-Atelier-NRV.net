@@ -33,6 +33,7 @@ Prérequis : Docker et Docker Compose.
 
    | Service | URL / port |
    |---|---|
+   | Front | http://localhost:7081 |
    | API | http://localhost:7080 |
    | Adminer | http://localhost:8880 (serveur : `nrv.db`) |
    | PostgreSQL | `localhost:5532` |

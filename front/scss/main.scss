@@ -1,0 +1,163 @@
+$noir: #1f1f1f;
+$gris: #6b6b6b;
+$gris-clair: #dadada;
+$bordure: #d4d4d4;
+$fond: #f3f3f3;
+$blanc: #ffffff;
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    color: $noir;
+    background-color: $fond;
+}
+
+.programme {
+    max-width: 1232px;
+    margin: 0 auto;
+    padding: 24px 16px;
+
+    .titre {
+        margin: 0;
+        font-size: 28px;
+    }
+
+    .sous-titre {
+        margin: 4px 0 0;
+        color: $gris;
+    }
+
+    .barre {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin: 16px 0;
+    }
+
+    .filtres {
+        display: flex;
+        gap: 16px;
+        width: 100%;
+    }
+
+    .compteur {
+        display: none;
+        margin: 0;
+        font-size: 14px;
+        color: $gris;
+    }
+
+    .message {
+        text-align: center;
+        color: $gris;
+    }
+
+    .liste {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 16px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+}
+
+.champ {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+
+    label {
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    select {
+        height: 44px;
+        padding: 0 16px;
+        font: inherit;
+        color: $gris;
+        background-color: $blanc;
+        border: 1px solid $bordure;
+        border-radius: 4px;
+    }
+}
+
+.carte {
+    height: 100%;
+    overflow: hidden;
+    background-color: $blanc;
+    border: 1px solid $bordure;
+    border-radius: 10px;
+
+    .media {
+        aspect-ratio: 3 / 2;
+        background-color: $gris-clair;
+    }
+
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .contenu {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 16px;
+    }
+
+    .nom {
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .infos {
+        margin: 0;
+        font-size: 14px;
+        color: $gris;
+    }
+}
+
+.badge {
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    background-color: #e3e3e3;
+    border-radius: 999px;
+}
+
+@media (min-width: 768px) {
+    .programme {
+        padding: 48px 16px;
+
+        .titre {
+            font-size: 40px;
+        }
+
+        .filtres {
+            width: auto;
+        }
+
+        .compteur {
+            display: block;
+        }
+
+        .liste {
+            gap: 32px;
+        }
+    }
+
+    .champ {
+        flex: none;
+        width: 260px;
+    }
+}
