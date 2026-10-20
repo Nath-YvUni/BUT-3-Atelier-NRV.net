@@ -94,7 +94,7 @@ Créés par `app/sql/nrv.data.sql`. Mot de passe commun à tous les comptes : `p
 Filtres prévus pour les spectacles : `date`, `style_id`, `page`, `limit`.
 
 Les paramètres, formats JSON et exemples sont disponibles dans la
-[documentation complète de l’API](Documents/API/contrat-api.md).
+[documentation complète de l’API](Documents/API/contrat-api-nrv.md).
 
 ## Commandes utiles
 
