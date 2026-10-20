@@ -25,7 +25,7 @@ class Spectacle {
   - description : string
   - urlsImages : array
   - urlVideo : string
-  - horairePrevisionnel : DateTime
+  - horairePrevisionnel : Time
 }
 
 class Artiste {
@@ -56,6 +56,7 @@ class Gestionnaire {
 
 class Panier {
   + ajouterBillet() : void
+  + ajouterPass() : void
   + supprimerBillet() : void
   + calculerTotal() : float
 }
@@ -89,27 +90,67 @@ class PassTroisJours {
   + calculerMontant() : float
 }
 
+' Programme
 Festival "1" <-- "1..*" Soiree : organise
 Lieu "1" <-- "0..*" Soiree : accueille
 Soiree "1" <-- "2..3" Spectacle : programme
 Spectacle "0..*" --> "1..*" Artiste : interprété par
 Spectacle "0..*" --> "1..*" StyleMusical : de style
 
+' Utilisateurs
 Visiteur <|-- Utilisateur
 Utilisateur <|-- Gestionnaire
 
+' Panier
 Utilisateur "1" <-- "0..1" Panier : possède
-Panier "0..*" --> "0..*" Soiree : concerne
-(Panier, Soiree) .. LignePanier
+Panier "1" -- "0..*" LignePanier : contient
+LignePanier "0..*" --> "1" Soiree : pour
 LignePanier "0..*" --> "1" Tarif : au tarif
 Panier "0..1" <-- "0..*" PassTroisJours : contient
 PassTroisJours "0..*" --> "3" Soiree : couvre
+PassTroisJours "0..*" --> "1" Tarif : au tarif
+
+' Commande et billets
 Utilisateur "1" <-- "0..*" Commande : passe
 Panier "1" <-- "0..1" Commande : devient
 Commande "0..1" <-- "0..*" PassTroisJours : inclut
 Commande "1" <-- "0..*" Billet : génère
 Soiree "1" <-- "0..*" Billet : donne accès à
 Tarif "1" <-- "0..*" Billet : au tarif
-PassTroisJours "0..1" <-- "3" Billet : regroupe
+PassTroisJours "0..1" <-- "0..3" Billet : regroupe
+
+' Règles métier
+note right of PassTroisJours
+  Les 3 soirées doivent être différentes
+  et pas forcément consécutives.
+  Remise de 3 % sur le total des 3 billets.
+  Les 3 billets sont créés au paiement.
+end note
+
+note bottom of Commande
+  Validée uniquement au paiement :
+  places vérifiées puis décomptées.
+  Si les places manquent, la commande
+  entière est refusée.
+end note
+
+note bottom of Billet
+  Créé après paiement.
+  Accessible via une URL avec un token
+  aléatoire et unique.
+  Non nominatif. Prix figé à l'achat.
+end note
+
+note right of Tarif
+  Tarif identique pour toutes les soirées.
+  2 catégories : normal et réduit
+  (étudiants, demandeurs d'emploi,
+  personnes en situation de handicap).
+end note
+
+note right of Soiree
+  Achat impossible si la soirée est complète.
+  Billets vendus <= capacité.
+end note
 
 @enduml
