@@ -7,6 +7,7 @@ final class Spectacle
 {
     public function __construct(
         private int $id,
+        private int $soiree_id,
         private string $titre,
         private \DateTimeImmutable $date,
         private \DateTimeImmutable $horaire,
@@ -17,6 +18,11 @@ final class Spectacle
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function getSoireeId(): int
+    {
+        return $this->soiree_id;
     }
 
     public function getTitre(): string

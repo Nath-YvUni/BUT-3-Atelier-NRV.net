@@ -9,6 +9,7 @@ final readonly class SpectacleDTO
 {
     public function __construct(
         public int $id,
+        public int $soiree_id,
         public string $titre,
         public string $date,
         public string $horaire,
@@ -20,6 +21,7 @@ final readonly class SpectacleDTO
     {
         return new self(
             id: $spectacle->getId(),
+            soiree_id: $spectacle->getSoireeId(),
             titre: $spectacle->getTitre(),
             date: $spectacle->getDate()->format('Y-m-d'),
             horaire: $spectacle->getHoraire()->format('H:i'),
@@ -31,6 +33,7 @@ final readonly class SpectacleDTO
     {
         return [
             'id' => $this->id,
+            'soiree_id' => $this->soiree_id,
             'titre' => $this->titre,
             'date' => $this->date,
             'horaire' => $this->horaire,
