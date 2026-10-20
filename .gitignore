@@ -27,3 +27,4 @@ composer.phar
 
 # Front (npm)
 /front/node_modules/
+/front/css/

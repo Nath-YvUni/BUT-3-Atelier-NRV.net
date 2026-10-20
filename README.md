@@ -7,7 +7,7 @@
 
 ## Installation (après le clone)
 
-Prérequis : Docker et Docker Compose.
+Prérequis : Docker et Docker Compose, Node.js (pour compiler le SCSS du front).
 
 1. **Créer les fichiers d'environnement** à partir des modèles `.dist` (ces fichiers ne sont pas versionnés) :
 
@@ -24,12 +24,20 @@ Prérequis : Docker et Docker Compose.
    docker compose up -d --build
    ```
 
-4. **Créer les tables** dans Adminer (http://localhost:8880) :
+4. **Compiler le SCSS du front** (le fichier `front/css/main.css` est généré et n'est pas versionné) :
+
+   ```sh
+   cd front
+   npm install
+   npm run build:css
+   ```
+
+5. **Créer les tables** dans Adminer (http://localhost:8880) :
    - Système : `PostgreSQL`, serveur : `nrv.db`, identifiants de `nrv.env`, base : `nrv`
    - **Importer** → choisir `app/sql/nrv.schema.sql` → **Exécuter**
    - Puis de la même façon `app/sql/nrv.data.sql` pour le jeu de données de test (mot de passe des comptes : `password`)
 
-5. **Accéder aux services** :
+6. **Accéder aux services** :
 
    | Service | URL / port |
    |---|---|
@@ -37,6 +45,12 @@ Prérequis : Docker et Docker Compose.
    | API | http://localhost:7080 |
    | Adminer | http://localhost:8880 (serveur : `nrv.db`) |
    | PostgreSQL | `localhost:5532` |
+
+Recompiler automatiquement le SCSS à chaque modification (depuis `front/`) :
+
+```sh
+npm run watch:css
+```
 
 Lancer les tests :
 
