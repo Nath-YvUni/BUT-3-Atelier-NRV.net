@@ -1,100 +1,46 @@
-# Contrat API NRV.net — proposé
+# Contrat API NRV.net — proposé, festival unique
 
 ## 1. Routes globales
 
-| Méthode | Route | Fonction | Accès |
-|---|---|---|---|
-| GET | `/api/festivals` | Liste des festivals | Public |
-| GET | `/api/spectacles` | Liste des spectacles | Public |
-| GET | `/api/spectacles/{id}` | Détail d’un spectacle | Public |
-| GET | `/api/soirees` | Liste des soirées | Public |
-| GET | `/api/soirees/{id}` | Détail d’une soirée | Public |
-| GET | `/api/styles` | Liste des styles | Public |
-| GET | `/api/tarifs` | Liste des tarifs | Public |
-| GET | `/api/lieux` | Liste des lieux | Public |
-| GET | `/api/artistes` | Liste des artistes | Public |
-| POST | `/api/utilisateurs` | Inscription | Public |
-| POST | `/api/auth/connexion` | Connexion | Public |
-| GET | `/api/me` | Profil connecté | Connecté |
-| GET | `/api/panier` | Consultation du panier | Connecté |
-| POST | `/api/panier/lignes` | Ajout de billets | Connecté |
-| PATCH | `/api/panier/lignes/{id}` | Modification de quantité | Connecté |
-| DELETE | `/api/panier/lignes/{id}` | Suppression d’une ligne | Connecté |
-| POST | `/api/panier/pass` | Ajout d’un pass | Connecté |
-| DELETE | `/api/panier/pass/{id}` | Suppression d’un pass | Connecté |
-| DELETE | `/api/panier` | Vidage du panier | Connecté |
-| POST | `/api/commandes` | Création d’une commande | Connecté |
-| GET | `/api/commandes` | Liste de mes commandes | Connecté |
-| GET | `/api/commandes/{id}` | Détail d’une commande | Propriétaire |
-| POST | `/api/commandes/{id}/paiement` | Paiement simulé | Propriétaire |
-| GET | `/api/commandes/{id}/billets` | Billets d’une commande | Propriétaire |
-| GET | `/api/billets/{token}` | Consultation d’un billet | Détenteur du token |
-| GET | `/api/admin/statistiques` | Statistiques des ventes | Gestionnaire |
-| POST | `/api/admin/soirees` | Création d’une soirée | Gestionnaire |
-| POST | `/api/admin/spectacles` | Création d’un spectacle | Gestionnaire |
+| Méthode | Route                          | Fonction                 | Accès              |
+| ------- | ------------------------------ | ------------------------ | ------------------ |
+| GET     | `/api/spectacles`              | Liste des spectacles     | Public             |
+| GET     | `/api/spectacles/{id}`         | Détail d’un spectacle    | Public             |
+| GET     | `/api/soirees`                 | Liste des soirées        | Public             |
+| GET     | `/api/soirees/{id}`            | Détail d’une soirée      | Public             |
+| GET     | `/api/styles`                  | Liste des styles         | Public             |
+| GET     | `/api/tarifs`                  | Liste des tarifs         | Public             |
+| GET     | `/api/lieux`                   | Liste des lieux          | Public             |
+| GET     | `/api/artistes`                | Liste des artistes       | Public             |
+| POST    | `/api/utilisateurs`            | Inscription              | Public             |
+| POST    | `/api/auth/connexion`          | Connexion                | Public             |
+| GET     | `/api/me`                      | Profil connecté          | Connecté           |
+| GET     | `/api/panier`                  | Consultation du panier   | Connecté           |
+| POST    | `/api/panier/lignes`           | Ajout de billets         | Connecté           |
+| PATCH   | `/api/panier/lignes/{id}`      | Modification de quantité | Connecté           |
+| DELETE  | `/api/panier/lignes/{id}`      | Suppression d’une ligne  | Connecté           |
+| POST    | `/api/panier/pass`             | Ajout d’un pass          | Connecté           |
+| DELETE  | `/api/panier/pass/{id}`        | Suppression d’un pass    | Connecté           |
+| DELETE  | `/api/panier`                  | Vidage du panier         | Connecté           |
+| POST    | `/api/commandes`               | Création d’une commande  | Connecté           |
+| GET     | `/api/commandes`               | Liste de mes commandes   | Connecté           |
+| GET     | `/api/commandes/{id}`          | Détail d’une commande    | Propriétaire       |
+| POST    | `/api/commandes/{id}/paiement` | Paiement simulé          | Propriétaire       |
+| GET     | `/api/commandes/{id}/billets`  | Billets d’une commande   | Propriétaire       |
+| GET     | `/api/billets/{token}`         | Consultation d’un billet | Détenteur du token |
+| GET     | `/api/admin/statistiques`      | Statistiques des ventes  | Gestionnaire       |
+| POST    | `/api/admin/soirees`           | Création d’une soirée    | Gestionnaire       |
+| POST    | `/api/admin/spectacles`        | Création d’un spectacle  | Gestionnaire       |
 
 Routes protégées : `Authorization: Bearer <jeton>`. Corps JSON : `Content-Type: application/json`.
-Les formats ci-dessous indiquent les types des valeurs. Les tableaux contiennent zéro à plusieurs éléments. Les exemples de modification partent chacun du jeu de données initial.
 
 ## 2. Toutes les routes
 
-### 2.1. GET /api/festivals — Liste des festivals
+### 2.1. GET /api/spectacles — Liste des spectacles
 
 **Accès :** Public.
 
-**Exemple de requête :** `GET /api/festivals`.
-
-**Données envoyées à l’API :** aucune ; aucun corps JSON.
-
-**Données renvoyées par l’API — HTTP 200**
-
-Format JSON attendu :
-
-```json
-{
-  "data": [
-    {
-      "id": "entier",
-      "nom": "chaîne",
-      "date_debut": "AAAA-MM-JJ",
-      "date_fin": "AAAA-MM-JJ",
-      "_links": {
-        "soirees": {
-          "href": "chaîne",
-          "method": "GET"
-        }
-      }
-    }
-  ]
-}
-```
-
-Exemple reçu :
-
-```json
-{
-  "data": [
-    {
-      "id": 1,
-      "nom": "Nancy Rock Vibration 2027",
-      "date_debut": "2027-06-04",
-      "date_fin": "2027-06-17",
-      "_links": {
-        "soirees": {
-          "href": "/api/soirees?festival_id=1",
-          "method": "GET"
-        }
-      }
-    }
-  ]
-}
-```
-
-### 2.2. GET /api/spectacles — Liste des spectacles
-
-**Accès :** Public.
-
-**Exemple de requête :** `GET /api/spectacles?festival_id=1&date=2027-06-04&style_id=1&page=1&limit=12`.
+**Exemple de requête :** `GET /api/spectacles?date=2027-06-04&style_id=1&page=1&limit=12`.
 
 **Données envoyées à l’API — paramètres d’URL, aucun corps JSON**
 
@@ -102,7 +48,6 @@ Format des paramètres, représenté en JSON :
 
 ```json
 {
-  "festival_id": "entier",
   "date": "AAAA-MM-JJ",
   "style_id": "entier",
   "page": "entier",
@@ -114,7 +59,6 @@ Exemple des paramètres :
 
 ```json
 {
-  "festival_id": 1,
   "date": "2027-06-04",
   "style_id": 1,
   "page": 1,
@@ -215,14 +159,14 @@ Exemple reçu :
   },
   "_links": {
     "self": {
-      "href": "/api/spectacles?festival_id=1&date=2027-06-04&style_id=1&page=1&limit=12",
+      "href": "/api/spectacles?date=2027-06-04&style_id=1&page=1&limit=12",
       "method": "GET"
     }
   }
 }
 ```
 
-### 2.3. GET /api/spectacles/{id} — Détail d’un spectacle
+### 2.2. GET /api/spectacles/{id} — Détail d’un spectacle
 
 **Accès :** Public.
 
@@ -324,11 +268,11 @@ Exemple reçu :
 }
 ```
 
-### 2.4. GET /api/soirees — Liste des soirées
+### 2.3. GET /api/soirees — Liste des soirées
 
 **Accès :** Public.
 
-**Exemple de requête :** `GET /api/soirees?festival_id=1&date=2027-06-05`.
+**Exemple de requête :** `GET /api/soirees?date=2027-06-05`.
 
 **Données envoyées à l’API — paramètres d’URL, aucun corps JSON**
 
@@ -336,7 +280,6 @@ Format des paramètres, représenté en JSON :
 
 ```json
 {
-  "festival_id": "entier",
   "date": "AAAA-MM-JJ"
 }
 ```
@@ -345,12 +288,11 @@ Exemple des paramètres :
 
 ```json
 {
-  "festival_id": 1,
   "date": "2027-06-05"
 }
 ```
 
-Les deux filtres sont facultatifs et cumulables.
+Le filtre date est facultatif.
 
 **Données renvoyées par l’API — HTTP 200**
 
@@ -361,7 +303,6 @@ Format JSON attendu :
   "data": [
     {
       "id": "entier",
-      "festival_id": "entier",
       "nom": "chaîne",
       "thematique": "chaîne",
       "date_heure_debut": "AAAA-MM-JJTHH:MM:SS — Europe/Paris",
@@ -392,7 +333,6 @@ Exemple reçu :
   "data": [
     {
       "id": 2,
-      "festival_id": 1,
       "nom": "Blues Night",
       "thematique": "Soirée blues",
       "date_heure_debut": "2027-06-05T20:30:00",
@@ -416,7 +356,7 @@ Exemple reçu :
 }
 ```
 
-### 2.5. GET /api/soirees/{id} — Détail d’une soirée
+### 2.4. GET /api/soirees/{id} — Détail d’une soirée
 
 **Accès :** Public.
 
@@ -432,7 +372,6 @@ Format JSON attendu :
 {
   "data": {
     "id": "entier",
-    "festival_id": "entier",
     "nom": "chaîne",
     "thematique": "chaîne",
     "date_heure_debut": "AAAA-MM-JJTHH:MM:SS — Europe/Paris",
@@ -445,12 +384,6 @@ Format JSON attendu :
     "places_vendues": "entier",
     "places_disponibles": "entier",
     "complete": "booléen",
-    "festival": {
-      "id": "entier",
-      "nom": "chaîne",
-      "date_debut": "AAAA-MM-JJ",
-      "date_fin": "AAAA-MM-JJ"
-    },
     "tarifs": [
       {
         "id": "entier",
@@ -507,7 +440,6 @@ Exemple reçu :
 {
   "data": {
     "id": 2,
-    "festival_id": 1,
     "nom": "Blues Night",
     "thematique": "Soirée blues",
     "date_heure_debut": "2027-06-05T20:30:00",
@@ -520,12 +452,6 @@ Exemple reçu :
     "places_vendues": 1,
     "places_disponibles": 799,
     "complete": false,
-    "festival": {
-      "id": 1,
-      "nom": "Nancy Rock Vibration 2027",
-      "date_debut": "2027-06-04",
-      "date_fin": "2027-06-17"
-    },
     "tarifs": [
       {
         "id": 1,
@@ -612,7 +538,7 @@ Exemple reçu :
 }
 ```
 
-### 2.6. GET /api/styles — Liste des styles
+### 2.5. GET /api/styles — Liste des styles
 
 **Accès :** Public.
 
@@ -680,7 +606,7 @@ Exemple reçu :
 }
 ```
 
-### 2.7. GET /api/tarifs — Liste des tarifs
+### 2.6. GET /api/tarifs — Liste des tarifs
 
 **Accès :** Public.
 
@@ -723,7 +649,7 @@ Exemple reçu :
 }
 ```
 
-### 2.8. GET /api/lieux — Liste des lieux
+### 2.7. GET /api/lieux — Liste des lieux
 
 **Accès :** Public.
 
@@ -771,7 +697,7 @@ Exemple reçu :
 }
 ```
 
-### 2.9. GET /api/artistes — Liste des artistes
+### 2.8. GET /api/artistes — Liste des artistes
 
 **Accès :** Public.
 
@@ -875,7 +801,7 @@ Exemple reçu :
 }
 ```
 
-### 2.10. POST /api/utilisateurs — Inscription
+### 2.9. POST /api/utilisateurs — Inscription
 
 **Accès :** Public.
 
@@ -945,7 +871,7 @@ Exemple reçu :
 }
 ```
 
-### 2.11. POST /api/auth/connexion — Connexion
+### 2.10. POST /api/auth/connexion — Connexion
 
 **Accès :** Public.
 
@@ -1009,7 +935,7 @@ Exemple reçu :
 }
 ```
 
-### 2.12. GET /api/me — Profil connecté
+### 2.11. GET /api/me — Profil connecté
 
 **Accès :** Connecté.
 
@@ -1045,7 +971,7 @@ Exemple reçu :
 }
 ```
 
-### 2.13. GET /api/panier — Consultation du panier
+### 2.12. GET /api/panier — Consultation du panier
 
 **Accès :** Connecté.
 
@@ -1208,7 +1134,7 @@ Exemple reçu :
 }
 ```
 
-### 2.14. POST /api/panier/lignes — Ajout de billets
+### 2.13. POST /api/panier/lignes — Ajout de billets
 
 **Accès :** Connecté.
 
@@ -1391,7 +1317,7 @@ Exemple reçu :
 }
 ```
 
-### 2.15. PATCH /api/panier/lignes/{id} — Modification de quantité
+### 2.14. PATCH /api/panier/lignes/{id} — Modification de quantité
 
 **Accès :** Connecté.
 
@@ -1572,7 +1498,7 @@ Exemple reçu :
 }
 ```
 
-### 2.16. DELETE /api/panier/lignes/{id} — Suppression d’une ligne
+### 2.15. DELETE /api/panier/lignes/{id} — Suppression d’une ligne
 
 **Accès :** Connecté.
 
@@ -1718,7 +1644,7 @@ Exemple reçu :
 }
 ```
 
-### 2.17. POST /api/panier/pass — Ajout d’un pass
+### 2.16. POST /api/panier/pass — Ajout d’un pass
 
 **Accès :** Connecté.
 
@@ -1730,9 +1656,7 @@ Format JSON attendu :
 
 ```json
 {
-  "soiree_ids": [
-    "entier"
-  ],
+  "soiree_ids": ["entier"],
   "tarif_id": "entier"
 }
 ```
@@ -1741,16 +1665,12 @@ Exemple envoyé :
 
 ```json
 {
-  "soiree_ids": [
-    1,
-    3,
-    7
-  ],
+  "soiree_ids": [1, 3, 7],
   "tarif_id": 1
 }
 ```
 
-Exactement trois soirées distinctes du même festival. Tarif existant. La remise de 3 % est déterminée par le backend.
+Exactement trois soirées distinctes. Tarif existant. La remise de 3 % est déterminée par le backend.
 
 **Données renvoyées par l’API — HTTP 201**
 
@@ -1934,7 +1854,7 @@ Exemple reçu :
 }
 ```
 
-### 2.18. DELETE /api/panier/pass/{id} — Suppression d’un pass
+### 2.17. DELETE /api/panier/pass/{id} — Suppression d’un pass
 
 **Accès :** Connecté.
 
@@ -2045,7 +1965,7 @@ Exemple reçu :
 }
 ```
 
-### 2.19. DELETE /api/panier — Vidage du panier
+### 2.18. DELETE /api/panier — Vidage du panier
 
 **Accès :** Connecté.
 
@@ -2101,7 +2021,7 @@ Exemple reçu :
 }
 ```
 
-### 2.20. POST /api/commandes — Création d’une commande
+### 2.19. POST /api/commandes — Création d’une commande
 
 **Accès :** Connecté.
 
@@ -2140,9 +2060,7 @@ Format JSON attendu :
       "pass": [
         {
           "id": "entier",
-          "soiree_ids": [
-            "entier"
-          ],
+          "soiree_ids": ["entier"],
           "tarif_id": "entier",
           "categorie": "normal | reduit",
           "prix_unitaire_avant_remise": "chaîne décimale à 2 chiffres après le point",
@@ -2202,11 +2120,7 @@ Exemple reçu :
       "pass": [
         {
           "id": 2,
-          "soiree_ids": [
-            3,
-            5,
-            6
-          ],
+          "soiree_ids": [3, 5, 6],
           "tarif_id": 2,
           "categorie": "reduit",
           "prix_unitaire_avant_remise": "25.00",
@@ -2229,7 +2143,7 @@ Exemple reçu :
 }
 ```
 
-### 2.21. GET /api/commandes — Liste de mes commandes
+### 2.20. GET /api/commandes — Liste de mes commandes
 
 **Accès :** Connecté.
 
@@ -2295,7 +2209,7 @@ Exemple reçu :
 }
 ```
 
-### 2.22. GET /api/commandes/{id} — Détail d’une commande
+### 2.21. GET /api/commandes/{id} — Détail d’une commande
 
 **Accès :** Propriétaire.
 
@@ -2334,9 +2248,7 @@ Format JSON attendu :
       "pass": [
         {
           "id": "entier",
-          "soiree_ids": [
-            "entier"
-          ],
+          "soiree_ids": ["entier"],
           "tarif_id": "entier",
           "categorie": "normal | reduit",
           "prix_unitaire_avant_remise": "chaîne décimale à 2 chiffres après le point",
@@ -2396,11 +2308,7 @@ Exemple reçu :
       "pass": [
         {
           "id": 2,
-          "soiree_ids": [
-            3,
-            5,
-            6
-          ],
+          "soiree_ids": [3, 5, 6],
           "tarif_id": 2,
           "categorie": "reduit",
           "prix_unitaire_avant_remise": "25.00",
@@ -2423,7 +2331,7 @@ Exemple reçu :
 }
 ```
 
-### 2.23. POST /api/commandes/{id}/paiement — Paiement simulé
+### 2.22. POST /api/commandes/{id}/paiement — Paiement simulé
 
 **Accès :** Propriétaire.
 
@@ -2549,7 +2457,7 @@ Exemple reçu :
 }
 ```
 
-### 2.24. GET /api/commandes/{id}/billets — Billets d’une commande
+### 2.23. GET /api/commandes/{id}/billets — Billets d’une commande
 
 **Accès :** Propriétaire.
 
@@ -2831,7 +2739,7 @@ Exemple reçu :
 }
 ```
 
-### 2.25. GET /api/billets/{token} — Consultation d’un billet
+### 2.24. GET /api/billets/{token} — Consultation d’un billet
 
 **Accès :** Détenteur du token.
 
@@ -2913,31 +2821,15 @@ Exemple reçu :
 }
 ```
 
-### 2.26. GET /api/admin/statistiques — Statistiques des ventes
+### 2.25. GET /api/admin/statistiques — Statistiques des ventes
 
 **Accès :** Gestionnaire.
 
-**Exemple de requête :** `GET /api/admin/statistiques?festival_id=1`.
+**Exemple de requête :** `GET /api/admin/statistiques`.
 
-**Données envoyées à l’API — paramètres d’URL, aucun corps JSON**
+**Données envoyées à l’API :** aucune ; aucun corps JSON.
 
-Format des paramètres, représenté en JSON :
-
-```json
-{
-  "festival_id": "entier"
-}
-```
-
-Exemple des paramètres :
-
-```json
-{
-  "festival_id": 1
-}
-```
-
-Filtre festival_id facultatif. Seules les ventes payées sont comptées. Recettes calculées à partir du prix figé des billets.
+Seules les ventes payées sont comptées. Recettes calculées à partir du prix figé des billets.
 
 **Données renvoyées par l’API — HTTP 200**
 
@@ -3033,7 +2925,7 @@ Exemple reçu :
 }
 ```
 
-### 2.27. POST /api/admin/soirees — Création d’une soirée
+### 2.26. POST /api/admin/soirees — Création d’une soirée
 
 **Accès :** Gestionnaire.
 
@@ -3045,7 +2937,6 @@ Format JSON attendu :
 
 ```json
 {
-  "festival_id": "entier",
   "lieu_id": "entier",
   "nom": "chaîne",
   "thematique": "chaîne",
@@ -3057,15 +2948,9 @@ Format JSON attendu :
       "description": "chaîne",
       "url_video": "URL",
       "horaire_previsionnel": "HH:MM:SS",
-      "artiste_ids": [
-        "entier"
-      ],
-      "style_ids": [
-        "entier"
-      ],
-      "images": [
-        "URL"
-      ]
+      "artiste_ids": ["entier"],
+      "style_ids": ["entier"],
+      "images": ["URL"]
     }
   ]
 }
@@ -3075,7 +2960,6 @@ Exemple envoyé :
 
 ```json
 {
-  "festival_id": 1,
   "lieu_id": 1,
   "nom": "Nouvelle soirée",
   "thematique": "Soirée blues",
@@ -3087,30 +2971,18 @@ Exemple envoyé :
       "description": "Description du premier concert.",
       "url_video": "https://example.com/videos/premier.mp4",
       "horaire_previsionnel": "20:00:00",
-      "artiste_ids": [
-        4
-      ],
-      "style_ids": [
-        9
-      ],
-      "images": [
-        "https://example.com/images/premier.jpg"
-      ]
+      "artiste_ids": [4],
+      "style_ids": [9],
+      "images": ["https://example.com/images/premier.jpg"]
     },
     {
       "titre": "Deuxième concert",
       "description": "Description du deuxième concert.",
       "url_video": "https://example.com/videos/deuxieme.mp4",
       "horaire_previsionnel": "21:30:00",
-      "artiste_ids": [
-        5
-      ],
-      "style_ids": [
-        2
-      ],
-      "images": [
-        "https://example.com/images/deuxieme.jpg"
-      ]
+      "artiste_ids": [5],
+      "style_ids": [2],
+      "images": ["https://example.com/images/deuxieme.jpg"]
     }
   ]
 }
@@ -3126,7 +2998,6 @@ Format JSON attendu :
 {
   "data": {
     "id": "entier",
-    "festival_id": "entier",
     "nom": "chaîne",
     "thematique": "chaîne",
     "date_heure_debut": "AAAA-MM-JJTHH:MM:SS — Europe/Paris",
@@ -3139,12 +3010,6 @@ Format JSON attendu :
     "places_vendues": "entier",
     "places_disponibles": "entier",
     "complete": "booléen",
-    "festival": {
-      "id": "entier",
-      "nom": "chaîne",
-      "date_debut": "AAAA-MM-JJ",
-      "date_fin": "AAAA-MM-JJ"
-    },
     "tarifs": [
       {
         "id": "entier",
@@ -3197,7 +3062,6 @@ Exemple reçu :
 {
   "data": {
     "id": 8,
-    "festival_id": 1,
     "nom": "Nouvelle soirée",
     "thematique": "Soirée blues",
     "date_heure_debut": "2027-06-13T20:00:00",
@@ -3210,12 +3074,6 @@ Exemple reçu :
     "places_vendues": 0,
     "places_disponibles": 800,
     "complete": false,
-    "festival": {
-      "id": 1,
-      "nom": "Nancy Rock Vibration 2027",
-      "date_debut": "2027-06-04",
-      "date_fin": "2027-06-17"
-    },
     "tarifs": [
       {
         "id": 1,
@@ -3294,7 +3152,7 @@ Exemple reçu :
 }
 ```
 
-### 2.28. POST /api/admin/spectacles — Création d’un spectacle
+### 2.27. POST /api/admin/spectacles — Création d’un spectacle
 
 **Accès :** Gestionnaire.
 
@@ -3311,15 +3169,9 @@ Format JSON attendu :
   "description": "chaîne",
   "url_video": "URL",
   "horaire_previsionnel": "HH:MM:SS",
-  "artiste_ids": [
-    "entier"
-  ],
-  "style_ids": [
-    "entier"
-  ],
-  "images": [
-    "URL"
-  ]
+  "artiste_ids": ["entier"],
+  "style_ids": ["entier"],
+  "images": ["URL"]
 }
 ```
 
@@ -3332,17 +3184,9 @@ Exemple envoyé :
   "description": "Un concert pour terminer la soirée.",
   "url_video": "https://example.com/videos/dernier-blues.mp4",
   "horaire_previsionnel": "23:00:00",
-  "artiste_ids": [
-    4,
-    5
-  ],
-  "style_ids": [
-    2,
-    9
-  ],
-  "images": [
-    "https://example.com/images/dernier-blues.jpg"
-  ]
+  "artiste_ids": [4, 5],
+  "style_ids": [2, 9],
+  "images": ["https://example.com/images/dernier-blues.jpg"]
 }
 ```
 
@@ -3446,20 +3290,20 @@ Exemple reçu :
 }
 ```
 
-### 2.29. Réponses d’erreur communes
+### 2.28. Réponses d’erreur communes
 
 **Données renvoyées par l’API**
 
-| HTTP | Cas |
-|---|---|
-| 400 | JSON mal formé |
-| 401 | Authentification absente, invalide ou expirée |
-| 403 | Rôle gestionnaire requis |
-| 404 | Ressource absente, privée pour un autre compte, ou token inconnu |
-| 409 | E-mail déjà utilisé, panier verrouillé, commande en attente ou refusée, places insuffisantes |
-| 415 | Format de corps non accepté |
-| 422 | Champ inconnu ou invalide, panier vide, règle métier non respectée |
-| 500 | Erreur interne |
+| HTTP | Cas                                                                                          |
+| ---- | -------------------------------------------------------------------------------------------- |
+| 400  | JSON mal formé                                                                               |
+| 401  | Authentification absente, invalide ou expirée                                                |
+| 403  | Rôle gestionnaire requis                                                                     |
+| 404  | Ressource absente, privée pour un autre compte, ou token inconnu                             |
+| 409  | E-mail déjà utilisé, panier verrouillé, commande en attente ou refusée, places insuffisantes |
+| 415  | Format de corps non accepté                                                                  |
+| 422  | Champ inconnu ou invalide, panier vide, règle métier non respectée                           |
+| 500  | Erreur interne                                                                               |
 
 Format JSON attendu :
 
