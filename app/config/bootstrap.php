@@ -4,6 +4,7 @@ declare(strict_types=1);
 use Slim\Factory\AppFactory;
 
 use nrv\adapters\config\ContainerConfig;
+use nrv\adapters\controllers\actions\GetSpectaclesAction;
 
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__, '.env');
 $dotenv->load();
@@ -20,7 +21,9 @@ $errorHandler->registerErrorRenderer('application/json', function ($exception, $
     return json_encode(['message' => $exception->getMessage()], JSON_UNESCAPED_UNICODE);
 });
 
-// routes
+$app->group("api/spectacles", function (\Slim\Routing\RouteCollectorProxy $group) {
+    $group->get("", GetSpectaclesAction::class)->setName("spectacles");
+});
 
 
 return $app;
