@@ -4,6 +4,7 @@ declare(strict_types=1);
 use Slim\Factory\AppFactory;
 
 use nrv\adapters\config\ContainerConfig;
+use nrv\adapters\controllers\actions\GetDetailsSoireeAction;
 
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__, '.env');
 $dotenv->load();
@@ -22,5 +23,9 @@ $errorHandler->registerErrorRenderer('application/json', function ($exception, $
 
 // routes
 
+$app->group('/soirees', function (\Slim\Routing\RouteCollectorProxy $group) {
+    $group->get('/{id}', GetDetailsSoireeAction::class)
+        ->setName('soiree-detail');
+});
 
 return $app;
