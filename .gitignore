@@ -1,0 +1,26 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+
+# Secrets / environnement (on ne versionne que les .dist)
+/nrv.env
+/app/config/.env
+
+# Composer
+/app/vendor/
+composer.phar
+
+# Logs & cache
+/app/logs/*
+!/app/logs/README.md
+/app/var/cache/*
+.phpunit.result.cache
+.php_cs.cache
+.php-cs-fixer.cache
+
+# Tests
+/coverage/
