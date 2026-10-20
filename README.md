@@ -46,6 +46,19 @@ Prérequis : Docker et Docker Compose, Node.js (pour compiler le SCSS du front).
    | Adminer | http://localhost:8880 (serveur : `nrv.db`) |
    | PostgreSQL | `localhost:5532` |
 
+## Comptes de test
+
+Créés par `app/sql/nrv.data.sql`. Mot de passe commun à tous les comptes : `password`.
+
+| Email | Rôle | Données associées |
+|---|---|---|
+| `gestionnaire@nrv.net` | gestionnaire | — |
+| `alice@example.com` | utilisateur | Commande payée (`CMD-2026-0001`) avec un pass 3 jours |
+| `bob@example.com` | utilisateur | Panier non validé (billets + pass 3 jours) |
+| `claire@example.com` | utilisateur | Panier validé, commande en attente (`CMD-2026-0002`) sur une soirée complète |
+
+## Commandes utiles
+
 Recompiler automatiquement le SCSS à chaque modification (depuis `front/`) :
 
 ```sh
