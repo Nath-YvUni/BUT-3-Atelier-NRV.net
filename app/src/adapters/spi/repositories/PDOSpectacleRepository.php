@@ -13,14 +13,14 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
     {
     }
 
-    public function getAll(): array
+    public function getAll(?\DateTimeImmutable $date = null): array
     {
         $sql = <<<'SQL'
             SELECT
-                sp."id"                     AS id,
-                sp."titre"                  AS titre,
+                sp."id"                    AS id,
+                sp."titre"                 AS titre,
                 so."date_heure_debut"::date AS date,
-                sp."horaire_previsionnel"   AS horaire,
+                sp."horaire_previsionnel"  AS horaire,
                 (
                     SELECT img."url"
                     FROM "spectacle_image" img
@@ -30,11 +30,21 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
                 ) AS image
             FROM "spectacle" sp
             JOIN "soiree" so ON so."id" = sp."soiree_id"
-            ORDER BY so."date_heure_debut", sp."horaire_previsionnel", sp."id"
             SQL;
 
+        $parametres = [];
+
+        if ($date !== null) {
+            $sql .= ' WHERE so."date_heure_debut"::date = :date';
+            $parametres['date'] = $date->format('Y-m-d');
+        }
+
+        $sql .= ' ORDER BY so."date_heure_debut",'
+            . ' sp."horaire_previsionnel", sp."id"';
+
         try {
-            $stmt = $this->pdo->query($sql);
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute($parametres);
             $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\PDOException $e) {
             throw new RepositoryInternalException(
@@ -45,7 +55,7 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
         }
 
         return array_map(
-            static fn (array $row): Spectacle => new Spectacle(
+            static fn(array $row): Spectacle => new Spectacle(
                 (int) $row['id'],
                 (string) $row['titre'],
                 new \DateTimeImmutable($row['date']),
