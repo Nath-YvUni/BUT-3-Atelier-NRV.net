@@ -1,0 +1,137 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  color: #1f1f1f;
+  background-color: #f3f3f3;
+}
+
+.programme {
+  max-width: 1232px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+.programme .titre {
+  margin: 0;
+  font-size: 28px;
+}
+.programme .sous-titre {
+  margin: 4px 0 0;
+  color: #6b6b6b;
+}
+.programme .barre {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin: 16px 0;
+}
+.programme .filtres {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+.programme .compteur {
+  display: none;
+  margin: 0;
+  font-size: 14px;
+  color: #6b6b6b;
+}
+.programme .message {
+  text-align: center;
+  color: #6b6b6b;
+}
+.programme .liste {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.champ {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+.champ label {
+  font-size: 14px;
+  font-weight: 500;
+}
+.champ select {
+  height: 44px;
+  padding: 0 16px;
+  font: inherit;
+  color: #6b6b6b;
+  background-color: #ffffff;
+  border: 1px solid #d4d4d4;
+  border-radius: 4px;
+}
+
+.carte {
+  height: 100%;
+  overflow: hidden;
+  background-color: #ffffff;
+  border: 1px solid #d4d4d4;
+  border-radius: 10px;
+}
+.carte .media {
+  aspect-ratio: 3/2;
+  background-color: #dadada;
+}
+.carte img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.carte .contenu {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 16px;
+}
+.carte .nom {
+  margin: 0;
+  font-size: 18px;
+}
+.carte .infos {
+  margin: 0;
+  font-size: 14px;
+  color: #6b6b6b;
+}
+
+.badge {
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  background-color: #e3e3e3;
+  border-radius: 999px;
+}
+
+@media (min-width: 768px) {
+  .programme {
+    padding: 48px 16px;
+  }
+  .programme .titre {
+    font-size: 40px;
+  }
+  .programme .filtres {
+    width: auto;
+  }
+  .programme .compteur {
+    display: block;
+  }
+  .programme .liste {
+    gap: 32px;
+  }
+  .champ {
+    flex: none;
+    width: 260px;
+  }
+}
