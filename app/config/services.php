@@ -46,5 +46,24 @@ return [
     ServiceSoireeInterface::class => function (ContainerInterface $c) {
         return new ServiceSoiree($c->get(SoireeRepositoryInterface::class));
     },
+        // Authentification
+    UtilisateurRepositoryInterface::class => function (ContainerInterface $c) {
+        return new PDOUtilisateurRepository(
+            $c->get('nrv.pdo')
+        );
+    },
 
+    GestionJetonInterface::class => function (ContainerInterface $c) {
+        return new GestionJetonJWT(
+            $c->get('nrv.jwt.secret'),
+            $c->get('nrv.jwt.ttl')
+        );
+    },
+
+    ServiceAuthInterface::class => function (ContainerInterface $c) {
+        return new ServiceAuth(
+            $c->get(UtilisateurRepositoryInterface::class),
+            $c->get(GestionJetonInterface::class)
+        );
+    },
 ];
