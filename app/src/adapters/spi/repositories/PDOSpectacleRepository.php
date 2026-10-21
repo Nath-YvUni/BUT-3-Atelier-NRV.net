@@ -17,8 +17,9 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
     {
         $sql = <<<'SQL'
             SELECT
-                sp."id"                    AS id,
-                sp."titre"                 AS titre,
+                sp."id"                     AS id,
+                sp."soiree_id"              AS soiree_id,
+                sp."titre"                  AS titre,
                 so."date_heure_debut"::date AS date,
                 sp."horaire_previsionnel"  AS horaire,
                 (
@@ -57,6 +58,7 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
         return array_map(
             static fn(array $row): Spectacle => new Spectacle(
                 (int) $row['id'],
+                (int) $row['soiree_id'],
                 (string) $row['titre'],
                 new \DateTimeImmutable($row['date']),
                 new \DateTimeImmutable($row['horaire']),

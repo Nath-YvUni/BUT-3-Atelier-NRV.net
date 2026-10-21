@@ -1,9 +1,11 @@
 # BUT-3-Atelier-NRV.net
+
 ## Réalisé par :
-  - Hugo ANTZORN
-  - Ilias BOUDOUAH 
-  - Thibaut LOUYOT 
-  - Nathan YVON
+
+- Hugo ANTZORN
+- Ilias BOUDOUAH
+- Thibaut LOUYOT
+- Nathan YVON
 
 ## Installation (après le clone)
 
@@ -39,23 +41,60 @@ Prérequis : Docker et Docker Compose, Node.js (pour compiler le SCSS du front).
 
 6. **Accéder aux services** :
 
-   | Service | URL / port |
-   |---|---|
-   | Front | http://localhost:7081 |
-   | API | http://localhost:7080 |
-   | Adminer | http://localhost:8880 (serveur : `nrv.db`) |
-   | PostgreSQL | `localhost:5532` |
+   | Service    | URL / port                                 |
+   | ---------- | ------------------------------------------ |
+   | Front      | http://localhost:7081                      |
+   | API        | http://localhost:7080                      |
+   | Adminer    | http://localhost:8880 (serveur : `nrv.db`) |
+   | PostgreSQL | `localhost:5532`                           |
 
 ## Comptes de test
 
 Créés par `app/sql/nrv.data.sql`. Mot de passe commun à tous les comptes : `password`.
 
-| Email | Rôle | Données associées |
-|---|---|---|
-| `gestionnaire@nrv.net` | gestionnaire | — |
-| `alice@example.com` | utilisateur | Commande payée (`CMD-2026-0001`) avec un pass 3 jours |
-| `bob@example.com` | utilisateur | Panier non validé (billets + pass 3 jours) |
-| `claire@example.com` | utilisateur | Panier validé, commande en attente (`CMD-2026-0002`) sur une soirée complète |
+| Email                  | Rôle         | Données associées                                                            |
+| ---------------------- | ------------ | ---------------------------------------------------------------------------- |
+| `gestionnaire@nrv.net` | gestionnaire | —                                                                            |
+| `alice@example.com`    | utilisateur  | Commande payée (`CMD-2026-0001`) avec un pass 3 jours                        |
+| `bob@example.com`      | utilisateur  | Panier non validé (billets + pass 3 jours)                                   |
+| `claire@example.com`   | utilisateur  | Panier validé, commande en attente (`CMD-2026-0002`) sur une soirée complète |
+
+## API
+
+| Méthode | Route                          | Description                      |
+| ------- | ------------------------------ | -------------------------------- |
+| GET     | `/api/spectacles`              | Lister et filtrer les spectacles |
+| GET     | `/api/spectacles/{id}`         | Consulter un spectacle           |
+| GET     | `/api/soirees`                 | Lister les soirées               |
+| GET     | `/api/soirees/{id}`            | Consulter une soirée             |
+| GET     | `/api/styles`                  | Lister les styles musicaux       |
+| GET     | `/api/tarifs`                  | Consulter les tarifs             |
+| GET     | `/api/lieux`                   | Lister les lieux                 |
+| GET     | `/api/artistes`                | Lister les artistes              |
+| POST    | `/api/utilisateurs`            | Créer un compte                  |
+| POST    | `/api/auth/connexion`          | Se connecter                     |
+| GET     | `/api/me`                      | Consulter son profil             |
+| GET     | `/api/panier`                  | Consulter son panier             |
+| POST    | `/api/panier/lignes`           | Ajouter des billets              |
+| PATCH   | `/api/panier/lignes/{id}`      | Modifier une quantité            |
+| DELETE  | `/api/panier/lignes/{id}`      | Supprimer une ligne              |
+| POST    | `/api/panier/pass`             | Ajouter un pass                  |
+| DELETE  | `/api/panier/pass/{id}`        | Supprimer un pass                |
+| DELETE  | `/api/panier`                  | Vider son panier                 |
+| POST    | `/api/commandes`               | Créer une commande               |
+| GET     | `/api/commandes`               | Lister ses commandes             |
+| GET     | `/api/commandes/{id}`          | Consulter une commande           |
+| POST    | `/api/commandes/{id}/paiement` | Simuler un paiement              |
+| GET     | `/api/commandes/{id}/billets`  | Récupérer les billets            |
+| GET     | `/api/billets/{token}`         | Consulter un billet              |
+| GET     | `/api/admin/statistiques`      | Consulter les ventes             |
+| POST    | `/api/admin/soirees`           | Créer une soirée                 |
+| POST    | `/api/admin/spectacles`        | Créer un spectacle               |
+
+Filtres prévus pour les spectacles : `date`, `style_id`, `page`, `limit`.
+
+Les paramètres, formats JSON et exemples sont disponibles dans la
+[documentation complète de l’API](Documents/API/contrat-api-nrv.md).
 
 ## Commandes utiles
 

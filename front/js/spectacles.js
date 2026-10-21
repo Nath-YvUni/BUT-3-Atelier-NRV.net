@@ -14,9 +14,6 @@ function versDate(date) {
     return new Date(`${date}T00:00`);
 }
 
-
-
-
 function afficherResume(spectacles) {
     const dates = [...new Set(spectacles.map((spectacle) => spectacle.date))].sort();
     const debut = versDate(dates[0]);
@@ -34,6 +31,8 @@ function afficherResume(spectacles) {
 
 function creerSpectacle(spectacle) {
     const element = template.content.cloneNode(true);
+
+    element.querySelector('.lien').href = `soiree.html?id=${encodeURIComponent(spectacle.soiree_id)}`;
 
     const img = element.querySelector('img');
     if (spectacle.image) {

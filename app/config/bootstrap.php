@@ -5,6 +5,7 @@ use Slim\Factory\AppFactory;
 
 use nrv\adapters\config\ContainerConfig;
 use nrv\adapters\controllers\actions\GetSpectaclesAction;
+use nrv\adapters\controllers\actions\GetDetailsSoireeAction;
 
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__, '.env');
 $dotenv->load();
@@ -14,6 +15,13 @@ $app = AppFactory::createFromContainer($container);
 
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
+$app->add(function ($request, $handler) {
+    $response = $handler->handle($request);
+    return $response
+        ->withHeader('Access-Control-Allow-Origin', '*')
+        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+});
 $errorMiddleware = $app->addErrorMiddleware(true, false, false);
 $errorHandler = $errorMiddleware->getDefaultErrorHandler();
 $errorHandler->forceContentType('application/json');
@@ -22,6 +30,12 @@ $errorHandler->registerErrorRenderer('application/json', function ($exception, $
 });
 
 $app->get("/api/spectacles", GetSpectaclesAction::class)->setName("spectacles");
+// routes
+
+$app->group('/api/soirees', function (\Slim\Routing\RouteCollectorProxy $group) {
+    $group->get('/{id}', GetDetailsSoireeAction::class)
+        ->setName('soiree-detail');
+});
 
 
 return $app;

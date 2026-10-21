@@ -8,6 +8,12 @@ use nrv\application\ports\api\ServiceSpectacleInterface;
 use nrv\adapters\spi\repositories\PDOSpectacleRepository;
 use nrv\application\usecases\ServiceSpectacle;
 
+use nrv\application\usecases\ServiceSoiree;
+use nrv\application\ports\api\ServiceSoireeInterface;
+use nrv\application\ports\spi\SoireeRepositoryInterface;
+use nrv\adapters\persistance\SoireeRepository;
+use nrv\adapters\controllers\actions\GetDetailsSoireeAction;
+
 // ── services métier et repositories ─
 return [
 
@@ -18,12 +24,20 @@ return [
         return new \PDO($dsn, $user, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     },
 
+        // F1
     SpectacleRepositoryInterface::class => function (ContainerInterface $c) {
         return new PDOSpectacleRepository($c->get('nrv.pdo'));
     },
-
     ServiceSpectacleInterface::class => function (ContainerInterface $c) {
         return new ServiceSpectacle($c->get(SpectacleRepositoryInterface::class));
+    },
+
+        // F2
+    SoireeRepositoryInterface::class => function (ContainerInterface $c) {
+        return new SoireeRepository($c->get('nrv.pdo'));
+    },
+    ServiceSoireeInterface::class => function (ContainerInterface $c) {
+        return new ServiceSoiree($c->get(SoireeRepositoryInterface::class));
     },
 
 ];
