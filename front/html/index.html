@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NRV.net - Programme du festival</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="../js/detailSoiree.js" defer></script>
+</head>
+<body>
+    <main class="programme">
+        <h1 class="titre">Programme du festival</h1>
+        <p class="sous-titre" id="programme-resume"></p>
+
+
+        <p class="message" id="spectacles-message">Chargement de la soiree..</p>
+
+        <ul class="liste" id="spectacles-liste"></ul>
+
+        <div id="soiree"></div>
+    </main>
+
+    <template id="soiree-template">
+    <article class="soiree-detail">
+        <h1 class="nom"></h1>
+        <h2 class="thematique"></h2>
+        <p class="date"></p>
+        <p class="lieu">Lieu : <span class="nom-lieu"></span></p>
+        <p class="capacite">Capacité : <span class="capacite-valeur"></span> places</p>
+        <p class="tarif">Tarif : <span class="tarif-valeur"></span> €</p>
+
+        <h3>Artistes</h3>
+        <p class="artistes-soiree"></p>
+
+        <h3>Programme</h3>
+        <ul class="liste-spectacles"></ul>
+    </article>
+</template>
+
+<template id="soiree-spectacle-template">
+    <li class="spectacle">
+        <h4 class="titre"></h4>
+        <p class="artistes">Artistes :</p>
+        <p class="styles">Styles :</p>
+        <p class="description">Description :</p>
+        <a class="video">Voir la vidéo</a>
+    </li>
+</template>
+</body>
+</html>

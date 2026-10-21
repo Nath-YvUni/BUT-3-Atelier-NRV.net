@@ -13,7 +13,11 @@ class Soiree {
         private string $nom,
         private string $thematique,
         private DateTimeImmutable $date_heure_debut,
-        private int $capacite
+        private int $capacite,
+        private int $tarif,
+        private string $nom_lieu,
+        private array $artistes,
+        private array $liste
     )
     { }
 
@@ -51,5 +55,25 @@ public function getDate(): DateTimeImmutable
 public function getCapacite(): int
 {
     return $this->capacite;
+}
+
+public function getTarif(): int
+{
+    return $this->tarif;
+}
+
+public function getNomLieu(): string
+{
+    return $this->nom_lieu;
+}
+
+public function getArtistes(): array {
+    return $this->artistes;
+}
+
+
+public function getListe(): array
+{
+    return $this->liste;
 }
 }

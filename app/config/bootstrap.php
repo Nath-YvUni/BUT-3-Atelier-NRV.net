@@ -14,6 +14,13 @@ $app = AppFactory::createFromContainer($container);
 
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
+$app->add(function ($request, $handler) {
+    $response = $handler->handle($request);
+    return $response
+        ->withHeader('Access-Control-Allow-Origin', '*')
+        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+});
 $errorMiddleware = $app->addErrorMiddleware(true, false, false);
 $errorHandler = $errorMiddleware->getDefaultErrorHandler();
 $errorHandler->forceContentType('application/json');
@@ -27,5 +34,6 @@ $app->group('/soirees', function (\Slim\Routing\RouteCollectorProxy $group) {
     $group->get('/{id}', GetDetailsSoireeAction::class)
         ->setName('soiree-detail');
 });
+
 
 return $app;

@@ -14,7 +14,11 @@ final readonly class SoireeDTO
         public string $nom,
         public string $thematique,
         public string $date_heure_debut,
-        public int $capacite
+        public int $capacite,
+        private int $tarif,
+        private string $nom_lieu,
+        private array $artistes,
+        private array $liste
     ){
     }
 
@@ -28,6 +32,10 @@ final readonly class SoireeDTO
             thematique: $soiree->getThematique(),
             date_heure_debut: $soiree->getDate()->format('Y-m-d H:i'),
             capacite: $soiree->getCapacite(),
+            tarif : $soiree->getTarif(),
+            nom_lieu : $soiree->getNomLieu(),
+            artistes : $soiree->getArtistes(),
+            liste : $soiree->getListe()
         );
     }
 
@@ -41,6 +49,10 @@ final readonly class SoireeDTO
         'thematique' => $this->thematique,
         'date_heure_debut' => $this->date_heure_debut,
         'capacite' => $this->capacite,
+        'tarif' => $this->tarif,
+        'nom_lieu' => $this->nom_lieu,
+        'artistes' => $this->artistes,
+        'liste' => $this->liste
     ];
 }
 }
