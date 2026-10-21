@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NRV.net - Détail de la soirée</title>
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/soiree.js" defer></script>
+</head>
+<body>
+    <main class="page-soiree">
+        <p class="message" id="soiree-message">Chargement de la soirée...</p>
+
+        <div id="soiree"></div>
+    </main>
+
+    <template id="soiree-template">
+        <article class="soiree-detail">
+            <h1 class="nom"></h1>
+            <h2 class="thematique"></h2>
+            <p class="date"></p>
+            <p class="lieu">Lieu : <span class="nom-lieu"></span></p>
+            <p class="capacite">Capacité : <span class="capacite-valeur"></span> places</p>
+            <p class="tarif">Tarif : <span class="tarif-valeur"></span> €</p>
+
+            <h3>Artistes</h3>
+            <p class="artistes-soiree"></p>
+
+            <h3>Programme</h3>
+            <ul class="liste-spectacles"></ul>
+        </article>
+    </template>
+
+    <template id="soiree-spectacle-template">
+        <li class="spectacle">
+            <h4 class="titre"></h4>
+            <p class="artistes">Artistes : </p>
+            <p class="styles">Styles : </p>
+            <p class="description">Description : </p>
+            <a class="video" target="_blank" rel="noopener">Voir la vidéo</a>
+        </li>
+    </template>
+</body>
+</html>
