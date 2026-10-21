@@ -28,10 +28,10 @@ function creerSoiree(soiree){
 function creerSpectacle(spectacle) {
     const li = spectacleTemplate.content.cloneNode(true);
 
-    li.querySelector('.titre').textContent = spectacle.titre;
-    li.querySelector('.artistes').textContent = spectacle.artistes;
-    li.querySelector('.styles').textContent = spectacle.styles;
-    li.querySelector('.description').textContent = spectacle.description;
+    li.querySelector('.titre').textContent += spectacle.titre;
+    li.querySelector('.artistes').textContent += spectacle.artistes;
+    li.querySelector('.styles').textContent += spectacle.styles;
+    li.querySelector('.description').textContent += spectacle.description;
     li.querySelector('.video').href = spectacle.url_video;
 
     return li;
