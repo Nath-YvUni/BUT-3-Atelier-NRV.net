@@ -8,9 +8,9 @@ use nrv\domain\entities\Spectacle;
 interface SpectacleRepositoryInterface
 {
     /**
-     * Retourne la liste de tous les spectacles.
+     * Retourne les spectacles, éventuellement filtrés par date de soirée.
      *
      * @return Spectacle[]
      */
-    public function getAll(): array;
+    public function getAll(?\DateTimeImmutable $date = null): array;
 }

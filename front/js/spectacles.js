@@ -5,6 +5,10 @@ const message = document.getElementById('spectacles-message');
 const compteur = document.getElementById('spectacles-compteur');
 const resume = document.getElementById('programme-resume');
 const template = document.getElementById('spectacle-template');
+const filtreDate = document.getElementById('filtre-date');
+
+let datesInitialisees = false;
+let requeteCourante = 0;
 
 function versDate(date) {
     return new Date(`${date}T00:00`);
@@ -58,28 +62,96 @@ function creerSpectacle(spectacle) {
     return element;
 }
 
-async function chargerSpectacles() {
+function remplirDates(spectacles) {
+    const dates = [...new Set(
+        spectacles.map((spectacle) => spectacle.date)
+    )].sort();
+
+    const options = dates.map((date) => {
+        const option = document.createElement('option');
+
+        option.value = date;
+        option.textContent = versDate(date).toLocaleDateString('fr-FR', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+        });
+
+        return option;
+    });
+
+    filtreDate.replaceChildren(
+        new Option('Toutes les dates', ''),
+        ...options
+    );
+}
+
+async function chargerSpectacles(date = '') {
+    const numeroRequete = ++requeteCourante;
+
+    message.hidden = false;
+    message.textContent = 'Chargement des spectacles...';
+    compteur.textContent = '';
+    liste.replaceChildren();
+
+    const parametres = new URLSearchParams();
+
+    if (date !== '') {
+        parametres.set('date', date);
+    }
+
+    const recherche = parametres.toString();
+    const url = `${API_URL}/spectacles${recherche ? `?${recherche}` : ''}`;
+
     try {
-        const response = await fetch(`${API_URL}/spectacles`);
+        const response = await fetch(url);
+
         if (!response.ok) {
             throw new Error(`Erreur HTTP ${response.status}`);
         }
 
         const spectacles = await response.json();
 
-        if (spectacles.length === 0) {
-            message.textContent = 'Aucun spectacle programmé pour le moment.';
+        if (numeroRequete !== requeteCourante) {
             return;
         }
 
-        message.remove();
-        compteur.textContent = `${spectacles.length} spectacle${spectacles.length > 1 ? 's' : ''}`;
-        afficherResume(spectacles);
+        if (!datesInitialisees && date === '') {
+            remplirDates(spectacles);
+
+            if (spectacles.length > 0) {
+                afficherResume(spectacles);
+            }
+
+            datesInitialisees = true;
+        }
+
+        compteur.textContent =
+            `${spectacles.length} spectacle${spectacles.length > 1 ? 's' : ''}`;
+
+        if (spectacles.length === 0) {
+            message.textContent = date
+                ? 'Aucun spectacle pour cette date.'
+                : 'Aucun spectacle programmé pour le moment.';
+
+            return;
+        }
+
+        message.hidden = true;
         liste.replaceChildren(...spectacles.map(creerSpectacle));
     } catch (e) {
+        if (numeroRequete !== requeteCourante) {
+            return;
+        }
+
+        message.hidden = false;
         message.textContent = 'Impossible de charger les spectacles.';
         console.error(e);
     }
 }
+
+filtreDate.addEventListener('change', () => {
+    chargerSpectacles(filtreDate.value);
+});
 
 chargerSpectacles();
