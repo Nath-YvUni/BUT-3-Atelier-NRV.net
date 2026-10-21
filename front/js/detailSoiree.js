@@ -1,4 +1,4 @@
-   const API_URL = 'http://localhost:7080';
+const API_URL = '/api';
 
 const message = document.getElementById('spectacles-message');
 const soireeTemplate = document.getElementById('soiree-template');

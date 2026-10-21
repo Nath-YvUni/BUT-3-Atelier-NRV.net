@@ -30,7 +30,7 @@ $errorHandler->registerErrorRenderer('application/json', function ($exception, $
 
 // routes
 
-$app->group('/soirees', function (\Slim\Routing\RouteCollectorProxy $group) {
+$app->group('/api/soirees', function (\Slim\Routing\RouteCollectorProxy $group) {
     $group->get('/{id}', GetDetailsSoireeAction::class)
         ->setName('soiree-detail');
 });
