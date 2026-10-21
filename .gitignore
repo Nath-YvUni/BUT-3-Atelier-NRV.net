@@ -24,3 +24,7 @@ composer.phar
 
 # Tests
 /coverage/
+
+# Front (npm)
+/front/node_modules/
+/front/css/

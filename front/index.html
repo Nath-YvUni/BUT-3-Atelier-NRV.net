@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NRV.net - Programme du festival</title>
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/spectacles.js" defer></script>
+</head>
+<body>
+    <main class="programme">
+        <h1 class="titre">Programme du festival</h1>
+        <p class="sous-titre" id="programme-resume"></p>
+
+        <div class="barre">
+            <form class="filtres">
+                <div class="champ">
+                    <label for="filtre-date">Date</label>
+                    <select id="filtre-date" name="date">
+                        <option value="">Toutes les dates</option>
+                    </select>
+                </div>
+
+                <div class="champ">
+                    <label for="filtre-style">Style de musique</label>
+                    <select id="filtre-style" name="style">
+                        <option value="">Tous les styles</option>
+                    </select>
+                </div>
+            </form>
+
+            <p class="compteur" id="spectacles-compteur"></p>
+        </div>
+
+        <p class="message" id="spectacles-message">Chargement des spectacles...</p>
+
+        <ul class="liste" id="spectacles-liste"></ul>
+    </main>
+
+    <template id="spectacle-template">
+        <li>
+            <a class="lien" href="#">
+            <article class="carte">
+                <div class="media">
+                    <img src="" alt="" loading="lazy">
+                </div>
+                <div class="contenu">
+                    <span class="badge"></span>
+                    <h2 class="nom"></h2>
+                    <p class="infos">
+                        <time class="date"></time>
+                        ·
+                        <time class="horaire"></time>
+                    </p>
+                </div>
+            </article>
+            </a>
+        </li>
+    </template>
+</body>
+</html>
