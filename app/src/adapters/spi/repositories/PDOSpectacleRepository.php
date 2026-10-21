@@ -13,7 +13,7 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
     {
     }
 
-    public function getAll(?\DateTimeImmutable $date = null): array
+    public function getAll(?\DateTimeImmutable $date = null, ?string $style = null): array
     {
         $sql = <<<'SQL'
             SELECT
@@ -22,6 +22,7 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
                 sp."titre"                  AS titre,
                 so."date_heure_debut"::date AS date,
                 sp."horaire_previsionnel"  AS horaire,
+                sm."libelle"::style          AS style,
                 (
                     SELECT img."url"
                     FROM "spectacle_image" img
@@ -31,13 +32,25 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
                 ) AS image
             FROM "spectacle" sp
             JOIN "soiree" so ON so."id" = sp."soiree_id"
+            INNER JOIN "spectacle_style" ss ON ss."spectacle_id" = sp."id"
+            INNER JOIN "style_musical" sm ON sm."id" = ss."style_id"
             SQL;
 
         $parametres = [];
 
         if ($date !== null) {
-            $sql .= ' WHERE so."date_heure_debut"::date = :date';
+            $conditions[] = 'so."date_heure_debut"::date = :date';
             $parametres['date'] = $date->format('Y-m-d');
+        }
+
+        if ($style !== null) {
+            $conditions[] = 'sm."libelle"::style = :style';
+            $parametres['style'] = $style;
+        }
+
+        // Ajout des conditions à la requête SQL si elles existent
+        if (!empty($conditions)) {
+            $sql .= ' WHERE ' . implode(' AND ', $conditions);
         }
 
         $sql .= ' ORDER BY so."date_heure_debut",'
