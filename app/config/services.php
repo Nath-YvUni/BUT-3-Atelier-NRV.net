@@ -14,6 +14,13 @@ use nrv\application\ports\spi\SoireeRepositoryInterface;
 use nrv\adapters\persistance\SoireeRepository;
 use nrv\adapters\controllers\actions\GetDetailsSoireeAction;
 
+use nrv\application\ports\spi\UtilisateurRepositoryInterface;
+use nrv\application\ports\spi\GestionJetonInterface;
+use nrv\application\ports\api\ServiceAuthInterface;
+use nrv\application\usecases\ServiceAuth;
+use nrv\adapters\spi\repositories\PDOUtilisateurRepository;
+use nrv\adapters\security\GestionJetonJWT;
+
 // ── services métier et repositories ─
 return [
 
