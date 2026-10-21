@@ -312,6 +312,22 @@ body {
 
     nav a {
         color: $noir;
+        text-decoration: none;
+    }
+
+    [data-lien-connexion] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 2.75rem;
+        padding: 0.625rem 1rem;
+        background-color: $blanc;
+        border: 1px solid $noir;
+        border-radius: 0.25rem;
+
+        &:hover {
+            background-color: $fond;
+        }
     }
 
     [data-auth-message] {
@@ -388,6 +404,7 @@ body {
     border: 1px solid $noir;
     border-radius: 0.25rem;
     cursor: pointer;
+    text-decoration: none;
 
     &:disabled {
         opacity: 0.6;
