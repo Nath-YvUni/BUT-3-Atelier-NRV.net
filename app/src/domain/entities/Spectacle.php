@@ -12,6 +12,7 @@ final class Spectacle
         private \DateTimeImmutable $date,
         private \DateTimeImmutable $horaire,
         private ?string $image,
+        private array $styles = []
     ) {
     }
 
@@ -43,5 +44,10 @@ final class Spectacle
     public function getImage(): ?string
     {
         return $this->image;
+    }
+
+    public function getStyles(): array
+    {
+        return $this->styles;
     }
 }

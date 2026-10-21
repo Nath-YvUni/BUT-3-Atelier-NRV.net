@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace nrv\application\dto;
 
 use nrv\domain\entities\Spectacle;
+use function Termwind\style;
 
 final readonly class SpectacleDTO
 {
@@ -14,6 +15,7 @@ final readonly class SpectacleDTO
         public string $date,
         public string $horaire,
         public ?string $image,
+        public array $styles
     ) {
     }
 
@@ -26,6 +28,7 @@ final readonly class SpectacleDTO
             date: $spectacle->getDate()->format('Y-m-d'),
             horaire: $spectacle->getHoraire()->format('H:i'),
             image: $spectacle->getImage(),
+            styles: $spectacle->getStyles()
         );
     }
 
@@ -38,6 +41,7 @@ final readonly class SpectacleDTO
             'date' => $this->date,
             'horaire' => $this->horaire,
             'image' => $this->image,
+            'styles' => $this->styles
         ];
     }
 }

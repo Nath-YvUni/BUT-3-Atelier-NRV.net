@@ -26,7 +26,8 @@ test('retourne les informations des spectacles pour le programme', function () {
             'Pistons & Chrome',
             new DateTimeImmutable('2027-06-04'),
             new DateTimeImmutable('20:00:00'),
-            'https://example.com/pistons.jpg'
+            'https://example.com/pistons.jpg',
+            []
         ),
         new Spectacle(
             4,
@@ -34,7 +35,8 @@ test('retourne les informations des spectacles pour le programme', function () {
             'Mississippi to Moselle',
             new DateTimeImmutable('2027-06-05'),
             new DateTimeImmutable('20:30:00'),
-            null
+            null,
+            []
         ),
     ];
 
@@ -54,6 +56,7 @@ test('retourne les informations des spectacles pour le programme', function () {
             'date' => '2027-06-04',
             'horaire' => '20:00',
             'image' => 'https://example.com/pistons.jpg',
+            'styles' => [],
         ],
         [
             'id' => 4,
@@ -62,6 +65,7 @@ test('retourne les informations des spectacles pour le programme', function () {
             'date' => '2027-06-05',
             'horaire' => '20:30',
             'image' => null,
+            'styles' => [],
         ],
     ]);
 });
