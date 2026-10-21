@@ -11,16 +11,23 @@ use nrv\application\ports\api\ServiceSoireeInterface;
 use nrv\application\exceptions\SoireeIntrouvableException;
 
 
-class GetDetailsSoireeAction extends AbstractAction {
+class GetDetailsSoireeAction extends AbstractAction
+{
 
     private ServiceSoireeInterface $serviceSoiree;
 
-    public function __construct(ServiceSoireeInterface $serviceSoiree) {
+    public function __construct(ServiceSoireeInterface $serviceSoiree)
+    {
         $this->serviceSoiree = $serviceSoiree;
     }
 
-    public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args): ResponseInterface {
+    public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args): ResponseInterface
+    {
         $id = $args['id'];
+
+        if (!ctype_digit($id) || (int) $id < 1) {
+            throw new HttpNotFoundException($rq, "Aucune soiree avec l'id $id");
+        }
 
         try {
             $soireeDTO = $this->serviceSoiree->getDetails((int) $id);
@@ -29,5 +36,4 @@ class GetDetailsSoireeAction extends AbstractAction {
         }
         return $this->json($rs, $soireeDTO->toArray());
     }
-
 }
