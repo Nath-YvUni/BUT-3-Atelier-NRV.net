@@ -6,8 +6,41 @@
     <title>NRV.net - Détail de la soirée</title>
     <link rel="stylesheet" href="css/main.css">
     <script src="js/soiree.js" defer></script>
+    <script type="module" src="js/navigation-auth.js"></script>
 </head>
 <body>
+    <header class="auth-navigation" data-navigation-auth>
+        <a class="auth-marque" href="index.html">NRV.net</a>
+
+        <nav aria-label="Navigation principale">
+            <a href="index.html">Programme</a>
+
+            <span data-auth-invite>
+                <a href="connexion.html" data-lien-connexion>
+                    Connexion / inscription
+                </a>
+            </span>
+
+            <span data-auth-connecte hidden>
+                <span>Bonjour <span data-auth-nom></span></span>
+
+                <button
+                    class="auth-bouton auth-bouton--secondaire"
+                    type="button"
+                    data-auth-deconnexion
+                >
+                    Se déconnecter
+                </button>
+            </span>
+        </nav>
+
+        <p
+            class="auth-message"
+            data-auth-message
+            role="status"
+            hidden
+        ></p>
+    </header>
     <main class="page-soiree">
         <a href="index.html" class="bouton-retour">← Retour à l'accueil</a>
         <p class="message" id="soiree-message">Chargement de la soirée...</p>
