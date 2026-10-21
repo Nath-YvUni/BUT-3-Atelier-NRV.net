@@ -25,6 +25,7 @@ class GetSpectaclesAction extends AbstractAction
     ): ResponseInterface {
         $parametres = $rq->getQueryParams();
         $date = $parametres['date'] ?? null;
+        $style = $parametres['style'] ?? null;
 
         try {
             if ($date !== null && !is_string($date)) {
@@ -34,7 +35,14 @@ class GetSpectaclesAction extends AbstractAction
                 );
             }
 
-            $spectacles = $this->serviceSpectacle->getSpectacles($date);
+            if ($style !== null && !is_string($style)) {
+                throw new ValidationException(
+                    ['style' => 'Un seul style doit être transmis.'],
+                    'Style invalide.'
+                );
+            }
+
+            $spectacles = $this->serviceSpectacle->getSpectacles($date, $style);
 
             return $this->json($rs, $spectacles);
         } catch (ValidationException $e) {

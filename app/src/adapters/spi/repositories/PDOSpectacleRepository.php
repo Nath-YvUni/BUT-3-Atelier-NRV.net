@@ -13,7 +13,7 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
     {
     }
 
-    public function getAll(?\DateTimeImmutable $date = null): array
+    public function getAll(?\DateTimeImmutable $date = null, ?string $style = null): array
     {
         $sql = <<<'SQL'
             SELECT
@@ -22,6 +22,7 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
                 sp."titre"                  AS titre,
                 so."date_heure_debut"::date AS date,
                 sp."horaire_previsionnel"  AS horaire,
+                STRING_AGG(sm."libelle", ', ') AS styles,
                 (
                     SELECT img."url"
                     FROM "spectacle_image" img
@@ -31,14 +32,34 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
                 ) AS image
             FROM "spectacle" sp
             JOIN "soiree" so ON so."id" = sp."soiree_id"
+            INNER JOIN "spectacle_style" ss ON ss."spectacle_id" = sp."id"
+            INNER JOIN "style_musical" sm ON sm."id" = ss."style_id"
             SQL;
 
         $parametres = [];
+        $conditions = [];
 
         if ($date !== null) {
-            $sql .= ' WHERE so."date_heure_debut"::date = :date';
+            $conditions[] = 'so."date_heure_debut"::date = :date';
             $parametres['date'] = $date->format('Y-m-d');
         }
+
+        if ($style !== null) {
+            $conditions[] = 'sp."id" IN (
+                SELECT ss_f."spectacle_id" 
+                FROM "spectacle_style" ss_f 
+                JOIN "style_musical" sm_f ON sm_f."id" = ss_f."style_id" 
+                WHERE sm_f."libelle" = :style
+            )';
+            $parametres['style'] = $style;
+        }
+
+        // Ajout des conditions à la requête SQL si elles existent
+        if (!empty($conditions)) {
+            $sql .= ' WHERE ' . implode(' AND ', $conditions);
+        }
+
+        $sql .= ' GROUP BY sp."id", sp."soiree_id", sp."titre", so."date_heure_debut", sp."horaire_previsionnel"';
 
         $sql .= ' ORDER BY so."date_heure_debut",'
             . ' sp."horaire_previsionnel", sp."id"';
@@ -63,6 +84,7 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
                 new \DateTimeImmutable($row['date']),
                 new \DateTimeImmutable($row['horaire']),
                 $row['image'] !== null ? (string) $row['image'] : null,
+                $row['styles'] !== null ? explode(', ', $row['styles']) : []
             ),
             $rows
         );

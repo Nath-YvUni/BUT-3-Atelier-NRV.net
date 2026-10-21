@@ -15,9 +15,10 @@ class ServiceSpectacle implements ServiceSpectacleInterface
     ) {
     }
 
-    public function getSpectacles(?string $date = null): array
+    public function getSpectacles(?string $date = null, ?string $style = null): array
     {
         $dateFiltre = null;
+        $styleFiltre = null;
 
         if ($date !== null && $date !== '') {
             if (preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/D', $date) !== 1) {
@@ -40,7 +41,11 @@ class ServiceSpectacle implements ServiceSpectacleInterface
             }
         }
 
-        $spectacles = $this->spectacleRepository->getAll($dateFiltre);
+        if ($style !== null && $style !== '') {
+            $styleFiltre = $style;
+        }
+
+        $spectacles = $this->spectacleRepository->getAll($dateFiltre, $styleFiltre);
 
         $dtos = [];
 

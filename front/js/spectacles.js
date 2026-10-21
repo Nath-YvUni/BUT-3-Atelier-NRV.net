@@ -6,6 +6,7 @@ const compteur = document.getElementById('spectacles-compteur');
 const resume = document.getElementById('programme-resume');
 const template = document.getElementById('spectacle-template');
 const filtreDate = document.getElementById('filtre-date');
+const filtreStyle = document.getElementById('filtre-style');
 
 let datesInitialisees = false;
 let requeteCourante = 0;
@@ -86,7 +87,27 @@ function remplirDates(spectacles) {
     );
 }
 
-async function chargerSpectacles(date = '') {
+function remplirStyles(spectacles) {
+    const styles = [...new Set(
+        spectacles.flatMap((spectacle) => spectacle.styles || []).filter(Boolean)
+    )].sort();
+
+    const options = styles.map((style) => {
+        const option = document.createElement('option');
+
+        option.value = style;
+        option.textContent = style;
+
+        return option;
+    });
+
+    filtreStyle.replaceChildren(
+        new Option('Tous les styles', ''),
+        ...options
+    );
+}
+
+async function chargerSpectacles(date = '', style = '') {
     const numeroRequete = ++requeteCourante;
 
     message.hidden = false;
@@ -98,6 +119,10 @@ async function chargerSpectacles(date = '') {
 
     if (date !== '') {
         parametres.set('date', date);
+    }
+
+    if (style !== '') {
+        parametres.set('style', style);
     }
 
     const recherche = parametres.toString();
@@ -116,8 +141,9 @@ async function chargerSpectacles(date = '') {
             return;
         }
 
-        if (!datesInitialisees && date === '') {
+        if (!datesInitialisees && date === '' && style === '') {
             remplirDates(spectacles);
+            remplirStyles(spectacles);
 
             if (spectacles.length > 0) {
                 afficherResume(spectacles);
@@ -130,8 +156,8 @@ async function chargerSpectacles(date = '') {
             `${spectacles.length} spectacle${spectacles.length > 1 ? 's' : ''}`;
 
         if (spectacles.length === 0) {
-            message.textContent = date
-                ? 'Aucun spectacle pour cette date.'
+            message.textContent = (date !== '' || style !== '')
+                ? 'Aucun spectacle ne correspond aux filtres sélectionnés.'
                 : 'Aucun spectacle programmé pour le moment.';
 
             return;
@@ -151,7 +177,11 @@ async function chargerSpectacles(date = '') {
 }
 
 filtreDate.addEventListener('change', () => {
-    chargerSpectacles(filtreDate.value);
+    chargerSpectacles(filtreDate.value, filtreStyle.value);
+});
+
+filtreStyle.addEventListener('change', () => {
+    chargerSpectacles(filtreDate.value, filtreStyle.value);
 });
 
 chargerSpectacles();
