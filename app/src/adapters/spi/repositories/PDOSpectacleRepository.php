@@ -22,7 +22,7 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
                 sp."titre"                  AS titre,
                 so."date_heure_debut"::date AS date,
                 sp."horaire_previsionnel"  AS horaire,
-                sm."libelle"::style          AS style,
+                STRING_AGG(sm."libelle", ', ') AS styles,
                 (
                     SELECT img."url"
                     FROM "spectacle_image" img
@@ -37,6 +37,7 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
             SQL;
 
         $parametres = [];
+        $conditions = [];
 
         if ($date !== null) {
             $conditions[] = 'so."date_heure_debut"::date = :date';
@@ -44,7 +45,12 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
         }
 
         if ($style !== null) {
-            $conditions[] = 'sm."libelle"::style = :style';
+            $conditions[] = 'sp."id" IN (
+                SELECT ss_f."spectacle_id" 
+                FROM "spectacle_style" ss_f 
+                JOIN "style_musical" sm_f ON sm_f."id" = ss_f."style_id" 
+                WHERE sm_f."libelle" = :style
+            )';
             $parametres['style'] = $style;
         }
 
@@ -52,6 +58,8 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
         if (!empty($conditions)) {
             $sql .= ' WHERE ' . implode(' AND ', $conditions);
         }
+
+        $sql .= ' GROUP BY sp."id", sp."soiree_id", sp."titre", so."date_heure_debut", sp."horaire_previsionnel"';
 
         $sql .= ' ORDER BY so."date_heure_debut",'
             . ' sp."horaire_previsionnel", sp."id"';
@@ -76,6 +84,7 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
                 new \DateTimeImmutable($row['date']),
                 new \DateTimeImmutable($row['horaire']),
                 $row['image'] !== null ? (string) $row['image'] : null,
+                $row['styles'] !== null ? explode(', ', $row['styles']) : []
             ),
             $rows
         );
