@@ -79,7 +79,7 @@ jwt.secret=REMPLACER_PAR_LA_CLE_GENEREE
 jwt.ttl=3600
 ```
 
-###Fonctionnement
+### Fonctionnement
 
 - L’inscription crée un compte avec le rôle utilisateur.
 - Un nouveau mot de passe doit contenir au moins 12 caractères.
@@ -90,7 +90,7 @@ jwt.ttl=3600
 
 ### Routes protégées
 
-Ajouter `AuthentificationMiddleware` à une route pour exiger un jeton `Bearer`.
+Ajouter `AuthentificationMiddleware` à une route pour exiger un jeton Bearer.
 Le middleware place le profil vérifié dans l’attribut de requête utilisateur :
 
 ```php
