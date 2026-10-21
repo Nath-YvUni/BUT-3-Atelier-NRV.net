@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NRV.net - Connexion et inscription</title>
+    <link rel="stylesheet" href="css/main.css">
+    <script type="module" src="js/navigation-auth.js"></script>
+    <script type="module" src="js/connexion.js"></script>
+</head>
+<body>
+    <header class="auth-navigation" data-navigation-auth>
+        <a class="auth-marque" href="index.html">NRV.net</a>
+
+        <nav aria-label="Navigation principale">
+            <a href="index.html">Programme</a>
+
+            <span data-auth-invite>
+                <a href="connexion.html" data-lien-connexion>
+                    Connexion / inscription
+                </a>
+            </span>
+
+            <span data-auth-connecte hidden>
+                <span>Bonjour <span data-auth-nom></span></span>
+
+                <button
+                    class="auth-bouton auth-bouton--secondaire"
+                    type="button"
+                    data-auth-deconnexion
+                >
+                    Se déconnecter
+                </button>
+            </span>
+        </nav>
+
+        <p
+            class="auth-message"
+            data-auth-message
+            role="status"
+            hidden
+        ></p>
+    </header>
+
+    <main class="auth-page">
+        <h1>Connexion et inscription</h1>
+        <p>Connecte-toi pour acheter tes billets.</p>
+
+        <div class="auth-grille">
+            <section class="auth-carte" aria-labelledby="connexion-titre">
+                <h2 id="connexion-titre">Connexion</h2>
+
+                <form
+                    id="form-connexion"
+                    action="/api/auth/connexion"
+                    method="post"
+                >
+                    <div class="auth-champ">
+                        <label for="connexion-email">Adresse e-mail</label>
+                        <input
+                            id="connexion-email"
+                            name="email"
+                            type="email"
+                            autocomplete="username"
+                            maxlength="255"
+                            required
+                        >
+                    </div>
+
+                    <div class="auth-champ">
+                        <label for="connexion-mot-de-passe">
+                            Mot de passe
+                        </label>
+                        <input
+                            id="connexion-mot-de-passe"
+                            name="mot_de_passe"
+                            type="password"
+                            autocomplete="current-password"
+                            required
+                        >
+                    </div>
+
+                    <button class="auth-bouton" type="submit">
+                        Se connecter
+                    </button>
+                </form>
+
+                <p
+                    id="connexion-message"
+                    class="auth-message"
+                    role="status"
+                    hidden
+                ></p>
+            </section>
+
+            <section class="auth-carte" aria-labelledby="inscription-titre">
+                <h2 id="inscription-titre">Créer un compte</h2>
+
+                <form
+                    id="form-inscription"
+                    action="/api/utilisateurs"
+                    method="post"
+                >
+                    <div class="auth-champ">
+                        <label for="inscription-nom">Nom complet</label>
+                        <input
+                            id="inscription-nom"
+                            name="nom"
+                            type="text"
+                            autocomplete="name"
+                            maxlength="100"
+                            required
+                        >
+                    </div>
+
+                    <div class="auth-champ">
+                        <label for="inscription-email">Adresse e-mail</label>
+                        <input
+                            id="inscription-email"
+                            name="email"
+                            type="email"
+                            autocomplete="username"
+                            maxlength="255"
+                            required
+                        >
+                    </div>
+
+                    <div class="auth-champ">
+                        <label for="inscription-mot-de-passe">
+                            Mot de passe
+                        </label>
+                        <input
+                            id="inscription-mot-de-passe"
+                            name="mot_de_passe"
+                            type="password"
+                            autocomplete="new-password"
+                            minlength="12"
+                            aria-describedby="inscription-aide"
+                            required
+                        >
+                        <small id="inscription-aide">
+                            Au moins 12 caractères.
+                        </small>
+                    </div>
+
+                    <div class="auth-champ">
+                        <label for="inscription-confirmation">
+                            Confirmer le mot de passe
+                        </label>
+                        <input
+                            id="inscription-confirmation"
+                            name="confirmation"
+                            type="password"
+                            autocomplete="new-password"
+                            required
+                        >
+                    </div>
+
+                    <button
+                        class="auth-bouton auth-bouton--secondaire"
+                        type="submit"
+                    >
+                        Créer mon compte
+                    </button>
+                </form>
+
+                <p
+                    id="inscription-message"
+                    class="auth-message"
+                    role="status"
+                    hidden
+                ></p>
+            </section>
+        </div>
+    </main>
+</body>
+</html>
