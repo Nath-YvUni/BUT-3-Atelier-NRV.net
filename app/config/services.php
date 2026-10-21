@@ -24,4 +24,20 @@ return [
         return new \PDO($dsn, $user, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     },
 
+        // F1
+    SpectacleRepositoryInterface::class => function (ContainerInterface $c) {
+        return new PDOSpectacleRepository($c->get('nrv.pdo'));
+    },
+    ServiceSpectacleInterface::class => function (ContainerInterface $c) {
+        return new ServiceSpectacle($c->get(SpectacleRepositoryInterface::class));
+    },
+
+        // F2
+    SoireeRepositoryInterface::class => function (ContainerInterface $c) {
+        return new SoireeRepository($c->get('nrv.pdo'));
+    },
+    ServiceSoireeInterface::class => function (ContainerInterface $c) {
+        return new ServiceSoiree($c->get(SoireeRepositoryInterface::class));
+    },
+
 ];
