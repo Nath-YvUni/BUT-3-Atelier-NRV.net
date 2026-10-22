@@ -126,8 +126,8 @@ final class PDOPanierRepository implements PanierRepositoryInterface
                 $pass
             ),
             $panier[0]['commande_en_attente_id'] !== null
-                ? (int) $panier[0]['commande_en_attente_id']
-                : null
+            ? (int) $panier[0]['commande_en_attente_id']
+            : null
         );
     }
 
@@ -166,6 +166,49 @@ final class PDOPanierRepository implements PanierRepositoryInterface
         } catch (\PDOException $e) {
             throw new RepositoryInternalException(
                 'Erreur lors de l’ajout au panier.',
+                0,
+                $e
+            );
+        }
+    }
+
+    public function modifierQuantite(
+        int $utilisateurId,
+        int $ligneId,
+        int $quantite
+    ): void {
+        try {
+            $statement = $this->pdo->prepare(
+                <<<'SQL'
+                UPDATE "ligne_panier" lp
+                SET "quantite" = :quantite
+                FROM "panier" p
+                WHERE lp."panier_id" = p."id"
+                  AND p."utilisateur_id" = :utilisateur_id
+                  AND lp."id" = :ligne_id
+                  AND NOT EXISTS (
+                      SELECT 1
+                      FROM "commande" c
+                      WHERE c."panier_id" = p."id"
+                        AND c."statut" = 'en_attente'
+                  )
+                SQL
+            );
+
+            $statement->execute([
+                'quantite' => $quantite,
+                'utilisateur_id' => $utilisateurId,
+                'ligne_id' => $ligneId,
+            ]);
+
+            if ($statement->rowCount() === 0) {
+                throw new \DomainException(
+                    'Ligne introuvable ou panier non modifiable.'
+                );
+            }
+        } catch (\PDOException $e) {
+            throw new RepositoryInternalException(
+                'Erreur lors de la modification de la quantité.',
                 0,
                 $e
             );
