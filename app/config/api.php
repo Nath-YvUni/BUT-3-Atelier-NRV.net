@@ -17,6 +17,9 @@ use nrv\application\ports\api\ServiceAuthInterface;
 use nrv\application\ports\spi\GestionJetonInterface;
 use Slim\Psr7\Factory\ResponseFactory;
 
+use nrv\adapters\controllers\actions\AjouterLignePanierAction;
+use nrv\application\ports\api\ServicePanierInterface;
+
 return [
 
     GetSpectaclesAction::class => function (ContainerInterface $c) {
@@ -42,6 +45,12 @@ return [
 
     ProfilAction::class => function (ContainerInterface $c) {
         return new ProfilAction();
+    },
+
+    AjouterLignePanierAction::class => function (ContainerInterface $c) {
+        return new AjouterLignePanierAction(
+            $c->get(ServicePanierInterface::class)
+        );
     },
 
     AuthentificationMiddleware::class => function (ContainerInterface $c) {
