@@ -15,4 +15,6 @@ interface PanierRepositoryInterface
         int $tarifId,
         int $quantite
     ): void;
+
+    public function modifierQuantite(int $utilisateurId, int $ligneId, int $quantite): void;
 }
