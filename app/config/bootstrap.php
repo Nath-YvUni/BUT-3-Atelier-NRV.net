@@ -12,6 +12,7 @@ use nrv\adapters\controllers\actions\ConnexionAction;
 use nrv\adapters\controllers\actions\ProfilAction;
 use nrv\adapters\controllers\middlewares\AuthentificationMiddleware;
 use nrv\adapters\controllers\actions\AjouterLignePanierAction;
+use nrv\adapters\controllers\actions\GetTarifsAction;
 
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__, '.env');
 $dotenv->load();
@@ -42,6 +43,9 @@ $app->group('/api/soirees', function (\Slim\Routing\RouteCollectorProxy $group) 
     $group->get('/{id}', GetDetailsSoireeAction::class)
         ->setName('soiree-detail');
 });
+
+$app->get('/api/tarifs', GetTarifsAction::class)
+    ->setName('tarifs');
 
 $app->post('/api/utilisateurs', InscriptionAction::class)
     ->setName('auth-inscription');
