@@ -82,6 +82,12 @@ Format JSON attendu :
       "horaire_previsionnel": "HH:MM:SS",
       "image": "URL",
       "soiree_id": "entier",
+      "styles": [
+        {
+          "id": "entier",
+          "libelle": "chaîne"
+        }
+      ],
       "_links": {
         "self": {
           "href": "chaîne",
@@ -121,6 +127,12 @@ Exemple reçu :
       "horaire_previsionnel": "20:00:00",
       "image": "https://picsum.photos/seed/nrv-1/800/600",
       "soiree_id": 1,
+      "styles": [
+        {
+          "id": 1,
+          "libelle": "Classic rock"
+        }
+      ],
       "_links": {
         "self": {
           "href": "/api/spectacles/1",
@@ -139,6 +151,16 @@ Exemple reçu :
       "horaire_previsionnel": "21:15:00",
       "image": "https://picsum.photos/seed/nrv-2/800/600",
       "soiree_id": 1,
+      "styles": [
+        {
+          "id": 1,
+          "libelle": "Classic rock"
+        },
+        {
+          "id": 7,
+          "libelle": "Hard rock"
+        }
+      ],
       "_links": {
         "self": {
           "href": "/api/spectacles/2",
@@ -165,6 +187,12 @@ Exemple reçu :
   }
 }
 ```
+
+`styles` contient des objets avec un identifiant entier et un libellé.
+Un spectacle sans style renvoie `"styles": []`.
+Le filtre `style_id` conserve tous les styles des spectacles sélectionnés.
+Un identifiant valide mais inexistant renvoie une liste vide.
+Un identifiant mal formé ou l’ancien paramètre `style` entraîne une réponse HTTP 422.
 
 ### 2.2. GET /api/spectacles/{id} — Détail d’un spectacle
 
@@ -3322,6 +3350,18 @@ Format JSON attendu :
 }
 ```
 
+Exemple reçu — HTTP 404 pour une soirée absente :
+
+```json
+{
+  "error": {
+    "code": "NOT_FOUND",
+    "message": "Cette soirée n’existe pas.",
+    "details": []
+  }
+}
+```
+
 Exemple reçu — HTTP 422 :
 
 ```json
@@ -3335,6 +3375,18 @@ Exemple reçu — HTTP 422 :
         "message": "La quantité doit être un entier strictement positif."
       }
     ]
+  }
+}
+```
+
+Exemple reçu — HTTP 500 :
+
+```json
+{
+  "error": {
+    "code": "INTERNAL_SERVER_ERROR",
+    "message": "Une erreur interne est survenue.",
+    "details": []
   }
 }
 ```

@@ -11,7 +11,7 @@ use nrv\application\usecases\ServiceSpectacle;
 use nrv\application\usecases\ServiceSoiree;
 use nrv\application\ports\api\ServiceSoireeInterface;
 use nrv\application\ports\spi\SoireeRepositoryInterface;
-use nrv\adapters\persistance\SoireeRepository;
+use nrv\adapters\spi\repositories\SoireeRepository;
 use nrv\adapters\controllers\actions\GetDetailsSoireeAction;
 
 use nrv\application\ports\spi\UtilisateurRepositoryInterface;
@@ -53,7 +53,10 @@ return [
         return new SoireeRepository($c->get('nrv.pdo'));
     },
     ServiceSoireeInterface::class => function (ContainerInterface $c) {
-        return new ServiceSoiree($c->get(SoireeRepositoryInterface::class));
+        return new ServiceSoiree(
+            $c->get(SoireeRepositoryInterface::class),
+            $c->get(TarifRepositoryInterface::class)
+        );
     },
         // Authentification
     UtilisateurRepositoryInterface::class => function (ContainerInterface $c) {

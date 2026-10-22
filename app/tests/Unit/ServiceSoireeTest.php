@@ -4,8 +4,22 @@ declare(strict_types=1);
 use nrv\application\dto\SoireeDTO;
 use nrv\application\exceptions\SoireeIntrouvableException;
 use nrv\application\ports\spi\SoireeRepositoryInterface;
+use nrv\application\ports\spi\TarifRepositoryInterface;
 use nrv\application\usecases\ServiceSoiree;
 use nrv\domain\entities\Soiree;
+use nrv\domain\entities\Tarif;
+
+beforeEach(function () {
+    $this->tarifRepository = $this->createMock(
+        TarifRepositoryInterface::class
+    );
+
+    $this->tarifRepository->method('trouverTous')
+        ->willReturn([
+            new Tarif(7, 'normal', 3550),
+            new Tarif(12, 'reduit', 2550),
+        ]);
+});
 
 function soireeDeTestPourService(array $liste = []): Soiree
 {
@@ -17,7 +31,6 @@ function soireeDeTestPourService(array $liste = []): Soiree
         'Rock et métal',
         new DateTimeImmutable('2027-06-04 20:00:00'),
         300,
-        25,
         'Salle Poirel',
         [['nom' => 'Alice'], ['nom' => 'Bob']],
         $liste
@@ -32,7 +45,7 @@ test('retourne le détail d\'une soirée existante', function () {
         ->with(1)
         ->willReturn(soireeDeTestPourService());
 
-    $service = new ServiceSoiree($repository);
+    $service = new ServiceSoiree($repository, $this->tarifRepository);
 
     $detail = $service->getDetails(1);
 
@@ -46,9 +59,13 @@ test('retourne le détail d\'une soirée existante', function () {
         'thematique' => 'Rock et métal',
         'date_heure_debut' => '2027-06-04 20:00',
         'capacite' => 300,
-        'tarif' => 25,
+        'tarifs' => [
+            ['id' => 7, 'categorie' => 'normal', 'prix' => '35.50'],
+            ['id' => 12, 'categorie' => 'reduit', 'prix' => '25.50'],
+        ],
         'nom_lieu' => 'Salle Poirel',
     ]);
+    expect($detail->toArray())->not->toHaveKey('tarif');
 });
 
 test('lève une exception quand la soirée n\'existe pas', function () {
@@ -59,7 +76,10 @@ test('lève une exception quand la soirée n\'existe pas', function () {
         ->with(999)
         ->willReturn(null);
 
-    $service = new ServiceSoiree($repository);
+    $this->tarifRepository->expects($this->never())
+        ->method('trouverTous');
+
+    $service = new ServiceSoiree($repository, $this->tarifRepository);
 
     expect(fn() => $service->getDetails(999))
         ->toThrow(SoireeIntrouvableException::class);
@@ -72,7 +92,7 @@ test('ne masque pas une erreur du repository par une soirée introuvable', funct
         ->method('findById')
         ->willThrowException(new RuntimeException('Base indisponible'));
 
-    $service = new ServiceSoiree($repository);
+    $service = new ServiceSoiree($repository, $this->tarifRepository);
 
     $erreur = null;
 
@@ -111,7 +131,7 @@ test('retourne les spectacles de la soirée avec toutes leurs informations', fun
     $repository->method('findById')
         ->willReturn(soireeDeTestPourService($spectacles));
 
-    $detail = (new ServiceSoiree($repository))->getDetails(1)->toArray();
+    $detail = (new ServiceSoiree($repository, $this->tarifRepository))->getDetails(1)->toArray();
 
     expect($detail['liste'])->toBe($spectacles);
 });
@@ -122,7 +142,7 @@ test('retourne une liste de spectacles vide pour une soirée sans spectacle', fu
     $repository->method('findById')
         ->willReturn(soireeDeTestPourService([]));
 
-    $detail = (new ServiceSoiree($repository))->getDetails(1)->toArray();
+    $detail = (new ServiceSoiree($repository, $this->tarifRepository))->getDetails(1)->toArray();
 
     expect($detail['liste'])->toBe([]);
 });

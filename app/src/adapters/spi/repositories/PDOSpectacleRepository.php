@@ -13,7 +13,7 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
     {
     }
 
-    public function getAll(?\DateTimeImmutable $date = null, ?string $style = null): array
+    public function getAll(?\DateTimeImmutable $date = null, ?int $styleId = null): array
     {
         $sql = <<<'SQL'
             SELECT
@@ -22,7 +22,16 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
                 sp."titre"                  AS titre,
                 so."date_heure_debut"::date AS date,
                 sp."horaire_previsionnel"  AS horaire,
-                STRING_AGG(sm."libelle", ', ') AS styles,
+                COALESCE(
+                    JSONB_AGG(
+                        JSONB_BUILD_OBJECT(
+                            'id', sm."id",
+                            'libelle', sm."libelle"
+                        )
+                        ORDER BY sm."libelle", sm."id"
+                    ) FILTER (WHERE sm."id" IS NOT NULL),
+                    '[]'::jsonb
+                ) AS styles,
                 (
                     SELECT img."url"
                     FROM "spectacle_image" img
@@ -32,8 +41,8 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
                 ) AS image
             FROM "spectacle" sp
             JOIN "soiree" so ON so."id" = sp."soiree_id"
-            INNER JOIN "spectacle_style" ss ON ss."spectacle_id" = sp."id"
-            INNER JOIN "style_musical" sm ON sm."id" = ss."style_id"
+            LEFT JOIN "spectacle_style" ss ON ss."spectacle_id" = sp."id"
+            LEFT JOIN "style_musical" sm ON sm."id" = ss."style_id"
             SQL;
 
         $parametres = [];
@@ -44,14 +53,15 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
             $parametres['date'] = $date->format('Y-m-d');
         }
 
-        if ($style !== null) {
-            $conditions[] = 'sp."id" IN (
-                SELECT ss_f."spectacle_id" 
-                FROM "spectacle_style" ss_f 
-                JOIN "style_musical" sm_f ON sm_f."id" = ss_f."style_id" 
-                WHERE sm_f."libelle" = :style
+        if ($styleId !== null) {
+            $conditions[] = 'EXISTS (
+                SELECT 1
+                FROM "spectacle_style" ss_filtre
+                WHERE ss_filtre."spectacle_id" = sp."id"
+                AND ss_filtre."style_id" = :style_id
             )';
-            $parametres['style'] = $style;
+
+            $parametres['style_id'] = $styleId;
         }
 
         // Ajout des conditions à la requête SQL si elles existent
@@ -84,7 +94,12 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
                 new \DateTimeImmutable($row['date']),
                 new \DateTimeImmutable($row['horaire']),
                 $row['image'] !== null ? (string) $row['image'] : null,
-                $row['styles'] !== null ? explode(', ', $row['styles']) : []
+                json_decode(
+                    (string) $row['styles'],
+                    true,
+                    512,
+                    JSON_THROW_ON_ERROR
+                )
             ),
             $rows
         );

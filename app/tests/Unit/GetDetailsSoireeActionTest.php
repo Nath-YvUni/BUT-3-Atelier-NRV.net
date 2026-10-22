@@ -13,28 +13,33 @@ use Slim\Psr7\Factory\ServerRequestFactory;
 
 function soireeDtoPourAction(int $id = 1): SoireeDTO
 {
-    return SoireeDTO::fromEntity(new Soiree(
-        $id,
-        1,
-        3,
-        'Soirée Rock',
-        'Rock et métal',
-        new DateTimeImmutable('2027-06-04 20:00:00'),
-        300,
-        25,
-        'Salle Poirel',
-        [['nom' => 'Alice']],
-        [
+    return SoireeDTO::fromEntity(
+        new Soiree(
+            $id,
+            1,
+            3,
+            'Soirée Rock',
+            'Rock et métal',
+            new DateTimeImmutable('2027-06-04 20:00:00'),
+            300,
+            'Salle Poirel',
+            [['nom' => 'Alice']],
             [
-                'id' => 1,
-                'titre' => 'Pistons & Chrome',
-                'description' => 'Un concert de rock.',
-                'url_video' => 'https://example.com/video.mp4',
-                'artistes' => 'Alice',
-                'styles' => 'Rock',
-            ],
+                [
+                    'id' => 1,
+                    'titre' => 'Pistons & Chrome',
+                    'description' => 'Un concert de rock.',
+                    'url_video' => 'https://example.com/video.mp4',
+                    'artistes' => 'Alice',
+                    'styles' => 'Rock',
+                ],
+            ]
+        ),
+        [
+            ['id' => 7, 'categorie' => 'normal', 'prix' => '35.50'],
+            ['id' => 12, 'categorie' => 'reduit', 'prix' => '25.50'],
         ]
-    ));
+    );
 }
 
 function appelerDetailsSoiree(GetDetailsSoireeAction $action, string $id)
@@ -71,13 +76,25 @@ test('renvoie le détail de la soirée en JSON avec le statut 200', function () 
         JSON_THROW_ON_ERROR
     );
 
-    expect($corps['id'])->toBe(1);
-    expect($corps['nom'])->toBe('Soirée Rock');
-    expect($corps['thematique'])->toBe('Rock et métal');
-    expect($corps['date_heure_debut'])->toBe('2027-06-04 20:00');
-    expect($corps['nom_lieu'])->toBe('Salle Poirel');
-    expect($corps['tarif'])->toBe(25);
-    expect($corps['liste'][0]['titre'])->toBe('Pistons & Chrome');
+    $donnees = $corps['data'];
+
+    expect($donnees['id'])->toBe(1);
+    expect($donnees['nom'])->toBe('Soirée Rock');
+    expect($donnees['thematique'])->toBe('Rock et métal');
+    expect($donnees['date_heure_debut'])->toBe('2027-06-04 20:00');
+    expect($donnees['nom_lieu'])->toBe('Salle Poirel');
+    expect($donnees['tarifs'])->toBe([
+        ['id' => 7, 'categorie' => 'normal', 'prix' => '35.50'],
+        ['id' => 12, 'categorie' => 'reduit', 'prix' => '25.50'],
+    ]);
+
+    expect($donnees)->not->toHaveKey('tarif');
+    expect($donnees['liste'][0]['titre'])->toBe('Pistons & Chrome');
+
+    expect($corps['_links']['self'])->toBe([
+        'href' => '/api/soirees/1',
+        'method' => 'GET',
+    ]);
 });
 
 test('convertit l\'identifiant de l\'URL en entier pour le service', function () {
@@ -126,26 +143,32 @@ test('ne transforme pas une erreur du service en 404', function () {
 
 // Seules les soirées 1 et 12 existent : un identifiant invalide ne doit
 // jamais être « deviné » (ex. « 12abc » ne doit pas donner la soirée 12).
-test('refuse un identifiant invalide avec une erreur 400 ou 404', function (string $id) {
+test('refuse un identifiant invalide avec une erreur 404', function (string $id) {
     $service = $this->createMock(ServiceSoireeInterface::class);
 
-    $service->method('getDetails')
-        ->willReturnCallback(function (int $id) {
-            if ($id === 1 || $id === 12) {
-                return soireeDtoPourAction($id);
-            }
-
-            throw new SoireeIntrouvableException();
-        });
+    $service->expects($this->never())
+        ->method('getDetails');
 
     $erreur = null;
 
     try {
-        appelerDetailsSoiree(new GetDetailsSoireeAction($service), $id);
+        appelerDetailsSoiree(
+            new GetDetailsSoireeAction($service),
+            $id
+        );
     } catch (HttpException $e) {
         $erreur = $e;
     }
 
     expect($erreur)->not->toBeNull();
-    expect($erreur->getCode())->toBeIn([400, 404]);
-})->with(['abc', '-1', '0', '1.5', '12abc', '']);
+    expect($erreur->getCode())->toBe(404);
+})->with([
+            'abc',
+            '-1',
+            '0',
+            '1.5',
+            '12abc',
+            '',
+            '2147483648',
+            '99999999999999999999999999',
+        ]);

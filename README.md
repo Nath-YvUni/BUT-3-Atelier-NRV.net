@@ -61,18 +61,17 @@ Créés par `app/sql/nrv.data.sql`. Mot de passe commun à tous les comptes : `p
 
 ## Authentification
 
-La page de connexion et d’inscription est accessible à l’adresse :
-http://localhost:7081/connexion.html.
+La page de connexion et d'inscription est disponible à cette adresse : http://localhost:7081/connexion.html.
 
 ### Configuration locale
 
-Après le démarrage des conteneurs, générer une clé JWT depuis la racine du projet :
+Une fois les conteneurs démarrés, il faut générer une clé JWT en exécutant cette commande à la racine du projet :
 
 ```sh
 docker compose exec api.nrv php -r 'echo bin2hex(random_bytes(32)), PHP_EOL;'
 ```
 
-Ajouter la clé obtenue dans app/config/.env :
+Ensuite, il faut ajouter la clé générée dans le fichier `app/config/.env` :
 
 ```env
 jwt.secret=REMPLACER_PAR_LA_CLE_GENEREE
@@ -81,17 +80,17 @@ jwt.ttl=3600
 
 ### Fonctionnement
 
-- L’inscription crée un compte avec le rôle utilisateur.
-- Un nouveau mot de passe doit contenir au moins 12 caractères.
-- Les comptes de test existants conservent leur mot de passe password.
-- La connexion retourne un jeton Bearer valable une heure.
-- Le frontend conserve le jeton dans le sessionStorage de l’onglet.
-- La déconnexion efface ce jeton de l’onglet.
+Lorsqu'un utilisateur s'inscrit, son compte est automatiquement créé avec le rôle **utilisateur**. Pour l'inscription, le mot de passe doit contenir au minimum 12 caractères. Cependant, les comptes de test déjà existants gardent leur mot de passe **password**.
+
+Lors de la connexion, l'API retourne un token Bearer (JWT) valable pendant une heure. Ce token est ensuite stocké dans le sessionStorage de l'onglet par le frontend pour pouvoir l'utiliser lors des requêtes nécessitant une authentification.
+
+Lorsque l'utilisateur se déconnecte, le token est simplement supprimé du sessionStorage.
 
 ### Routes protégées
 
-Ajouter `AuthentificationMiddleware` à une route pour exiger un jeton Bearer.
-Le middleware place le profil vérifié dans l’attribut de requête utilisateur :
+Pour protéger une route et obliger l'utilisateur à être connecté, il suffit d'ajouter le middleware `AuthentificationMiddleware`.
+
+Ce middleware vérifie le token Bearer et ajoute les informations de l'utilisateur dans les attributs de la requête. On peut ensuite récupérer son identifiant et son rôle comme ceci :
 
 ```php
 $utilisateur = $request->getAttribute('utilisateur');
@@ -100,9 +99,9 @@ $utilisateurId = $utilisateur['id'];
 $role = $utilisateur['role'];
 ```
 
-Le backoffice doit également vérifier le rôle `gestionnaire`.
+Pour les routes du backoffice, il faut également vérifier que l'utilisateur possède le rôle **gestionnaire**.
 
-La déconnexion locale ne révoque pas un jeton déjà copié ailleurs : il reste valable jusqu’à son expiration.
+**Attention :** la déconnexion supprime uniquement le token stocké dans l'onglet. Si celui-ci a été copié ailleurs, il reste utilisable jusqu'à son expiration, soit une heure après sa création.
 
 ## API
 

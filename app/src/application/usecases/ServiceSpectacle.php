@@ -15,7 +15,7 @@ class ServiceSpectacle implements ServiceSpectacleInterface
     ) {
     }
 
-    public function getSpectacles(?string $date = null, ?string $style = null): array
+    public function getSpectacles(?string $date = null, ?string $styleId = null): array
     {
         $dateFiltre = null;
         $styleFiltre = null;
@@ -41,8 +41,28 @@ class ServiceSpectacle implements ServiceSpectacleInterface
             }
         }
 
-        if ($style !== null && $style !== '') {
-            $styleFiltre = $style;
+        if ($styleId !== null && $styleId !== '') {
+            $identifiant = filter_var(
+                $styleId,
+                FILTER_VALIDATE_INT,
+                [
+                    'options' => [
+                        'min_range' => 1,
+                        'max_range' => 2147483647,
+                    ],
+                ]
+            );
+
+            if (!ctype_digit($styleId) || $identifiant === false) {
+                throw new ValidationException(
+                    [
+                        'style_id' => 'L’identifiant du style doit être un entier strictement positif valide.',
+                    ],
+                    'Style invalide.'
+                );
+            }
+
+            $styleFiltre = $identifiant;
         }
 
         $spectacles = $this->spectacleRepository->getAll($dateFiltre, $styleFiltre);
