@@ -12,7 +12,6 @@ use nrv\domain\entities\Panier;
 use nrv\domain\entities\PassTroisJours;
 use nrv\domain\entities\SoireeResume;
 use nrv\domain\entities\Tarif;
-use nrv\domain\entities\PassTroisJours;
 
 function panierAvecLigne(int $quantite, ?int $commandeEnAttenteId = null): Panier
 {
