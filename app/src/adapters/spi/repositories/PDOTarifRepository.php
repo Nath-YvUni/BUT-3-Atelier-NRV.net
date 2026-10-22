@@ -15,13 +15,31 @@ final class PDOTarifRepository implements TarifRepositoryInterface
 
     public function trouverParId(int $id): ?Tarif
     {
-        try {
-            $statement = $this->pdo->prepare(
-                'SELECT "id", "categorie", "prix" FROM "tarif" WHERE "id" = :id'
-            );
-            $statement->execute(['id' => $id]);
+        $lignes = $this->executer(
+            'SELECT "id", "categorie", "prix" FROM "tarif" WHERE "id" = :id',
+            ['id' => $id]
+        );
 
-            $ligne = $statement->fetch(\PDO::FETCH_ASSOC);
+        return $lignes === [] ? null : $this->tarif($lignes[0]);
+    }
+
+    public function trouverTous(): array
+    {
+        $lignes = $this->executer(
+            'SELECT "id", "categorie", "prix" FROM "tarif" ORDER BY "id"',
+            []
+        );
+
+        return array_map($this->tarif(...), $lignes);
+    }
+
+    private function executer(string $sql, array $parametres): array
+    {
+        try {
+            $statement = $this->pdo->prepare($sql);
+            $statement->execute($parametres);
+
+            return $statement->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\PDOException $e) {
             throw new RepositoryInternalException(
                 'Erreur lors de l’accès aux tarifs.',
@@ -29,11 +47,10 @@ final class PDOTarifRepository implements TarifRepositoryInterface
                 $e
             );
         }
+    }
 
-        if ($ligne === false) {
-            return null;
-        }
-
+    private function tarif(array $ligne): Tarif
+    {
         return new Tarif(
             (int) $ligne['id'],
             (string) $ligne['categorie'],
