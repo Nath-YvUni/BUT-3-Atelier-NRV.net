@@ -11,6 +11,7 @@ use nrv\adapters\controllers\actions\InscriptionAction;
 use nrv\adapters\controllers\actions\ConnexionAction;
 use nrv\adapters\controllers\actions\ProfilAction;
 use nrv\adapters\controllers\middlewares\AuthentificationMiddleware;
+use nrv\adapters\controllers\actions\AjouterLignePanierAction;
 
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__, '.env');
 $dotenv->load();
@@ -50,6 +51,10 @@ $app->post('/api/auth/connexion', ConnexionAction::class)
 
 $app->get('/api/me', ProfilAction::class)
     ->setName('auth-profil')
+    ->add(AuthentificationMiddleware::class);
+
+$app->post('/api/panier/lignes', AjouterLignePanierAction::class)
+    ->setName('panier-ajout-ligne')
     ->add(AuthentificationMiddleware::class);
 
 
