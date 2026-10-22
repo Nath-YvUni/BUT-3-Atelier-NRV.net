@@ -50,7 +50,28 @@ class GetSpectaclesAction extends AbstractAction
 
             $spectacles = $this->serviceSpectacle->getSpectacles($date, $styleId);
 
-            return $this->json($rs, $spectacles);
+            $recherche = http_build_query(
+                $parametres,
+                '',
+                '&',
+                PHP_QUERY_RFC3986
+            );
+
+            $href = '/api/spectacles';
+
+            if ($recherche !== '') {
+                $href .= '?' . $recherche;
+            }
+
+            return $this->json($rs, [
+                'data' => $spectacles,
+                '_links' => [
+                    'self' => [
+                        'href' => $href,
+                        'method' => 'GET',
+                    ],
+                ],
+            ]);
         } catch (ValidationException $e) {
             $details = [];
 
