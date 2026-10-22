@@ -59,6 +59,51 @@ Créés par `app/sql/nrv.data.sql`. Mot de passe commun à tous les comptes : `p
 | `bob@example.com`      | utilisateur  | Panier non validé (billets + pass 3 jours)                                   |
 | `claire@example.com`   | utilisateur  | Panier validé, commande en attente (`CMD-2026-0002`) sur une soirée complète |
 
+## Authentification
+
+La page de connexion et d’inscription est accessible à l’adresse :
+http://localhost:7081/connexion.html.
+
+### Configuration locale
+
+Après le démarrage des conteneurs, générer une clé JWT depuis la racine du projet :
+
+```sh
+docker compose exec api.nrv php -r 'echo bin2hex(random_bytes(32)), PHP_EOL;'
+```
+
+Ajouter la clé obtenue dans app/config/.env :
+
+```env
+jwt.secret=REMPLACER_PAR_LA_CLE_GENEREE
+jwt.ttl=3600
+```
+
+### Fonctionnement
+
+- L’inscription crée un compte avec le rôle utilisateur.
+- Un nouveau mot de passe doit contenir au moins 12 caractères.
+- Les comptes de test existants conservent leur mot de passe password.
+- La connexion retourne un jeton Bearer valable une heure.
+- Le frontend conserve le jeton dans le sessionStorage de l’onglet.
+- La déconnexion efface ce jeton de l’onglet.
+
+### Routes protégées
+
+Ajouter `AuthentificationMiddleware` à une route pour exiger un jeton Bearer.
+Le middleware place le profil vérifié dans l’attribut de requête utilisateur :
+
+```php
+$utilisateur = $request->getAttribute('utilisateur');
+
+$utilisateurId = $utilisateur['id'];
+$role = $utilisateur['role'];
+```
+
+Le backoffice doit également vérifier le rôle `gestionnaire`.
+
+La déconnexion locale ne révoque pas un jeton déjà copié ailleurs : il reste valable jusqu’à son expiration.
+
 ## API
 
 | Méthode | Route                          | Description                      |

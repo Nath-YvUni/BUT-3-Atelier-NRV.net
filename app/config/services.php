@@ -14,6 +14,13 @@ use nrv\application\ports\spi\SoireeRepositoryInterface;
 use nrv\adapters\persistance\SoireeRepository;
 use nrv\adapters\controllers\actions\GetDetailsSoireeAction;
 
+use nrv\application\ports\spi\UtilisateurRepositoryInterface;
+use nrv\application\ports\spi\GestionJetonInterface;
+use nrv\application\ports\api\ServiceAuthInterface;
+use nrv\application\usecases\ServiceAuth;
+use nrv\adapters\spi\repositories\PDOUtilisateurRepository;
+use nrv\adapters\security\GestionJetonJWT;
+
 // ── services métier et repositories ─
 return [
 
@@ -39,5 +46,24 @@ return [
     ServiceSoireeInterface::class => function (ContainerInterface $c) {
         return new ServiceSoiree($c->get(SoireeRepositoryInterface::class));
     },
+        // Authentification
+    UtilisateurRepositoryInterface::class => function (ContainerInterface $c) {
+        return new PDOUtilisateurRepository(
+            $c->get('nrv.pdo')
+        );
+    },
 
+    GestionJetonInterface::class => function (ContainerInterface $c) {
+        return new GestionJetonJWT(
+            $c->get('nrv.jwt.secret'),
+            $c->get('nrv.jwt.ttl')
+        );
+    },
+
+    ServiceAuthInterface::class => function (ContainerInterface $c) {
+        return new ServiceAuth(
+            $c->get(UtilisateurRepositoryInterface::class),
+            $c->get(GestionJetonInterface::class)
+        );
+    },
 ];

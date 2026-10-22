@@ -7,6 +7,11 @@ use nrv\adapters\config\ContainerConfig;
 use nrv\adapters\controllers\actions\GetSpectaclesAction;
 use nrv\adapters\controllers\actions\GetDetailsSoireeAction;
 
+use nrv\adapters\controllers\actions\InscriptionAction;
+use nrv\adapters\controllers\actions\ConnexionAction;
+use nrv\adapters\controllers\actions\ProfilAction;
+use nrv\adapters\controllers\middlewares\AuthentificationMiddleware;
+
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__, '.env');
 $dotenv->load();
 $container = ContainerConfig::build();
@@ -36,6 +41,16 @@ $app->group('/api/soirees', function (\Slim\Routing\RouteCollectorProxy $group) 
     $group->get('/{id}', GetDetailsSoireeAction::class)
         ->setName('soiree-detail');
 });
+
+$app->post('/api/utilisateurs', InscriptionAction::class)
+    ->setName('auth-inscription');
+
+$app->post('/api/auth/connexion', ConnexionAction::class)
+    ->setName('auth-connexion');
+
+$app->get('/api/me', ProfilAction::class)
+    ->setName('auth-profil')
+    ->add(AuthentificationMiddleware::class);
 
 
 return $app;

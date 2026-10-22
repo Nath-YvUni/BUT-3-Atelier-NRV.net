@@ -285,6 +285,161 @@ body {
     }
 }
 
+.auth-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: $blanc;
+    border-bottom: 1px solid $bordure;
+
+    .auth-marque {
+        color: $noir;
+        font-size: 1.25rem;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    nav,
+    [data-auth-connecte] {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    nav a {
+        color: $noir;
+        text-decoration: none;
+    }
+
+    [data-lien-connexion] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 2.75rem;
+        padding: 0.625rem 1rem;
+        background-color: $blanc;
+        border: 1px solid $noir;
+        border-radius: 0.25rem;
+
+        &:hover {
+            background-color: $fond;
+        }
+    }
+
+    [data-auth-message] {
+        flex-basis: 100%;
+        margin: 0;
+    }
+}
+
+.auth-page {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+
+    > h1,
+    > p {
+        text-align: center;
+    }
+}
+
+.auth-grille {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.auth-carte {
+    min-width: 0;
+    padding: 1.5rem;
+    background-color: $blanc;
+    border: 1px solid $bordure;
+    border-radius: 0.625rem;
+
+    h2 {
+        margin-top: 0;
+    }
+
+    form {
+        display: grid;
+        gap: 1rem;
+    }
+}
+
+.auth-champ {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    label {
+        font-weight: 500;
+    }
+
+    input {
+        width: 100%;
+        min-height: 2.75rem;
+        padding: 0.625rem 0.75rem;
+        font: inherit;
+        color: $noir;
+        background-color: $blanc;
+        border: 1px solid $bordure;
+        border-radius: 0.25rem;
+    }
+
+    small {
+        color: $gris;
+    }
+}
+
+.auth-bouton {
+    min-height: 2.75rem;
+    padding: 0.625rem 1rem;
+    font: inherit;
+    color: $blanc;
+    background-color: $noir;
+    border: 1px solid $noir;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: wait;
+    }
+
+    &--secondaire {
+        color: $noir;
+        background-color: $blanc;
+    }
+}
+
+.auth-message {
+    margin: 1rem 0 0;
+    color: #176b35;
+
+    &--erreur {
+        color: #a71919;
+    }
+}
+
+.auth-navigation,
+.auth-page {
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible {
+        outline: 2px solid $noir;
+        outline-offset: 3px;
+    }
+
+    [hidden] {
+        display: none !important;
+    }
+}
+
 @media (min-width: 768px) {
     .programme {
         padding: 48px 16px;
@@ -309,5 +464,16 @@ body {
     .champ {
         flex: none;
         width: 260px;
+    }
+}
+
+@media (min-width: 768px) {
+    .auth-grille {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
+    }
+
+    .auth-navigation {
+        padding-inline: 2rem;
     }
 }
