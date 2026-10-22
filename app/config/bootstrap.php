@@ -6,6 +6,7 @@ use Slim\Factory\AppFactory;
 use nrv\adapters\config\ContainerConfig;
 use nrv\adapters\controllers\actions\GetSpectaclesAction;
 use nrv\adapters\controllers\actions\GetDetailsSoireeAction;
+use nrv\adapters\controllers\actions\GetSoireesAction;
 
 use nrv\adapters\controllers\actions\InscriptionAction;
 use nrv\adapters\controllers\actions\ConnexionAction;
@@ -45,6 +46,8 @@ $app->get("/api/spectacles", GetSpectaclesAction::class)->setName("spectacles");
 // routes
 
 $app->group('/api/soirees', function (\Slim\Routing\RouteCollectorProxy $group) {
+    $group->get('', GetSoireesAction::class)
+        ->setName('soirees');
     $group->get('/{id}', GetDetailsSoireeAction::class)
         ->setName('soiree-detail');
 });
