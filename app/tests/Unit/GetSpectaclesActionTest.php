@@ -36,7 +36,15 @@ test('renvoie une liste vide en JSON avec le statut 200', function () {
             512,
             JSON_THROW_ON_ERROR
         )
-    )->toBe([]);
+    )->toBe([
+                'data' => [],
+                '_links' => [
+                    'self' => [
+                        'href' => '/api/spectacles',
+                        'method' => 'GET',
+                    ],
+                ],
+            ]);
 });
 
 test('renvoie les spectacles fournis par le service en JSON', function () {
@@ -80,7 +88,15 @@ test('renvoie les spectacles fournis par le service en JSON', function () {
             512,
             JSON_THROW_ON_ERROR
         )
-    )->toBe($spectacles);
+    )->toBe([
+                'data' => $spectacles,
+                '_links' => [
+                    'self' => [
+                        'href' => '/api/spectacles',
+                        'method' => 'GET',
+                    ],
+                ],
+            ]);
 });
 
 test('transmet la date et style_id au service', function () {
@@ -107,6 +123,20 @@ test('transmet la date et style_id au service', function () {
     );
 
     expect($reponse->getStatusCode())->toBe(200);
+
+    $contenu = json_decode(
+        (string) $reponse->getBody(),
+        true,
+        512,
+        JSON_THROW_ON_ERROR
+    );
+
+    expect($contenu['data'])->toBe([]);
+
+    expect($contenu['_links']['self'])->toBe([
+        'href' => '/api/spectacles?date=2027-06-04&style_id=1',
+        'method' => 'GET',
+    ]);
 });
 
 test('refuse les paramètres de style mal formés', function (array $parametres, string $champ) {
