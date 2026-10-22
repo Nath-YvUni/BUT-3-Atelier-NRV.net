@@ -5,6 +5,16 @@ const soireeTemplate = document.getElementById('soiree-template');
 const boite = document.getElementById('soiree');
 const spectacleTemplate = document.getElementById('soiree-spectacle-template');
 
+const libellesTarifs = {
+    normal: 'Normal',
+    reduit: 'Réduit',
+};
+
+const euros = new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'EUR',
+});
+
 function creerSoiree(soiree) {
     const element = soireeTemplate.content.cloneNode(true);
 
@@ -13,7 +23,13 @@ function creerSoiree(soiree) {
     element.querySelector('.date').textContent = 'Date : ' + soiree.date_heure_debut;
     element.querySelector('.nom-lieu').textContent = soiree.nom_lieu;
     element.querySelector('.capacite-valeur').textContent = soiree.capacite;
-    element.querySelector('.tarif-valeur').textContent = soiree.tarif;
+    element.querySelector('.tarifs-valeurs').textContent =
+        (soiree.tarifs ?? []).map((tarif) => {
+            const libelle = libellesTarifs[tarif.categorie]
+                ?? tarif.categorie;
+
+            return `${libelle} : ${euros.format(Number(tarif.prix))}`;
+        }).join(' · ') || 'Non renseignés';
     element.querySelector('.artistes-soiree').textContent =
         (soiree.artistes ?? []).map((a) => a.nom).join(', ');
 
