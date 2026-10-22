@@ -82,3 +82,68 @@ test('renvoie les spectacles fournis par le service en JSON', function () {
         )
     )->toBe($spectacles);
 });
+
+test('transmet la date et style_id au service', function () {
+    $service = $this->createMock(ServiceSpectacleInterface::class);
+
+    $service->expects($this->once())
+        ->method('getSpectacles')
+        ->with('2027-06-04', '1')
+        ->willReturn([]);
+
+    $action = new GetSpectaclesAction($service);
+
+    $requete = (new ServerRequestFactory())
+        ->createServerRequest('GET', '/api/spectacles')
+        ->withQueryParams([
+            'date' => '2027-06-04',
+            'style_id' => '1',
+        ]);
+
+    $reponse = $action(
+        $requete,
+        (new ResponseFactory())->createResponse(),
+        []
+    );
+
+    expect($reponse->getStatusCode())->toBe(200);
+});
+
+test('refuse les paramètres de style mal formés', function (array $parametres, string $champ) {
+    $service = $this->createMock(ServiceSpectacleInterface::class);
+
+    $service->expects($this->never())
+        ->method('getSpectacles');
+
+    $action = new GetSpectaclesAction($service);
+
+    $requete = (new ServerRequestFactory())
+        ->createServerRequest('GET', '/api/spectacles')
+        ->withQueryParams($parametres);
+
+    $reponse = $action(
+        $requete,
+        (new ResponseFactory())->createResponse(),
+        []
+    );
+
+    $contenu = json_decode(
+        (string) $reponse->getBody(),
+        true,
+        512,
+        JSON_THROW_ON_ERROR
+    );
+
+    expect($reponse->getStatusCode())->toBe(422);
+    expect($contenu['error']['code'])->toBe('VALIDATION_ERROR');
+    expect($contenu['error']['details'][0]['champ'])->toBe($champ);
+})->with([
+            'plusieurs identifiants' => [
+                ['style_id' => ['1', '7']],
+                'style_id',
+            ],
+            'ancien paramètre' => [
+                ['style' => 'Classic rock'],
+                'style',
+            ],
+        ]);
