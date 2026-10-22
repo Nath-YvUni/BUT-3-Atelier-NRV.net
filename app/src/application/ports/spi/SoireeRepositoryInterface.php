@@ -10,6 +10,8 @@ interface SoireeRepositoryInterface
 {
     public function findByAll() : array;
 
-    public function findById(int $id) : ?Soiree; 
-    
+    public function findById(int $id) : ?Soiree;
+
+    public function existe(int $id) : bool;
+
 }

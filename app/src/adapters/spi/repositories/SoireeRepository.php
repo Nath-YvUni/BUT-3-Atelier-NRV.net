@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace nrv\adapters\spi\repositories;
 
+use nrv\application\exceptions\RepositoryInternalException;
 use nrv\application\ports\spi\SoireeRepositoryInterface;
 use nrv\domain\entities\Soiree;
 use Override;
@@ -20,7 +21,18 @@ class SoireeRepository implements SoireeRepositoryInterface
         throw new \Exception('Pas encore fait');
     }
 
-    #[Override]
+    public function existe(int $id): bool
+    {
+        try {
+            $stmt = $this->pdo->prepare('SELECT 1 FROM soiree WHERE id = :id');
+            $stmt->execute(['id' => $id]);
+        } catch (\PDOException $e) {
+            throw new RepositoryInternalException('Erreur lors de l’accès aux soirées.', 0, $e);
+        }
+
+        return $stmt->fetchColumn() !== false;
+    }
+
     public function findById(int $id): ?Soiree
     {
         try {

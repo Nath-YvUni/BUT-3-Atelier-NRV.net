@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/main.css">
     <script src="js/soiree.js" defer></script>
     <script type="module" src="js/navigation-auth.js"></script>
+    <script type="module" src="js/ajout-panier.js"></script>
 </head>
 <body>
     <header class="auth-navigation" data-navigation-auth>
@@ -46,6 +47,35 @@
         <p class="message" id="soiree-message">Chargement de la soirée...</p>
 
         <div id="soiree"></div>
+
+        <section class="ajout-panier" id="ajout-panier" aria-labelledby="ajout-panier-titre" hidden>
+            <h2 id="ajout-panier-titre">Acheter des billets</h2>
+
+            <form id="form-ajout-panier">
+                <div class="ajout-panier-champ">
+                    <label for="ajout-panier-tarif">Tarif</label>
+                    <select id="ajout-panier-tarif" name="tarif_id" required></select>
+                </div>
+
+                <div class="ajout-panier-champ">
+                    <label for="ajout-panier-quantite">Nombre de billets</label>
+                    <input
+                        id="ajout-panier-quantite"
+                        name="quantite"
+                        type="number"
+                        inputmode="numeric"
+                        min="1"
+                        step="1"
+                        value="1"
+                        required
+                    >
+                </div>
+
+                <button class="auth-bouton" type="submit">Ajouter au panier</button>
+            </form>
+
+            <p id="ajout-panier-message" class="auth-message" role="status" hidden></p>
+        </section>
     </main>
 
     <template id="soiree-template">

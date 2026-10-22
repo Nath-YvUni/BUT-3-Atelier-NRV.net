@@ -12,6 +12,8 @@ use nrv\adapters\controllers\actions\ConnexionAction;
 use nrv\adapters\controllers\actions\ProfilAction;
 use nrv\adapters\controllers\middlewares\ApiErrorRenderer;
 use nrv\adapters\controllers\middlewares\AuthentificationMiddleware;
+use nrv\adapters\controllers\actions\AjouterLignePanierAction;
+use nrv\adapters\controllers\actions\GetTarifsAction;
 
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__, '.env');
 $dotenv->load();
@@ -45,6 +47,9 @@ $app->group('/api/soirees', function (\Slim\Routing\RouteCollectorProxy $group) 
         ->setName('soiree-detail');
 });
 
+$app->get('/api/tarifs', GetTarifsAction::class)
+    ->setName('tarifs');
+
 $app->post('/api/utilisateurs', InscriptionAction::class)
     ->setName('auth-inscription');
 
@@ -53,6 +58,10 @@ $app->post('/api/auth/connexion', ConnexionAction::class)
 
 $app->get('/api/me', ProfilAction::class)
     ->setName('auth-profil')
+    ->add(AuthentificationMiddleware::class);
+
+$app->post('/api/panier/lignes', AjouterLignePanierAction::class)
+    ->setName('panier-ajout-ligne')
     ->add(AuthentificationMiddleware::class);
 
 

@@ -73,6 +73,7 @@ async function chargerSoiree(id) {
 
         message.remove();
         boite.replaceChildren(creerSoiree(soiree));
+        document.dispatchEvent(new CustomEvent('nrv-soiree-chargee', { detail: soiree }));
     } catch (e) {
         message.textContent = 'Impossible de charger la soirée.';
         console.error(e);

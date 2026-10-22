@@ -194,6 +194,62 @@ body {
     }
 }
 
+.ajout-panier {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: $blanc;
+    border: 1px solid $bordure;
+    border-radius: 0.625rem;
+
+    h2 {
+        margin: 0 0 1rem;
+        font-size: 1.25rem;
+    }
+
+    form {
+        display: grid;
+        gap: 1rem;
+
+        @media (min-width: 768px) {
+            grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto;
+            align-items: end;
+        }
+    }
+
+    .ajout-panier-champ {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        label {
+            font-weight: 500;
+        }
+
+        select,
+        input {
+            width: 100%;
+            min-height: 2.75rem;
+            padding: 0.625rem 0.75rem;
+            font: inherit;
+            color: $noir;
+            background-color: $blanc;
+            border: 1px solid $bordure;
+            border-radius: 0.25rem;
+        }
+    }
+
+    select:focus-visible,
+    input:focus-visible,
+    button:focus-visible {
+        outline: 2px solid $noir;
+        outline-offset: 3px;
+    }
+
+    [hidden] {
+        display: none !important;
+    }
+}
+
 .soiree-detail {
     .nom {
         margin: 0;
