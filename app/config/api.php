@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use nrv\adapters\controllers\actions\GetPanierAction;
 use Psr\Container\ContainerInterface;
 
 use nrv\adapters\controllers\actions\GetSpectaclesAction;
@@ -32,6 +33,10 @@ return [
 
     GetDetailsSoireeAction::class => function (ContainerInterface $c) {
         return new GetDetailsSoireeAction($c->get(ServiceSoireeInterface::class));
+    },
+
+    GetPanierAction::class => function (ContainerInterface $c) {
+        return new GetPanierAction($c->get(ServicePanierInterface::class));
     },
 
     InscriptionAction::class => function (ContainerInterface $c) {
