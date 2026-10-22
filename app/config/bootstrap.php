@@ -15,6 +15,7 @@ use nrv\adapters\controllers\middlewares\AuthentificationMiddleware;
 use nrv\adapters\controllers\actions\AjouterLignePanierAction;
 use nrv\adapters\controllers\actions\GetTarifsAction;
 use nrv\adapters\controllers\actions\GetPanierAction;
+use nrv\adapters\controllers\actions\ModifierQuantitePanierAction;
 
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__, '.env');
 $dotenv->load();
@@ -69,4 +70,7 @@ $app->get('/api/panier', GetPanierAction::class)
     ->setName('panier-consulter')
     ->add(AuthentificationMiddleware::class);
 
+$app->patch('/api/panier/lignes/{id}', ModifierQuantitePanierAction::class)
+    ->setName('panier-modifier-quantite')
+    ->add(AuthentificationMiddleware::class);
 return $app;
