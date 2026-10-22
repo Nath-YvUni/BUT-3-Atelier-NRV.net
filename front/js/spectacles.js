@@ -43,11 +43,16 @@ function creerSpectacle(spectacle) {
         img.remove();
     }
 
-    const style = element.querySelector('.badge');
-    if (spectacle.style) {
-        style.textContent = spectacle.style;
+    const badge = element.querySelector('.badge');
+
+    const styles = Array.isArray(spectacle.styles)
+        ? spectacle.styles
+        : [];
+
+    if (styles.length > 0) {
+        badge.textContent = styles.join(' · ');
     } else {
-        style.remove();
+        badge.remove();
     }
 
     element.querySelector('.nom').textContent = spectacle.titre;
