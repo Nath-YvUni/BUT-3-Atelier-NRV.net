@@ -53,7 +53,10 @@ return [
         return new SoireeRepository($c->get('nrv.pdo'));
     },
     ServiceSoireeInterface::class => function (ContainerInterface $c) {
-        return new ServiceSoiree($c->get(SoireeRepositoryInterface::class));
+        return new ServiceSoiree(
+            $c->get(SoireeRepositoryInterface::class),
+            $c->get(TarifRepositoryInterface::class)
+        );
     },
         // Authentification
     UtilisateurRepositoryInterface::class => function (ContainerInterface $c) {
