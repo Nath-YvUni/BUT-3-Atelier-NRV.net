@@ -10,6 +10,7 @@ use nrv\adapters\controllers\actions\GetDetailsSoireeAction;
 use nrv\adapters\controllers\actions\InscriptionAction;
 use nrv\adapters\controllers\actions\ConnexionAction;
 use nrv\adapters\controllers\actions\ProfilAction;
+use nrv\adapters\controllers\middlewares\ApiErrorRenderer;
 use nrv\adapters\controllers\middlewares\AuthentificationMiddleware;
 
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__, '.env');
@@ -27,12 +28,14 @@ $app->add(function ($request, $handler) {
         ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
         ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 });
-$errorMiddleware = $app->addErrorMiddleware(true, false, false);
+$errorMiddleware = $app->addErrorMiddleware(false, true, true);
+
 $errorHandler = $errorMiddleware->getDefaultErrorHandler();
 $errorHandler->forceContentType('application/json');
-$errorHandler->registerErrorRenderer('application/json', function ($exception, $displayErrorDetails) {
-    return json_encode(['message' => $exception->getMessage()], JSON_UNESCAPED_UNICODE);
-});
+$errorHandler->registerErrorRenderer(
+    'application/json',
+    new ApiErrorRenderer()
+);
 
 $app->get("/api/spectacles", GetSpectaclesAction::class)->setName("spectacles");
 // routes
