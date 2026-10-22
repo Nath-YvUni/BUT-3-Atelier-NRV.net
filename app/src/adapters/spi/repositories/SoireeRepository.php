@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace nrv\adapters\persistance;
+namespace nrv\adapters\spi\repositories;
 
 use nrv\application\ports\spi\SoireeRepositoryInterface;
 use nrv\domain\entities\Soiree;
