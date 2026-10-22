@@ -32,8 +32,8 @@ final class PDOSpectacleRepository implements SpectacleRepositoryInterface
                 ) AS image
             FROM "spectacle" sp
             JOIN "soiree" so ON so."id" = sp."soiree_id"
-            INNER JOIN "spectacle_style" ss ON ss."spectacle_id" = sp."id"
-            INNER JOIN "style_musical" sm ON sm."id" = ss."style_id"
+            LEFT JOIN "spectacle_style" ss ON ss."spectacle_id" = sp."id"
+            LEFT JOIN "style_musical" sm ON sm."id" = ss."style_id"
             SQL;
 
         $parametres = [];
