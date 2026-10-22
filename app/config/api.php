@@ -20,6 +20,9 @@ use Slim\Psr7\Factory\ResponseFactory;
 use nrv\adapters\controllers\actions\AjouterLignePanierAction;
 use nrv\application\ports\api\ServicePanierInterface;
 
+use nrv\adapters\controllers\actions\GetTarifsAction;
+use nrv\application\ports\api\ServiceTarifInterface;
+
 return [
 
     GetSpectaclesAction::class => function (ContainerInterface $c) {
@@ -45,6 +48,10 @@ return [
 
     ProfilAction::class => function (ContainerInterface $c) {
         return new ProfilAction();
+    },
+
+    GetTarifsAction::class => function (ContainerInterface $c) {
+        return new GetTarifsAction($c->get(ServiceTarifInterface::class));
     },
 
     AjouterLignePanierAction::class => function (ContainerInterface $c) {
