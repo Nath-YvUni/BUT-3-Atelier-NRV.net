@@ -51,10 +51,6 @@ class SoireeRepository implements SoireeRepositoryInterface
                 return null;
             }
 
-            $stmtTarif = $this->pdo->prepare('SELECT prix FROM tarif WHERE id = 1');
-            $stmtTarif->execute();
-            $rowTarif = $stmtTarif->fetch(\PDO::FETCH_ASSOC);
-
             $stmtListe = $this->pdo->prepare(
                 'SELECT sp.id, sp.titre, sp.description, sp.url_video, 
             STRING_AGG(DISTINCT a.nom, \', \' ORDER BY a.nom) AS artistes, STRING_AGG(DISTINCT sm.libelle, \', \' ORDER BY sm.libelle) AS styles
@@ -91,7 +87,6 @@ class SoireeRepository implements SoireeRepositoryInterface
             $row['thematique'],
             new \DateTimeImmutable($row['date_heure_debut']),
             $row['capacite'],
-            (int) $rowTarif['prix'],
             $row['lieu_nom'],
             $artistes,
             $spectacles
