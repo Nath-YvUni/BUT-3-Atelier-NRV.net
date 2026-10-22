@@ -50,12 +50,6 @@ Format des paramètres, représenté en JSON :
 {
   "date": "AAAA-MM-JJ",
   "style_id": "entier",
-  "styles": [
-    {
-      "id": "entier",
-      "libelle": "chaîne"
-    }
-  ],
   "page": "entier",
   "limit": "entier"
 }
@@ -67,12 +61,6 @@ Exemple des paramètres :
 {
   "date": "2027-06-04",
   "style_id": 1,
-  "styles": [
-    {
-      "id": 1,
-      "libelle": "Classic rock"
-    }
-  ],
   "page": 1,
   "limit": 12
 }
@@ -143,10 +131,6 @@ Exemple reçu :
         {
           "id": 1,
           "libelle": "Classic rock"
-        },
-        {
-          "id": 7,
-          "libelle": "Hard rock"
         }
       ],
       "_links": {
@@ -167,6 +151,16 @@ Exemple reçu :
       "horaire_previsionnel": "21:15:00",
       "image": "https://picsum.photos/seed/nrv-2/800/600",
       "soiree_id": 1,
+      "styles": [
+        {
+          "id": 1,
+          "libelle": "Classic rock"
+        },
+        {
+          "id": 7,
+          "libelle": "Hard rock"
+        }
+      ],
       "_links": {
         "self": {
           "href": "/api/spectacles/2",
@@ -3356,6 +3350,18 @@ Format JSON attendu :
 }
 ```
 
+Exemple reçu — HTTP 404 pour une soirée absente :
+
+```json
+{
+  "error": {
+    "code": "NOT_FOUND",
+    "message": "Cette soirée n’existe pas.",
+    "details": []
+  }
+}
+```
+
 Exemple reçu — HTTP 422 :
 
 ```json
@@ -3369,6 +3375,18 @@ Exemple reçu — HTTP 422 :
         "message": "La quantité doit être un entier strictement positif."
       }
     ]
+  }
+}
+```
+
+Exemple reçu — HTTP 500 :
+
+```json
+{
+  "error": {
+    "code": "INTERNAL_SERVER_ERROR",
+    "message": "Une erreur interne est survenue.",
+    "details": []
   }
 }
 ```
