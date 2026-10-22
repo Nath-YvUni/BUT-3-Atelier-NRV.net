@@ -12,5 +12,5 @@ interface SpectacleRepositoryInterface
      *
      * @return Spectacle[]
      */
-    public function getAll(?\DateTimeImmutable $date = null, ?string $style = null): array;
+    public function getAll(?\DateTimeImmutable $date = null, ?int $styleId = null): array;
 }
