@@ -15,6 +15,7 @@ use nrv\adapters\controllers\middlewares\AuthentificationMiddleware;
 use nrv\adapters\controllers\actions\AjouterLignePanierAction;
 use nrv\adapters\controllers\actions\AjouterPassPanierAction;
 use nrv\adapters\controllers\actions\GetTarifsAction;
+use nrv\adapters\controllers\actions\GetPanierAction;
 
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__, '.env');
 $dotenv->load();
@@ -61,6 +62,10 @@ $app->get('/api/me', ProfilAction::class)
     ->setName('auth-profil')
     ->add(AuthentificationMiddleware::class);
 
+    $app->get('/api/panier', GetPanierAction::class)
+    ->setName('panier-consulter')
+    ->add(AuthentificationMiddleware::class);
+
 $app->post('/api/panier/lignes', AjouterLignePanierAction::class)
     ->setName('panier-ajout-ligne')
     ->add(AuthentificationMiddleware::class);
@@ -68,6 +73,7 @@ $app->post('/api/panier/lignes', AjouterLignePanierAction::class)
 $app->post('/api/panier/pass', AjouterPassPanierAction::class)
     ->setName('panier-ajout-pass')
     ->add(AuthentificationMiddleware::class);
+
 
 
 return $app;

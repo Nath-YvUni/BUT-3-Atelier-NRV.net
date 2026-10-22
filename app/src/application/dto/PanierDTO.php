@@ -35,6 +35,20 @@ final readonly class PanierDTO
         return $this->donnees;
     }
 
+    public static function vide(): self
+    {
+        return new self([
+            'id' => null,
+            'lignes' => [],
+            'pass' => [],
+            'nombre_billets' => 0,
+            'montant_total' => Montant::formater(0),
+            'devise' => 'EUR',
+            'commande_en_attente_id' => null,
+            'modifiable' => true,
+        ]);
+    }
+
     private static function ligne(LignePanier $ligne): array
     {
         return [
