@@ -5,7 +5,9 @@ namespace nrv\adapters\spi\repositories;
 
 use nrv\application\exceptions\RepositoryInternalException;
 use nrv\application\ports\spi\SoireeRepositoryInterface;
+use nrv\domain\entities\Lieu;
 use nrv\domain\entities\Soiree;
+use nrv\domain\entities\SoireeProgramme;
 use Override;
 
 class SoireeRepository implements SoireeRepositoryInterface
@@ -15,10 +17,48 @@ class SoireeRepository implements SoireeRepositoryInterface
     {
     }
 
-    public function findByAll(): array
+    public function findByAll(?\DateTimeImmutable $date = null): array
     {
-        // TODO
-        throw new \Exception('Pas encore fait');
+        $filtre = '';
+        $parametres = [];
+
+        if ($date !== null) {
+            $filtre = 'WHERE s.date_heure_debut >= :debut AND s.date_heure_debut < :fin';
+            $parametres = [
+                'debut' => $date->format('Y-m-d'),
+                'fin' => $date->modify('+1 day')->format('Y-m-d'),
+            ];
+        }
+
+        try {
+            $stmt = $this->pdo->prepare(
+                "SELECT s.id, s.nom, s.thematique, s.date_heure_debut, s.capacite,
+                    l.id AS lieu_id, l.nom AS lieu_nom, l.adresse AS lieu_adresse,
+                    COUNT(b.id) AS places_vendues
+                 FROM soiree s
+                 INNER JOIN lieu l ON l.id = s.lieu_id
+                 LEFT JOIN billet b ON b.soiree_id = s.id
+                 $filtre
+                 GROUP BY s.id, l.id
+                 ORDER BY s.date_heure_debut, s.id"
+            );
+            $stmt->execute($parametres);
+        } catch (\PDOException $e) {
+            throw new RepositoryInternalException('Erreur lors de l’accès aux soirées.', 0, $e);
+        }
+
+        return array_map(
+            fn(array $row): SoireeProgramme => new SoireeProgramme(
+                (int) $row['id'],
+                $row['nom'],
+                $row['thematique'],
+                new \DateTimeImmutable($row['date_heure_debut']),
+                new Lieu((int) $row['lieu_id'], $row['lieu_nom'], $row['lieu_adresse']),
+                (int) $row['capacite'],
+                (int) $row['places_vendues']
+            ),
+            $stmt->fetchAll(\PDO::FETCH_ASSOC)
+        );
     }
 
     public function existe(int $id): bool

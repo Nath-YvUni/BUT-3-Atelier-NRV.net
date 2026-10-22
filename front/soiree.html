@@ -8,6 +8,7 @@
     <script src="js/soiree.js" defer></script>
     <script type="module" src="js/navigation-auth.js"></script>
     <script type="module" src="js/ajout-panier.js"></script>
+    <script type="module" src="js/ajout-pass.js"></script>
 </head>
 <body>
     <header class="auth-navigation" data-navigation-auth>
@@ -77,6 +78,45 @@
             </form>
 
             <p id="ajout-panier-message" class="auth-message" role="status" hidden></p>
+        </section>
+
+        <section class="ajout-pass" id="ajout-pass" aria-labelledby="ajout-pass-titre" hidden>
+            <div class="ajout-pass-entete">
+                <div>
+                    <h2 id="ajout-pass-titre">Pass 3 jours à −3 %</h2>
+                    <p>3 soirées au choix, pas forcément à la suite.</p>
+                </div>
+
+                <button
+                    class="auth-bouton auth-bouton--secondaire"
+                    type="button"
+                    id="ajout-pass-choisir"
+                    aria-expanded="false"
+                    aria-controls="form-ajout-pass"
+                >
+                    Choisir
+                </button>
+            </div>
+
+            <form id="form-ajout-pass" hidden>
+                <fieldset class="ajout-pass-soirees">
+                    <legend>
+                        Soirées du pass
+                        <span class="ajout-pass-compteur" id="ajout-pass-compteur" aria-live="polite"></span>
+                    </legend>
+
+                    <ul class="ajout-pass-liste" id="ajout-pass-liste"></ul>
+                </fieldset>
+
+                <div class="ajout-panier-champ">
+                    <label for="ajout-pass-tarif">Tarif</label>
+                    <select id="ajout-pass-tarif" name="tarif_id" required></select>
+                </div>
+
+                <button class="auth-bouton" type="submit" disabled>Ajouter le pass au panier</button>
+            </form>
+
+            <p id="ajout-pass-message" class="auth-message" role="status" hidden></p>
         </section>
     </main>
 

@@ -6,6 +6,7 @@ use Slim\Factory\AppFactory;
 use nrv\adapters\config\ContainerConfig;
 use nrv\adapters\controllers\actions\GetSpectaclesAction;
 use nrv\adapters\controllers\actions\GetDetailsSoireeAction;
+use nrv\adapters\controllers\actions\GetSoireesAction;
 
 use nrv\adapters\controllers\actions\InscriptionAction;
 use nrv\adapters\controllers\actions\ConnexionAction;
@@ -13,6 +14,7 @@ use nrv\adapters\controllers\actions\ProfilAction;
 use nrv\adapters\controllers\middlewares\ApiErrorRenderer;
 use nrv\adapters\controllers\middlewares\AuthentificationMiddleware;
 use nrv\adapters\controllers\actions\AjouterLignePanierAction;
+use nrv\adapters\controllers\actions\AjouterPassPanierAction;
 use nrv\adapters\controllers\actions\GetTarifsAction;
 use nrv\adapters\controllers\actions\GetPanierAction;
 
@@ -44,6 +46,8 @@ $app->get("/api/spectacles", GetSpectaclesAction::class)->setName("spectacles");
 // routes
 
 $app->group('/api/soirees', function (\Slim\Routing\RouteCollectorProxy $group) {
+    $group->get('', GetSoireesAction::class)
+        ->setName('soirees');
     $group->get('/{id}', GetDetailsSoireeAction::class)
         ->setName('soiree-detail');
 });
@@ -61,12 +65,18 @@ $app->get('/api/me', ProfilAction::class)
     ->setName('auth-profil')
     ->add(AuthentificationMiddleware::class);
 
+    $app->get('/api/panier', GetPanierAction::class)
+    ->setName('panier-consulter')
+    ->add(AuthentificationMiddleware::class);
+
 $app->post('/api/panier/lignes', AjouterLignePanierAction::class)
     ->setName('panier-ajout-ligne')
     ->add(AuthentificationMiddleware::class);
 
-$app->get('/api/panier', GetPanierAction::class)
-    ->setName('panier-consulter')
+$app->post('/api/panier/pass', AjouterPassPanierAction::class)
+    ->setName('panier-ajout-pass')
     ->add(AuthentificationMiddleware::class);
+
+
 
 return $app;

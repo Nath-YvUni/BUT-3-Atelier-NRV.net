@@ -9,9 +9,9 @@ use nrv\application\ports\spi\TarifRepositoryInterface;
 use nrv\application\usecases\ServicePanier;
 use nrv\domain\entities\LignePanier;
 use nrv\domain\entities\Panier;
+use nrv\domain\entities\PassTroisJours;
 use nrv\domain\entities\SoireeResume;
 use nrv\domain\entities\Tarif;
-use nrv\domain\entities\PassTroisJours;
 
 function panierAvecLigne(int $quantite, ?int $commandeEnAttenteId = null): Panier
 {
@@ -27,6 +27,27 @@ function panierAvecLigne(int $quantite, ?int $commandeEnAttenteId = null): Panie
         ],
         [],
         $commandeEnAttenteId
+    );
+}
+
+function panierAvecPass(): Panier
+{
+    return new Panier(
+        1,
+        [],
+        [
+            new PassTroisJours(
+                4,
+                new Tarif(1, 'normal', 3500),
+                300,
+                [
+                    new SoireeResume(3, 'Metal Storm', new DateTimeImmutable('2027-06-08 19:30:00')),
+                    new SoireeResume(5, 'Reggae Vibration', new DateTimeImmutable('2027-06-12 20:00:00')),
+                    new SoireeResume(6, 'Punk Attitude', new DateTimeImmutable('2027-06-15 20:30:00')),
+                ]
+            ),
+        ],
+        null
     );
 }
 
@@ -46,7 +67,7 @@ beforeEach(function () {
     $this->soirees = $this->createMock(SoireeRepositoryInterface::class);
     $this->tarifs = $this->createMock(TarifRepositoryInterface::class);
 
-    $this->soirees->method('existe')->willReturnCallback(fn(int $id) => $id === 2);
+    $this->soirees->method('existe')->willReturnCallback(fn(int $id) => in_array($id, [2, 3, 5, 6], true));
     $this->tarifs->method('trouverParId')->willReturnCallback(
         fn(int $id) => $id === 1 ? new Tarif(1, 'normal', 3500) : null
     );
