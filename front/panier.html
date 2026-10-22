@@ -76,16 +76,38 @@
         </section>
     </main>
 
+
     <template id="panier-ligne-template">
-        <li class="panier-element">
-            <div class="panier-element-infos">
-                <h3 class="panier-element-nom"></h3>
-                <p class="panier-element-date"></p>
-                <p class="panier-element-detail"></p>
+    <li class="panier-element">
+        <div class="panier-element-infos">
+            <h3 class="panier-element-nom"></h3>
+            <p class="panier-element-date"></p>
+            <p class="panier-element-detail"></p>
+
+            <div class="panier-quantite">
+                <label>
+                    Quantité :
+                    <input
+                        type="number"
+                        class="panier-quantite-input"
+                        min="1"
+                        step="1"
+                        required
+                    >
+                </label>
+
+                <button
+                    type="button"
+                    class="auth-bouton panier-quantite-enregistrer"
+                >
+                    Modifier
+                </button>
             </div>
-            <p class="panier-element-montant"></p>
-        </li>
-    </template>
+        </div>
+
+        <p class="panier-element-montant"></p>
+    </li>
+</template>
 
     <template id="panier-pass-template">
         <li class="panier-element panier-element--pass">
@@ -99,5 +121,7 @@
             <p class="panier-element-montant"></p>
         </li>
     </template>
+
+    
 </body>
 </html>
