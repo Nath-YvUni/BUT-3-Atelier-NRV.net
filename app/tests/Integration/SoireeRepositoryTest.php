@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use Dotenv\Dotenv;
 use nrv\adapters\config\ContainerConfig;
-use nrv\adapters\persistance\SoireeRepository;
+use nrv\adapters\spi\repositories\SoireeRepository;
 
 function insererSoireesDeBase(PDO $pdo): void
 {
