@@ -143,7 +143,13 @@ async function chargerSpectacles(date = '', styleId = '') {
             throw new Error(`Erreur HTTP ${response.status}`);
         }
 
-        const spectacles = await response.json();
+        const contenu = await response.json();
+
+        if (!Array.isArray(contenu.data)) {
+            throw new Error('Réponse invalide : liste des spectacles absente.');
+        }
+
+        const spectacles = contenu.data;
 
         if (numeroRequete !== requeteCourante) {
             return;
