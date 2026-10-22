@@ -21,6 +21,13 @@ use nrv\application\usecases\ServiceAuth;
 use nrv\adapters\spi\repositories\PDOUtilisateurRepository;
 use nrv\adapters\security\GestionJetonJWT;
 
+use nrv\application\ports\spi\PanierRepositoryInterface;
+use nrv\application\ports\spi\TarifRepositoryInterface;
+use nrv\application\ports\api\ServicePanierInterface;
+use nrv\application\usecases\ServicePanier;
+use nrv\adapters\spi\repositories\PDOPanierRepository;
+use nrv\adapters\spi\repositories\PDOTarifRepository;
+
 // ── services métier et repositories ─
 return [
 
@@ -64,6 +71,20 @@ return [
         return new ServiceAuth(
             $c->get(UtilisateurRepositoryInterface::class),
             $c->get(GestionJetonInterface::class)
+        );
+    },
+
+    TarifRepositoryInterface::class => function (ContainerInterface $c) {
+        return new PDOTarifRepository($c->get('nrv.pdo'));
+    },
+    PanierRepositoryInterface::class => function (ContainerInterface $c) {
+        return new PDOPanierRepository($c->get('nrv.pdo'));
+    },
+    ServicePanierInterface::class => function (ContainerInterface $c) {
+        return new ServicePanier(
+            $c->get(PanierRepositoryInterface::class),
+            $c->get(SoireeRepositoryInterface::class),
+            $c->get(TarifRepositoryInterface::class)
         );
     },
 ];
