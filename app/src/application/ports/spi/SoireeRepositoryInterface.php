@@ -8,7 +8,7 @@ use nrv\domain\entities\Soiree;
 
 interface SoireeRepositoryInterface 
 {
-    public function findByAll() : array;
+    public function findByAll(?\DateTimeImmutable $date = null) : array;
 
     public function findById(int $id) : ?Soiree;
 

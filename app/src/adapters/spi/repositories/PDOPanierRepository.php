@@ -138,14 +138,7 @@ final class PDOPanierRepository implements PanierRepositoryInterface
         int $quantite
     ): void {
         try {
-            $this->executer(
-                <<<'SQL'
-                    INSERT INTO "panier" ("utilisateur_id")
-                    VALUES (:utilisateur_id)
-                    ON CONFLICT ("utilisateur_id") DO NOTHING
-                    SQL,
-                ['utilisateur_id' => $utilisateurId]
-            );
+            $this->creerPanierSiAbsent($utilisateurId);
 
             $this->executer(
                 <<<'SQL'
@@ -172,6 +165,64 @@ final class PDOPanierRepository implements PanierRepositoryInterface
         }
     }
 
+    public function ajouterPass(
+        int $utilisateurId,
+        int $tarifId,
+        array $soireeIds,
+        int $tauxRemise
+    ): void {
+        $transaction = !$this->pdo->inTransaction();
+
+        try {
+            if ($transaction) {
+                $this->pdo->beginTransaction();
+            }
+
+            $this->creerPanierSiAbsent($utilisateurId);
+
+            $pass = $this->executer(
+                <<<'SQL'
+                    INSERT INTO "pass_trois_jours" ("panier_id", "tarif_id", "taux_remise")
+                    SELECT p."id", :tarif_id, :taux_remise
+                    FROM "panier" p
+                    WHERE p."utilisateur_id" = :utilisateur_id
+                    RETURNING "id"
+                    SQL,
+                [
+                    'utilisateur_id' => $utilisateurId,
+                    'tarif_id' => $tarifId,
+                    'taux_remise' => Centimes::versDecimal($tauxRemise),
+                ]
+            );
+
+            foreach ($soireeIds as $soireeId) {
+                $this->executer(
+                    <<<'SQL'
+                        INSERT INTO "pass_soiree" ("pass_id", "soiree_id")
+                        VALUES (:pass_id, :soiree_id)
+                        SQL,
+                    [
+                        'pass_id' => (int) $pass[0]['id'],
+                        'soiree_id' => $soireeId,
+                    ]
+                );
+            }
+
+            if ($transaction) {
+                $this->pdo->commit();
+            }
+        } catch (\PDOException $e) {
+            if ($transaction && $this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            throw new RepositoryInternalException(
+                'Erreur lors de l’ajout du pass au panier.',
+                0,
+                $e
+            );
+        }
+    }
     public function modifierQuantite(
         int $utilisateurId,
         int $ligneId,
@@ -213,6 +264,18 @@ final class PDOPanierRepository implements PanierRepositoryInterface
                 $e
             );
         }
+    }
+
+    private function creerPanierSiAbsent(int $utilisateurId): void
+    {
+        $this->executer(
+            <<<'SQL'
+                INSERT INTO "panier" ("utilisateur_id")
+                VALUES (:utilisateur_id)
+                ON CONFLICT ("utilisateur_id") DO NOTHING
+                SQL,
+            ['utilisateur_id' => $utilisateurId]
+        );
     }
 
     private function executer(string $sql, array $parametres): array

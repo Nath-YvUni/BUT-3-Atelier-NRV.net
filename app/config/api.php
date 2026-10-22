@@ -10,6 +10,7 @@ use nrv\application\ports\api\ServiceSpectacleInterface;
 use nrv\adapters\controllers\actions\ModifierQuantitePanierAction;
 
 use nrv\adapters\controllers\actions\GetDetailsSoireeAction;
+use nrv\adapters\controllers\actions\GetSoireesAction;
 use nrv\application\ports\api\ServiceSoireeInterface;
 
 use nrv\adapters\controllers\actions\InscriptionAction;
@@ -21,6 +22,7 @@ use nrv\application\ports\spi\GestionJetonInterface;
 use Slim\Psr7\Factory\ResponseFactory;
 
 use nrv\adapters\controllers\actions\AjouterLignePanierAction;
+use nrv\adapters\controllers\actions\AjouterPassPanierAction;
 use nrv\application\ports\api\ServicePanierInterface;
 
 use nrv\adapters\controllers\actions\GetTarifsAction;
@@ -36,6 +38,10 @@ return [
 
     GetDetailsSoireeAction::class => function (ContainerInterface $c) {
         return new GetDetailsSoireeAction($c->get(ServiceSoireeInterface::class));
+    },
+
+    GetSoireesAction::class => function (ContainerInterface $c) {
+        return new GetSoireesAction($c->get(ServiceSoireeInterface::class));
     },
 
     GetPanierAction::class => function (ContainerInterface $c) {
@@ -68,6 +74,12 @@ return [
 
     AjouterLignePanierAction::class => function (ContainerInterface $c) {
         return new AjouterLignePanierAction(
+            $c->get(ServicePanierInterface::class)
+        );
+    },
+
+    AjouterPassPanierAction::class => function (ContainerInterface $c) {
+        return new AjouterPassPanierAction(
             $c->get(ServicePanierInterface::class)
         );
     },

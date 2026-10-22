@@ -9,4 +9,9 @@ final class Centimes
     {
         return (int) round(((float) $valeur) * 100);
     }
+
+    public static function versDecimal(int $centiemes): string
+    {
+        return sprintf('%d.%02d', intdiv($centiemes, 100), $centiemes % 100);
+    }
 }

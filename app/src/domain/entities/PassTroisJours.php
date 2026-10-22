@@ -5,6 +5,10 @@ namespace nrv\domain\entities;
 
 final readonly class PassTroisJours
 {
+    public const NOMBRE_SOIREES = 3;
+
+    public const TAUX_REMISE = 300;
+
     public function __construct(
         private int $id,
         private Tarif $tarif,
