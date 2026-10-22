@@ -50,7 +50,7 @@ function creerSpectacle(spectacle) {
         : [];
 
     if (styles.length > 0) {
-        badge.textContent = styles.join(' · ');
+        badge.textContent = styles.map((style) => style.libelle).join(' · ');
     } else {
         badge.remove();
     }
@@ -93,18 +93,21 @@ function remplirDates(spectacles) {
 }
 
 function remplirStyles(spectacles) {
-    const styles = [...new Set(
-        spectacles.flatMap((spectacle) => spectacle.styles || []).filter(Boolean)
-    )].sort();
+    const stylesParId = new Map();
 
-    const options = styles.map((style) => {
-        const option = document.createElement('option');
+    for (const spectacle of spectacles) {
+        for (const style of spectacle.styles ?? []) {
+            stylesParId.set(style.id, style);
+        }
+    }
 
-        option.value = style;
-        option.textContent = style;
+    const styles = [...stylesParId.values()].sort(
+        (a, b) => a.libelle.localeCompare(b.libelle, 'fr')
+    );
 
-        return option;
-    });
+    const options = styles.map(
+        (style) => new Option(style.libelle, String(style.id))
+    );
 
     filtreStyle.replaceChildren(
         new Option('Tous les styles', ''),
@@ -112,7 +115,7 @@ function remplirStyles(spectacles) {
     );
 }
 
-async function chargerSpectacles(date = '', style = '') {
+async function chargerSpectacles(date = '', styleId = '') {
     const numeroRequete = ++requeteCourante;
 
     message.hidden = false;
@@ -126,8 +129,8 @@ async function chargerSpectacles(date = '', style = '') {
         parametres.set('date', date);
     }
 
-    if (style !== '') {
-        parametres.set('style', style);
+    if (styleId !== '') {
+        parametres.set('style_id', styleId);
     }
 
     const recherche = parametres.toString();
@@ -146,7 +149,7 @@ async function chargerSpectacles(date = '', style = '') {
             return;
         }
 
-        if (!datesInitialisees && date === '' && style === '') {
+        if (!datesInitialisees && date === '' && styleId === '') {
             remplirDates(spectacles);
             remplirStyles(spectacles);
 
@@ -161,7 +164,7 @@ async function chargerSpectacles(date = '', style = '') {
             `${spectacles.length} spectacle${spectacles.length > 1 ? 's' : ''}`;
 
         if (spectacles.length === 0) {
-            message.textContent = (date !== '' || style !== '')
+            message.textContent = (date !== '' || styleId !== '')
                 ? 'Aucun spectacle ne correspond aux filtres sélectionnés.'
                 : 'Aucun spectacle programmé pour le moment.';
 
