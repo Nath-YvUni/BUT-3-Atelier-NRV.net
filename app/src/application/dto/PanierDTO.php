@@ -23,7 +23,7 @@ final readonly class PanierDTO
             'lignes' => array_map(self::ligne(...), $panier->getLignes()),
             'pass' => array_map(self::pass(...), $panier->getPass()),
             'nombre_billets' => $panier->nombreBillets(),
-            'montant_total' => self::decimal($panier->montantTotal()),
+            'montant_total' => Montant::formater($panier->montantTotal()),
             'devise' => 'EUR',
             'commande_en_attente_id' => $panier->getCommandeEnAttenteId(),
             'modifiable' => $panier->estModifiable(),
@@ -42,7 +42,7 @@ final readonly class PanierDTO
             'soiree' => self::soiree($ligne->getSoiree()),
             'tarif' => self::tarif($ligne->getTarif()),
             'quantite' => $ligne->getQuantite(),
-            'sous_total' => self::decimal($ligne->sousTotal()),
+            'sous_total' => Montant::formater($ligne->sousTotal()),
         ];
     }
 
@@ -51,11 +51,11 @@ final readonly class PanierDTO
         return [
             'id' => $pass->getId(),
             'tarif' => self::tarif($pass->getTarif()),
-            'taux_remise' => self::decimal($pass->getTauxRemise()),
+            'taux_remise' => Montant::formater($pass->getTauxRemise()),
             'soirees' => array_map(self::soiree(...), $pass->getSoirees()),
-            'montant_avant_remise' => self::decimal($pass->montantAvantRemise()),
-            'montant_remise' => self::decimal($pass->montantRemise()),
-            'sous_total' => self::decimal($pass->sousTotal()),
+            'montant_avant_remise' => Montant::formater($pass->montantAvantRemise()),
+            'montant_remise' => Montant::formater($pass->montantRemise()),
+            'sous_total' => Montant::formater($pass->sousTotal()),
         ];
     }
 
@@ -70,15 +70,6 @@ final readonly class PanierDTO
 
     private static function tarif(Tarif $tarif): array
     {
-        return [
-            'id' => $tarif->getId(),
-            'categorie' => $tarif->getCategorie(),
-            'prix' => self::decimal($tarif->getPrix()),
-        ];
-    }
-
-    private static function decimal(int $centiemes): string
-    {
-        return sprintf('%d.%02d', intdiv($centiemes, 100), $centiemes % 100);
+        return TarifDTO::fromEntity($tarif)->toArray();
     }
 }
