@@ -25,6 +25,8 @@ use nrv\application\ports\spi\PanierRepositoryInterface;
 use nrv\application\ports\spi\TarifRepositoryInterface;
 use nrv\application\ports\api\ServicePanierInterface;
 use nrv\application\usecases\ServicePanier;
+use nrv\application\ports\api\ServiceTarifInterface;
+use nrv\application\usecases\ServiceTarif;
 use nrv\adapters\spi\repositories\PDOPanierRepository;
 use nrv\adapters\spi\repositories\PDOTarifRepository;
 
@@ -76,6 +78,9 @@ return [
 
     TarifRepositoryInterface::class => function (ContainerInterface $c) {
         return new PDOTarifRepository($c->get('nrv.pdo'));
+    },
+    ServiceTarifInterface::class => function (ContainerInterface $c) {
+        return new ServiceTarif($c->get(TarifRepositoryInterface::class));
     },
     PanierRepositoryInterface::class => function (ContainerInterface $c) {
         return new PDOPanierRepository($c->get('nrv.pdo'));
