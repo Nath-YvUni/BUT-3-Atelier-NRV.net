@@ -496,6 +496,136 @@ body {
     }
 }
 
+.page-panier {
+    max-width: 48rem;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+
+    > h1 {
+        margin: 0 0 1.5rem;
+        font-size: 28px;
+    }
+
+    .message {
+        text-align: center;
+        color: $gris;
+
+        a {
+            color: $noir;
+        }
+    }
+}
+
+.panier-verrouille {
+    margin: 0 0 1.5rem;
+    padding: 0.75rem 1rem;
+    background-color: $blanc;
+    border: 1px solid $bordure;
+    border-left: 4px solid $noir;
+    border-radius: 0.25rem;
+}
+
+.panier-section {
+    margin-bottom: 1.5rem;
+
+    h2 {
+        margin: 0 0 0.75rem;
+        font-size: 1.25rem;
+    }
+}
+
+.panier-liste {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.panier-element {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    padding: 1rem 1.25rem;
+    background-color: $blanc;
+    border: 1px solid $bordure;
+    border-radius: 0.625rem;
+
+    p {
+        margin: 0;
+    }
+
+    &-infos {
+        min-width: 0;
+        flex: 1 1 14rem;
+    }
+
+    &-nom {
+        margin: 0 0 0.25rem;
+        font-size: 1.125rem;
+    }
+
+    &-date {
+        color: $gris;
+    }
+
+    &-detail {
+        margin-top: 0.25rem;
+        color: $gris;
+    }
+
+    &-montant {
+        font-weight: 700;
+        white-space: nowrap;
+    }
+}
+
+.panier-pass-soirees {
+    margin: 0.5rem 0;
+    padding-left: 1.25rem;
+}
+
+.panier-total {
+    padding: 1.25rem;
+    background-color: $blanc;
+    border: 1px solid $noir;
+    border-radius: 0.625rem;
+
+    h2 {
+        margin: 0 0 0.75rem;
+        font-size: 1.25rem;
+    }
+
+    &-ligne {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        margin: 0.5rem 0 0;
+
+        &--montant {
+            padding-top: 0.75rem;
+            font-size: 1.25rem;
+            border-top: 1px solid $bordure;
+        }
+    }
+}
+
+.auth-navigation,
+.auth-page,
+.page-panier {
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible {
+        outline: 2px solid $noir;
+        outline-offset: 3px;
+    }
+
+    [hidden] {
+        display: none !important;
+    }
+}
+
 @media (min-width: 768px) {
     .programme {
         padding: 48px 16px;

@@ -20,6 +20,15 @@ final class ServicePanier implements ServicePanierInterface
     ) {
     }
 
+    public function consulterPanier(int $utilisateurId): array
+    {
+        $panier = $this->paniers->trouverParUtilisateur($utilisateurId);
+
+        return $panier === null
+            ? PanierDTO::vide()->toArray()
+            : PanierDTO::fromEntity($panier)->toArray();
+    }
+
     public function ajouterBillets(int $utilisateurId, array $donnees): array
     {
         $donnees = $this->validerAjout($donnees);

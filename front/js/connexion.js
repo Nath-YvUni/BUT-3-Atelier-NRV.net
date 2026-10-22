@@ -26,6 +26,7 @@ function destinationRetour() {
             '/',
             '/index.html',
             '/soiree.html',
+            '/panier.html',
         ];
 
         if (
