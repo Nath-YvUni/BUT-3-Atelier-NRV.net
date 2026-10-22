@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 use Dotenv\Dotenv;
 use nrv\adapters\config\ContainerConfig;
+use nrv\adapters\spi\repositories\PDOTarifRepository;
 use nrv\adapters\spi\repositories\SoireeRepository;
+use nrv\application\usecases\ServiceSoiree;
 
 function insererSoireesDeBase(PDO $pdo): void
 {
@@ -19,8 +21,8 @@ function insererSoireesDeBase(PDO $pdo): void
             (2, 1, 2, 'Soirée Jazz', 'Jazz et blues', '2027-06-05 20:30:00', 150);
 
         INSERT INTO "tarif" ("id", "categorie", "prix") VALUES
-            (1, 'normal', 25.00),
-            (2, 'reduit', 15.00);
+            (7, 'normal', 35.50),
+            (12, 'reduit', 25.50);
         SQL);
 }
 
@@ -251,4 +253,20 @@ test('liste chaque artiste une seule fois pour la soirée', function () {
     expect($noms)->toBe(['Alice', 'Bob']);
 });
 
+test('le détail de soirée conserve les centimes et retourne tous les tarifs', function () {
+    insererSoireesDeBase($this->pdo);
 
+    $service = new ServiceSoiree(
+        $this->repository,
+        new PDOTarifRepository($this->pdo)
+    );
+
+    $detail = $service->getDetails(1)->toArray();
+
+    expect($detail['tarifs'])->toBe([
+        ['id' => 7, 'categorie' => 'normal', 'prix' => '35.50'],
+        ['id' => 12, 'categorie' => 'reduit', 'prix' => '25.50'],
+    ]);
+
+    expect($detail)->not->toHaveKey('tarif');
+});
