@@ -132,6 +132,61 @@ test('retourne aussi les spectacles sans style', function () {
     );
 
     expect($identifiants)->toBe([1, 2]);
-    expect($spectacles[0]->getStyles())->toBe(['Rock']);
+    expect($spectacles[0]->getStyles())->toBe([
+        ['id' => 1, 'libelle' => 'Rock'],
+    ]);
     expect($spectacles[1]->getStyles())->toBe([]);
+});
+
+test('filtre par identifiant de style et par date en conservant tous les styles', function () {
+    $this->pdo->exec(<<<'SQL'
+        INSERT INTO "soiree" ("id", "date_heure_debut") VALUES
+            (1, '2027-06-04 20:00:00'),
+            (2, '2027-06-05 20:00:00');
+
+        INSERT INTO "spectacle"
+            ("id", "soiree_id", "titre", "horaire_previsionnel")
+        VALUES
+            (1, 1, 'Rock et blues', '20:00:00'),
+            (2, 2, 'Rock du lendemain', '20:00:00'),
+            (3, 1, 'Blues uniquement', '21:00:00');
+
+        INSERT INTO "style_musical" ("id", "libelle") VALUES
+            (1, 'Rock'),
+            (2, 'Blues');
+
+        INSERT INTO "spectacle_style" ("spectacle_id", "style_id") VALUES
+            (1, 1),
+            (1, 2),
+            (2, 1),
+            (3, 2);
+        SQL);
+
+    $identifiants = static fn(array $spectacles): array => array_map(
+        static fn($spectacle) => $spectacle->getId(),
+        $spectacles
+    );
+
+    $spectacles = $this->repository->getAll(null, 1);
+
+    expect($identifiants($spectacles))->toBe([1, 2]);
+
+    expect($spectacles[0]->getStyles())->toBe([
+        ['id' => 2, 'libelle' => 'Blues'],
+        ['id' => 1, 'libelle' => 'Rock'],
+    ]);
+
+    $spectaclesFiltres = $this->repository->getAll(
+        new DateTimeImmutable('2027-06-04'),
+        1
+    );
+
+    expect($identifiants($spectaclesFiltres))->toBe([1]);
+
+    expect($this->repository->getAll(
+        new DateTimeImmutable('2027-06-06'),
+        1
+    ))->toBe([]);
+
+    expect($this->repository->getAll(null, 999))->toBe([]);
 });
