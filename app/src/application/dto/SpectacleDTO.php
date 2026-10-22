@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace nrv\application\dto;
 
 use nrv\domain\entities\Spectacle;
-use function Termwind\style;
 
 final readonly class SpectacleDTO
 {
