@@ -5,7 +5,7 @@ namespace nrv\application\ports\api;
 
 interface ServiceSoireeInterface {
     
-    public function getAllSoirees() : array;
+    public function getSoirees(?string $date = null) : array;
 
     public function getDetails(int $id);
 }
