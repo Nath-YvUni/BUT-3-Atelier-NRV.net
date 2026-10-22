@@ -18,6 +18,7 @@ use nrv\application\ports\spi\GestionJetonInterface;
 use Slim\Psr7\Factory\ResponseFactory;
 
 use nrv\adapters\controllers\actions\AjouterLignePanierAction;
+use nrv\adapters\controllers\actions\AjouterPassPanierAction;
 use nrv\application\ports\api\ServicePanierInterface;
 
 use nrv\adapters\controllers\actions\GetTarifsAction;
@@ -56,6 +57,12 @@ return [
 
     AjouterLignePanierAction::class => function (ContainerInterface $c) {
         return new AjouterLignePanierAction(
+            $c->get(ServicePanierInterface::class)
+        );
+    },
+
+    AjouterPassPanierAction::class => function (ContainerInterface $c) {
+        return new AjouterPassPanierAction(
             $c->get(ServicePanierInterface::class)
         );
     },
