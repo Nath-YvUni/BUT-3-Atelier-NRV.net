@@ -32,6 +32,17 @@ beforeEach(function () {
             "spectacle_id" integer NOT NULL,
             "url" varchar(255) NOT NULL
         ) ON COMMIT DROP;
+
+                CREATE TEMP TABLE "style_musical" (
+            "id" integer PRIMARY KEY,
+            "libelle" varchar(50) NOT NULL
+        ) ON COMMIT DROP;
+
+        CREATE TEMP TABLE "spectacle_style" (
+            "spectacle_id" integer NOT NULL,
+            "style_id" integer NOT NULL,
+            PRIMARY KEY ("spectacle_id", "style_id")
+        ) ON COMMIT DROP;
         SQL);
 
     $this->repository = new PDOSpectacleRepository($this->pdo);
@@ -93,4 +104,34 @@ test('classe les spectacles et sélectionne une seule image par spectacle', func
         ->toBe('https://example.com/premiere.jpg');
 
     expect($spectacles[1]->getImage())->toBeNull();
+});
+
+test('retourne aussi les spectacles sans style', function () {
+    $this->pdo->exec(<<<'SQL'
+        INSERT INTO "soiree" ("id", "date_heure_debut")
+        VALUES (1, '2027-06-04 20:00:00');
+
+        INSERT INTO "spectacle"
+            ("id", "soiree_id", "titre", "horaire_previsionnel")
+        VALUES
+            (1, 1, 'Concert rock', '20:00:00'),
+            (2, 1, 'Concert sans style', '21:00:00');
+
+        INSERT INTO "style_musical" ("id", "libelle")
+        VALUES (1, 'Rock');
+
+        INSERT INTO "spectacle_style" ("spectacle_id", "style_id")
+        VALUES (1, 1);
+        SQL);
+
+    $spectacles = $this->repository->getAll();
+
+    $identifiants = array_map(
+        static fn($spectacle) => $spectacle->getId(),
+        $spectacles
+    );
+
+    expect($identifiants)->toBe([1, 2]);
+    expect($spectacles[0]->getStyles())->toBe(['Rock']);
+    expect($spectacles[1]->getStyles())->toBe([]);
 });
