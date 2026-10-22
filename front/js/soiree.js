@@ -59,7 +59,17 @@ async function chargerSoiree(id) {
             throw new Error(`Erreur HTTP ${response.status}`);
         }
 
-        const soiree = await response.json();
+        const contenu = await response.json();
+
+        if (
+            contenu.data === null
+            || typeof contenu.data !== 'object'
+            || Array.isArray(contenu.data)
+        ) {
+            throw new Error('Réponse invalide : détail de soirée absent.');
+        }
+
+        const soiree = contenu.data;
 
         message.remove();
         boite.replaceChildren(creerSoiree(soiree));
