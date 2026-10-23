@@ -73,3 +73,34 @@ test('retrouve une ligne par soirée et tarif', function () {
     expect($panier->contientLigne(2, 2))->toBeFalse();
     expect($panier->contientLigne(3, 1))->toBeFalse();
 });
+
+
+test('billetsParSoiree additionne les lignes et les pass par soirée', function () {
+    $panier = new Panier(
+        1,
+        [
+            new LignePanier(
+                1,
+                soireeResumeDeTest(2),
+                new Tarif(1, 'normal', 3500),
+                2
+            ),
+            new LignePanier(
+                2,
+                soireeResumeDeTest(3),
+                new Tarif(2, 'reduit', 2500),
+                3
+            ),
+        ],
+        [passDeTest(2500)],
+        null
+    );
+
+    expect($panier->billetsParSoiree())->toBe([
+        2 => 2,
+        3 => 4,
+        5 => 1,
+        6 => 1,
+    ]);
+});
+
