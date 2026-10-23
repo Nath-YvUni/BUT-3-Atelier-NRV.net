@@ -9,12 +9,10 @@ final readonly class CommandeDTO
 {
     public function __construct(
         public int $id,
-        public int $utilisateur_id,
-        public ?int $panier_id,
         public string $reference,
         public string $date_commande,
         public string $statut,
-        public float $montant_total
+        public string $montant_total
     ) {
     }
 
@@ -22,12 +20,10 @@ final readonly class CommandeDTO
     {
         return new self(
             id: $commande->getId(),
-            utilisateur_id: $commande->getUtilisateurId(),
-            panier_id: $commande->getPanierId(),
             reference: $commande->getReference(),
-            date_commande: $commande->getDateCommande()->format('Y-m-d H:i'),
+            date_commande: $commande->getDateCommande()->format('Y-m-d\TH:i:s'),
             statut: $commande->getStatut(),
-            montant_total: $commande->getMontantTotal() / 100
+            montant_total: Montant::formater($commande->getMontantTotal())
         );
     }
 
@@ -35,12 +31,21 @@ final readonly class CommandeDTO
     {
         return [
             'id' => $this->id,
-            'utilisateur_id' => $this->utilisateur_id,
-            'panier_id' => $this->panier_id,
             'reference' => $this->reference,
             'date_commande' => $this->date_commande,
             'statut' => $this->statut,
             'montant_total' => $this->montant_total,
+            'devise' => 'EUR',
+            '_links' => [
+                'self' => [
+                    'href' => '/api/commandes/' . $this->id,
+                    'method' => 'GET',
+                ],
+                'billets' => [
+                    'href' => '/api/commandes/' . $this->id . '/billets',
+                    'method' => 'GET',
+                ],
+            ],
         ];
     }
 }

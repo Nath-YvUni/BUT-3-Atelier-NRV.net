@@ -1,0 +1,69 @@
+@use '../abstracts' as *;
+
+.page-billet {
+    @include conteneur(50rem, 2rem 1rem);
+
+    .billet-retour {
+        display: inline-block;
+        margin-bottom: 1.5rem;
+        color: $noir;
+    }
+
+    #billet-message {
+        text-align: center;
+        color: $gris;
+    }
+
+    .billet-imprimer {
+        display: block;
+        width: 100%;
+        margin-top: 1.5rem;
+    }
+}
+
+.billet-detail {
+    padding: 2rem;
+    @include carte;
+    text-align: center;
+
+    h1 {
+        margin: 0 0 2rem;
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        margin: 0 0 1rem;
+        font-size: 1.75rem;
+    }
+
+    p {
+        margin: 0.75rem 0;
+    }
+
+    #billet-reference {
+        margin-top: 1.5rem;
+        font-weight: bold;
+    }
+}
+
+#billet-qrcode {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    padding: 1rem;
+
+    img, canvas {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+.billet-lien {
+    display: flex;
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+        border-color: $noir;
+    }
+}

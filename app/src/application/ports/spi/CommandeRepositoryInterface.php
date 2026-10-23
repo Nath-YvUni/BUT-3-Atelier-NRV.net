@@ -9,7 +9,7 @@ use nrv\domain\entities\Panier;
 
 interface CommandeRepositoryInterface
 {
-    public function findbyUser(int $utilisateurId): array;
+    public function findByUser(int $utilisateurId): array;
 
     public function findById(int $utilisateurId, int $commandeId): ?Commande;
 

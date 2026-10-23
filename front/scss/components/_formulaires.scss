@@ -1,0 +1,50 @@
+@use '../abstracts' as *;
+
+.auth-champ {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    label {
+        font-weight: 500;
+    }
+
+    input {
+        @include champ-saisie;
+    }
+
+    small {
+        color: $gris;
+    }
+}
+
+.auth-bouton {
+    min-height: 2.75rem;
+    padding: 0.625rem 1rem;
+    font: inherit;
+    color: $blanc;
+    background-color: $noir;
+    border: 1px solid $noir;
+    border-radius: $rayon-champ;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: wait;
+    }
+
+    &--secondaire {
+        color: $noir;
+        background-color: $blanc;
+    }
+}
+
+.auth-message {
+    margin: 1rem 0 0;
+    color: $succes;
+
+    &--erreur {
+        color: $erreur;
+    }
+}
