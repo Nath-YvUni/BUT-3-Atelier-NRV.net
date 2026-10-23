@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace nrv\application\usecases;
 
 use nrv\application\ports\api\ServiceCommandeInterface;
+use nrv\application\ports\spi\CommandeRepositoryInterface;
 use Override;
 
 final class ServiceCommande implements ServiceCommandeInterface
@@ -22,9 +23,9 @@ final class ServiceCommande implements ServiceCommandeInterface
     }
 
     #[Override]
-    public function creerCommande(int $utilisateurId, array $donnees)
+    public function creerCommande(int $utilisateurId, array $donnees) : bool
     {
-        $this->commandeRepository->commander($utilisateurId, $donnees);
+        return $this->commandeRepository->commander($utilisateurId, $donnees);
     }
 
 }
