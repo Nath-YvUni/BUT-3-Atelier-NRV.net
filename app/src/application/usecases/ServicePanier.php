@@ -186,4 +186,46 @@ final class ServicePanier implements ServicePanierInterface
 
         return $erreurs;
     }
+
+
+    public function modifierQuantite(int $utilisateurId, int $ligneId, array $donnees): array
+    {
+        $erreurs = [];
+
+        if (
+            !array_key_exists('quantite', $donnees)
+            || !is_int($donnees['quantite'])
+            || $donnees['quantite'] < 1
+        ) {
+            $erreurs['quantite'] =
+                'Un entier strictement positif est obligatoire.';
+        }
+
+        foreach (array_diff(array_keys($donnees), ['quantite']) as $champ) {
+            $erreurs[$champ] = 'Champ non autorisé.';
+        }
+
+        if ($erreurs !== []) {
+            throw new ValidationException($erreurs, 'Données invalides.');
+        }
+
+        $panier = $this->paniers->trouverParUtilisateur($utilisateurId);
+
+        if ($panier === null) {
+            throw new ValidationException(
+                ['panier' => 'Panier introuvable.'],
+                'Panier introuvable.'
+            );
+        }
+
+        if (!$panier->estModifiable()) {
+            throw new PanierVerrouilleException();
+        }
+
+        $this->paniers->modifierQuantite($utilisateurId, $ligneId, $donnees['quantite']);
+
+        $panier = $this->paniers->trouverParUtilisateur($utilisateurId);
+
+        return PanierDTO::fromEntity($panier)->toArray();
+    }
 }

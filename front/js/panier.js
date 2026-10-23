@@ -59,13 +59,43 @@ function redirigerVersConnexion() {
 function creerLigne(ligne) {
     const element = ligneTemplate.content.cloneNode(true);
 
-    element.querySelector('.panier-element-nom').textContent = ligne.soiree.nom;
+    element.querySelector('.panier-element-nom').textContent =
+        ligne.soiree.nom;
+
     element.querySelector('.panier-element-date').textContent =
         formaterDate(ligne.soiree.date_heure_debut);
+
     element.querySelector('.panier-element-detail').textContent =
         `${libelleTarif(ligne.tarif)} · ${formaterMontant(ligne.tarif.prix)} × ${ligne.quantite}`;
+
     element.querySelector('.panier-element-montant').textContent =
         formaterMontant(ligne.sous_total);
+
+    const input = element.querySelector('.panier-quantite-input');
+    const bouton = element.querySelector('.panier-quantite-enregistrer');
+
+    input.value = ligne.quantite;
+
+    bouton.addEventListener('click', async () => {
+        const quantite = Number(input.value);
+
+        bouton.disabled = true;
+
+        try {
+            await modifierQuantite(ligne.id, quantite);
+        } catch (erreur) {
+            message.hidden = false;
+            message.textContent = erreur.message;
+
+            if (erreur.statut === 401) {
+                redirigerVersConnexion();
+            }
+
+            console.error(erreur);
+        } finally {
+            bouton.disabled = false;
+        }
+    });
 
     return element;
 }
@@ -119,6 +149,10 @@ function afficherPanier(panier) {
     sectionBillets.hidden = lignes.length === 0;
     listeBillets.replaceChildren(...lignes.map(creerLigne));
 
+    listeBillets.querySelectorAll('.panier-quantite').forEach((element) => {
+        element.hidden = panier.modifiable === false;
+    });
+
     sectionPass.hidden = pass.length === 0;
     listePass.replaceChildren(...pass.map(creerPass));
 
@@ -150,6 +184,7 @@ async function chargerPanier() {
         const resultat = await requeteApi('/panier', {
             authentifie: true,
         });
+        
 
         if (numeroRequete !== requeteCourante) {
             return;
@@ -181,6 +216,22 @@ async function chargerPanier() {
     }
 }
 
+async function modifierQuantite(ligneId, quantite) {
+    if (!Number.isInteger(quantite) || quantite < 1) {
+        throw new Error('La quantité doit être un entier supérieur à 0.');
+    }
+
+    await requeteApi(`/panier/lignes/${ligneId}`, {
+        methode: 'PATCH',
+        authentifie: true,
+        donnees: {
+            quantite: quantite,
+        },
+    });
+
+    await chargerPanier();
+}
+
 window.addEventListener('nrv-auth-change', () => {
     if (lireJeton()) {
         chargerPanier();
@@ -188,5 +239,6 @@ window.addEventListener('nrv-auth-change', () => {
         redirigerVersConnexion();
     }
 });
+
 
 chargerPanier();
