@@ -5,7 +5,6 @@ namespace nrv\application\dto;
 
 use nrv\domain\entities\Commande;
 use nrv\domain\entities\LignePanier;
-use nrv\domain\entities\Panier;
 use nrv\domain\entities\PassTroisJours;
 use nrv\domain\entities\SoireeResume;
 
@@ -16,7 +15,7 @@ final readonly class CommandeDetailDTO
     ) {
     }
 
-    public static function fromEntities(Commande $commande, Panier $panier): self
+    public static function fromEntities(Commande $commande, array $lignes, array $pass): self
     {
         return new self([
             'id' => $commande->getId(),
@@ -26,8 +25,8 @@ final readonly class CommandeDetailDTO
             'montant_total' => Montant::formater($commande->getMontantTotal()),
             'devise' => 'EUR',
             'contenu' => [
-                'lignes' => array_map(self::ligne(...), $panier->getLignes()),
-                'pass' => array_map(self::pass(...), $panier->getPass()),
+                'lignes' => array_map(self::ligne(...), $lignes),
+                'pass' => array_map(self::pass(...), $pass),
             ],
         ]);
     }
