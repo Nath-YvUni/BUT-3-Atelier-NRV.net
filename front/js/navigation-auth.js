@@ -207,9 +207,6 @@ function initialiserNavigation() {
             return;
         }
 
-        message.hidden = false;
-        message.textContent = 'Vérification du compte…';
-
         try {
             const resultat = await requeteApi('/me', {
                 authentifie: true,
