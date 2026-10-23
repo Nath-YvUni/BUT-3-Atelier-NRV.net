@@ -1064,6 +1064,11 @@ body.backoffice {
     display: none;
 }
 
+.auth-actions-mobiles,
+.auth-gestionnaire-mobile {
+    display: none;
+}
+
 @media (min-width: 640px) {
     .backoffice-indicateurs {
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1120,10 +1125,6 @@ body.backoffice {
     .auth-navigation {
         padding-inline: 2rem;
     }
-}
-
-.backoffice-cartes {
-    display: none;
 }
 
 @media (max-width: 639px) {
@@ -1229,5 +1230,128 @@ body.backoffice {
             grid-column: 1 / -1;
             justify-self: start;
         }
+    }
+}
+
+@media (max-width: 639px) {
+    .auth-navigation {
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+
+        .auth-actions-mobiles {
+            display: flex;
+            flex: 0 0 auto;
+            align-items: center;
+            gap: 0.25rem;
+            margin-left: auto;
+        }
+
+        .auth-icone {
+            position: relative;
+            display: inline-flex;
+            flex: 0 0 2.75rem;
+            align-items: center;
+            justify-content: center;
+            width: 2.75rem;
+            height: 2.75rem;
+            padding: 0;
+            color: $noir;
+            text-decoration: none;
+            background: transparent;
+            border: 0;
+            border-radius: 0.25rem;
+            cursor: pointer;
+
+            &:hover {
+                background-color: $fond;
+            }
+
+            svg {
+                width: 1.5rem;
+                height: 1.5rem;
+                fill: none;
+                stroke: currentColor;
+                stroke-width: 1.75;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+        }
+
+        .auth-compteur-panier {
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 1rem;
+            height: 1rem;
+            padding-inline: 0.2rem;
+            color: $blanc;
+            font-size: 0.625rem;
+            font-weight: 700;
+            background-color: $noir;
+            border-radius: 1rem;
+        }
+
+        > nav {
+            flex: 0 0 100%;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.5rem;
+            width: 100%;
+            padding-top: 0.75rem;
+            border-top: 1px solid $bordure;
+        }
+
+        [data-auth-connecte] {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.75rem;
+        }
+
+        > nav > a,
+        [data-auth-connecte] > span {
+            padding: 0.75rem;
+        }
+
+        [data-auth-connecte] > span {
+            overflow-wrap: anywhere;
+        }
+
+        [data-auth-deconnexion] {
+            text-align: left;
+        }
+
+        .auth-lien-backoffice {
+            display: none;
+        }
+
+        .auth-gestionnaire-mobile {
+            display: grid;
+            gap: 0.25rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid $bordure;
+
+            strong {
+                padding: 0.5rem 0.75rem;
+                color: $gris;
+                font-size: 0.8125rem;
+            }
+
+            a {
+                padding: 0.75rem;
+                border-radius: 0.25rem;
+
+                &:hover,
+                &[aria-current="page"] {
+                    background-color: $fond;
+                }
+            }
+        }
+    }
+
+    .backoffice-menu {
+        display: none;
     }
 }
