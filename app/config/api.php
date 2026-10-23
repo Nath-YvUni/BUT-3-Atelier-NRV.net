@@ -93,6 +93,12 @@ return [
         );
     },
 
+    GetPanierAction::class => function (ContainerInterface $c) {
+        return new GetPanierAction(
+            $c->get(ServicePanierInterface::class)
+        );
+    },
+
     PayerCommandeAction::class => function (ContainerInterface $c) {
         return new PayerCommandeAction(
             $c->get(ServiceCommandeInterface::class)
