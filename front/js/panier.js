@@ -189,6 +189,4 @@ window.addEventListener('nrv-auth-change', () => {
     }
 });
 
-document.addEventListener('nrv-commande-creee', chargerPanier);
-
 chargerPanier();
