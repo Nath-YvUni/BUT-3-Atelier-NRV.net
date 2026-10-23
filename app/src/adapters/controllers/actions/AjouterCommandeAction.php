@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpNotFoundException;
 
-use nrv\application\ports\api\ServiceSoireeInterface;
+use nrv\application\ports\api\ServiceCommandeInterface;
 use nrv\application\exceptions\SoireeIntrouvableException;
 
 
@@ -27,6 +27,6 @@ class AjouterCommandeAction extends AbstractAction
 
     public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args): ResponseInterface
     {
-        $this->serviceCommande->commander();
+        $this->serviceCommande->ajouterCommande($this->utilisateurId, $this->donnees);
     }
 }
