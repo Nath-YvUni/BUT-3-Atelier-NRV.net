@@ -40,6 +40,9 @@ use nrv\application\ports\api\ServiceCommandeInterface;
 use nrv\application\usecases\ServiceCommande;
 use nrv\adapters\spi\repositories\PDOCommandeRepository;
 
+use nrv\adapters\controllers\actions\GetBilletByTokenAction;
+use nrv\adapters\controllers\actions\GetBilletsByUserAction;
+
 // ── services métier et repositories ─
 return [
 
@@ -125,6 +128,18 @@ return [
         return new ServiceCommande(
             $c->get(CommandeRepositoryInterface::class),
             $c->get(PanierRepositoryInterface::class),
+            $c->get(ServiceBilletInterface::class)
+        );
+    },
+
+    GetBilletByTokenAction::class => function (ContainerInterface $c) {
+        return new GetBilletByTokenAction(
+            $c->get(ServiceBilletInterface::class)
+        );
+    },
+
+    GetBilletsByUserAction::class => function (ContainerInterface $c) {
+        return new GetBilletsByUserAction(
             $c->get(ServiceBilletInterface::class)
         );
     },

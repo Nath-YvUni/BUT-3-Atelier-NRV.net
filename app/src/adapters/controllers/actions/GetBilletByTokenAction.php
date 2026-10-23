@@ -9,7 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpNotFoundException;
 
-final class GetBilletAction extends AbstractAction
+final class GetBilletByTokenAction extends AbstractAction
 {
     public function __construct(
         private ServiceBilletInterface $serviceBillet
