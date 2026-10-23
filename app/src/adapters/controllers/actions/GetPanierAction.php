@@ -35,6 +35,16 @@ final class GetPanierAction extends AbstractAction
             'data' => $this->servicePanier->consulterPanier(
                 (int) $utilisateur['id']
             ),
+            '_links' => [
+                'self' => [
+                    'href' => '/api/panier',
+                    'method' => 'GET',
+                ],
+                'commander' => [
+                    'href' => '/api/commandes',
+                    'method' => 'POST',
+                ],
+            ],
         ]);
     }
 }
