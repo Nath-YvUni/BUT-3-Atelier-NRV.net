@@ -1,0 +1,36 @@
+@use '../abstracts' as *;
+
+.auth-page {
+    @include conteneur(60rem, 2rem 1rem);
+
+    > h1,
+    > p {
+        text-align: center;
+    }
+}
+
+.auth-grille {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 2rem;
+
+    @include a-partir-de(moyen) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
+    }
+}
+
+.auth-carte {
+    min-width: 0;
+    padding: 1.5rem;
+    @include carte;
+
+    h2 {
+        margin-top: 0;
+    }
+
+    form {
+        display: grid;
+        gap: 1rem;
+    }
+}

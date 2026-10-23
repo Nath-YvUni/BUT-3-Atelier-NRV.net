@@ -1,0 +1,15 @@
+@use '../abstracts' as *;
+
+.auth-navigation,
+.auth-page,
+.page-panier,
+.page-paiement,
+.page-billet {
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible {
+        @include contour-focus;
+    }
+
+    @include masquer-hidden;
+}
