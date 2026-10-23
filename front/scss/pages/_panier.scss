@@ -1,0 +1,161 @@
+@use '../abstracts' as *;
+
+.page-panier {
+    @include conteneur(48rem, 2rem 1rem);
+
+    > h1 {
+        margin: 0 0 1.5rem;
+        font-size: 28px;
+    }
+
+    .message {
+        text-align: center;
+        color: $gris;
+
+        a {
+            color: $noir;
+        }
+    }
+}
+
+.panier-verrouille {
+    margin: 0 0 1.5rem;
+    padding: 0.75rem 1rem;
+    background-color: $blanc;
+    border: 1px solid $bordure;
+    border-left: 4px solid $noir;
+    border-radius: $rayon-champ;
+
+    a {
+        font-weight: 500;
+        color: $noir;
+    }
+}
+
+.panier-section {
+    margin-bottom: 1.5rem;
+
+    h2 {
+        margin: 0 0 0.75rem;
+        font-size: 1.25rem;
+    }
+}
+
+.panier-liste {
+    display: grid;
+    gap: 0.75rem;
+    @include liste-sans-puces;
+}
+
+.panier-element {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    padding: 1rem 1.25rem;
+    @include carte;
+
+    p {
+        margin: 0;
+    }
+
+    &-infos {
+        min-width: 0;
+        flex: 1 1 14rem;
+    }
+
+    &-nom {
+        margin: 0 0 0.25rem;
+        font-size: 1.125rem;
+    }
+
+    &-date {
+        color: $gris;
+    }
+
+    &-detail {
+        margin-top: 0.25rem;
+        color: $gris;
+    }
+
+    &-montant {
+        font-weight: 700;
+        white-space: nowrap;
+    }
+}
+
+.panier-pass-soirees {
+    margin: 0.5rem 0;
+    padding-left: 1.25rem;
+}
+
+.panier-total {
+    padding: 1.25rem;
+    background-color: $blanc;
+    border: 1px solid $noir;
+    border-radius: $rayon-carte;
+
+    h2 {
+        margin: 0 0 0.75rem;
+        font-size: 1.25rem;
+    }
+
+    &-ligne {
+        @include ligne-repartie;
+        margin: 0.5rem 0 0;
+
+        &--montant {
+            padding-top: 0.75rem;
+            font-size: 1.25rem;
+            border-top: 1px solid $bordure;
+        }
+    }
+}
+
+.panier-validation {
+    margin-top: 1.25rem;
+
+    .valider-panier {
+        width: 100%;
+    }
+
+    &-note {
+        margin: 0.5rem 0 0;
+        font-size: 0.875rem;
+        text-align: center;
+        color: $gris;
+    }
+}
+
+.panier-quantite {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin-top: 1rem;
+
+    label {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+    }
+
+    &-input {
+        width: 4rem;
+        padding: 0.5rem;
+        border: 0.0625rem solid #ccc;
+        border-radius: 0.3rem;
+        text-align: center;
+    }
+
+    &-enregistrer {
+        padding: 0.5rem 1rem;
+        background: #c62828;
+        color: white;
+        border: none;
+        border-radius: 0.3rem;
+
+        &:hover {
+            background: #a51f1f;
+        }
+    }
+}

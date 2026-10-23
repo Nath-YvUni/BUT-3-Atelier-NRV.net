@@ -1,0 +1,33 @@
+@media print {
+    .auth-navigation,
+    .billet-retour,
+    .billet-imprimer,
+    #billet-message {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+        color: black;
+    }
+
+    .page-billet {
+        max-width: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .billet-detail {
+        display: block;
+        padding: 2rem;
+        border: 1px solid black;
+        border-radius: 0;
+        break-inside: avoid;
+    }
+
+    #billet-qrcode {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+}

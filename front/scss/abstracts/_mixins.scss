@@ -1,0 +1,60 @@
+@use 'sass:map';
+@use 'variables' as *;
+
+@mixin a-partir-de($point) {
+    @media (min-width: map.get($points-rupture, $point)) {
+        @content;
+    }
+}
+
+@mixin jusqu-a($point) {
+    @media (max-width: map.get($points-rupture, $point) - 1px) {
+        @content;
+    }
+}
+
+@mixin conteneur($largeur, $espacement) {
+    max-width: $largeur;
+    margin: 0 auto;
+    padding: $espacement;
+}
+
+@mixin carte($rayon: $rayon-carte) {
+    background-color: $blanc;
+    border: 1px solid $bordure;
+    border-radius: $rayon;
+}
+
+@mixin liste-sans-puces($marge: 0) {
+    margin: $marge;
+    padding: 0;
+    list-style: none;
+}
+
+@mixin ligne-repartie($ecart: 1rem) {
+    display: flex;
+    justify-content: space-between;
+    gap: $ecart;
+}
+
+@mixin champ-saisie {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.625rem 0.75rem;
+    font: inherit;
+    color: $noir;
+    background-color: $blanc;
+    border: 1px solid $bordure;
+    border-radius: $rayon-champ;
+}
+
+@mixin contour-focus($epaisseur: 2px, $decalage: 3px) {
+    outline: $epaisseur solid $noir;
+    outline-offset: $decalage;
+}
+
+@mixin masquer-hidden {
+    [hidden] {
+        display: none !important;
+    }
+}
