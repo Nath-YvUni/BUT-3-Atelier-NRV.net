@@ -61,7 +61,7 @@ final class PayerCommandeAction extends AbstractCommandeAction
             'data' => $paiement,
             '_links' => [
                 'self' => ['href' => '/api/commandes/' . $id, 'method' => 'GET'],
-                'billets' => ['href' => '/api/commandes/' . $id . '/billets', 'method' => 'GET'],
+                'billets' => ['href' => '/api/billets', 'method' => 'GET'],
             ],
         ]);
     }

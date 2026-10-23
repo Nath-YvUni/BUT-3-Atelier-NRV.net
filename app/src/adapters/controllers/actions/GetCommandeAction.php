@@ -31,7 +31,7 @@ final class GetCommandeAction extends AbstractCommandeAction
 
         $liens = [
             'en_attente' => ['paiement' => ['href' => '/api/commandes/' . $id . '/paiement', 'method' => 'POST']],
-            'payee' => ['billets' => ['href' => '/api/commandes/' . $id . '/billets', 'method' => 'GET']],
+            'payee' => ['billets' => ['href' => '/api/billets', 'method' => 'GET']],
             'refusee' => ['panier' => ['href' => '/api/panier', 'method' => 'GET']],
         ];
 

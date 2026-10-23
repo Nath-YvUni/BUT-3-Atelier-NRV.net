@@ -42,7 +42,7 @@ final readonly class CommandeDTO
                     'method' => 'GET',
                 ],
                 'billets' => [
-                    'href' => '/api/commandes/' . $this->id . '/billets',
+                    'href' => '/api/billets',
                     'method' => 'GET',
                 ],
             ],
