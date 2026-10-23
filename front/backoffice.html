@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NRV.net - Jauge des soirées</title>
+    <link rel="stylesheet" href="css/main.css">
+    <script type="module" src="js/navigation-auth.js"></script>
+    <script type="module" src="js/backoffice.js"></script>
+</head>
+<body class="backoffice">
+    <header class="auth-navigation" data-navigation-auth>
+        <a class="auth-marque" href="index.html">NRV.net</a>
+
+        <nav aria-label="Navigation principale">
+            <a href="index.html">Programme</a>
+            <a href="panier.html">Panier</a>
+
+            <span data-auth-invite hidden>
+                <a href="connexion.html" data-lien-connexion>
+                    Connexion / inscription
+                </a>
+            </span>
+
+            <span data-auth-connecte hidden>
+                <span>Bonjour <span data-auth-nom></span></span>
+
+                <button
+                    class="auth-bouton auth-bouton--secondaire"
+                    type="button"
+                    data-auth-deconnexion
+                >
+                    Se déconnecter
+                </button>
+            </span>
+        </nav>
+
+        <p
+            class="auth-message"
+            data-auth-message
+            role="status"
+            hidden
+        ></p>
+    </header>
+
+    <div class="backoffice-layout">
+        <aside class="backoffice-menu">
+            <strong>NRV · Back-office</strong>
+
+            <nav aria-label="Navigation du back-office">
+                <a href="backoffice.html" aria-current="page">
+                    Jauge des soirées
+                </a>
+                <a href="index.html">Retour au programme</a>
+            </nav>
+        </aside>
+
+        <main class="page-backoffice">
+            <div class="backoffice-entete">
+                <div>
+                    <h1>Jauge des soirées</h1>
+                    <p>Ventes et recettes des commandes payées.</p>
+                </div>
+
+                <button
+                    class="auth-bouton auth-bouton--secondaire"
+                    id="backoffice-actualiser"
+                    type="button"
+                >
+                    Actualiser
+                </button>
+            </div>
+
+            <p id="backoffice-message" role="status">
+                Chargement des statistiques...
+            </p>
+
+            <section
+                id="backoffice-contenu"
+                aria-label="Statistiques des ventes"
+                hidden
+            >
+                <dl class="backoffice-indicateurs">
+                    <div>
+                        <dt>Billets vendus</dt>
+                        <dd id="backoffice-billets"></dd>
+                    </div>
+
+                    <div>
+                        <dt>Recette totale</dt>
+                        <dd id="backoffice-recette"></dd>
+                    </div>
+
+                    <div>
+                        <dt>Remplissage global</dt>
+                        <dd id="backoffice-remplissage"></dd>
+                    </div>
+                </dl>
+
+                <div
+                    class="backoffice-tableau"
+                    id="backoffice-tableau"
+                    role="region"
+                    aria-label="Tableau des ventes par soirée"
+                    tabindex="0"
+                >
+                    <table>
+                        <caption>Ventes par soirée</caption>
+
+                        <thead>
+                            <tr>
+                                <th scope="col">Soirée</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Places vendues</th>
+                                <th scope="col">Disponibles</th>
+                                <th scope="col">Recette</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="backoffice-soirees"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <template id="backoffice-soiree-template">
+        <tr>
+            <th scope="row">
+                <a class="backoffice-soiree-nom" href="#"></a>
+            </th>
+
+            <td class="backoffice-date"></td>
+
+            <td>
+                <div class="backoffice-jauge">
+                    <progress></progress>
+                    <span class="backoffice-places"></span>
+                    <span class="backoffice-complet" hidden>Complet</span>
+                </div>
+            </td>
+
+            <td class="backoffice-disponibles"></td>
+            <td class="backoffice-soiree-recette"></td>
+        </tr>
+    </template>
+</body>
+</html>
