@@ -30,6 +30,10 @@ use nrv\application\ports\api\ServicePanierInterface;
 use nrv\adapters\controllers\actions\GetTarifsAction;
 use nrv\application\ports\api\ServiceTarifInterface;
 
+use nrv\adapters\controllers\actions\GetStatistiquesAction;
+use nrv\adapters\controllers\middlewares\GestionnaireMiddleware;
+use nrv\application\ports\api\ServiceStatistiqueInterface;
+
 return [
 
     GetSpectaclesAction::class => function (ContainerInterface $c) {
@@ -103,6 +107,18 @@ return [
         return new AuthentificationMiddleware(
             $c->get(GestionJetonInterface::class),
             $c->get(ServiceAuthInterface::class),
+            new ResponseFactory()
+        );
+    },
+
+    GetStatistiquesAction::class => function (ContainerInterface $c) {
+        return new GetStatistiquesAction(
+            $c->get(ServiceStatistiqueInterface::class)
+        );
+    },
+
+    GestionnaireMiddleware::class => function (ContainerInterface $c) {
+        return new GestionnaireMiddleware(
             new ResponseFactory()
         );
     },
