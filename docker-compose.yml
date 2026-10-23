@@ -9,6 +9,7 @@ services:
     build:
       context: build
       dockerfile: 8.5-cli.Dockerfile
+    restart: unless-stopped
     ports:
       - '7080:80'
     volumes:
@@ -26,6 +27,7 @@ services:
   #
   web.nrv:
     image: 'nginx:1.27-alpine'
+    restart: unless-stopped
     ports:
       - '7081:80'
     volumes:
@@ -39,6 +41,7 @@ services:
 
   nrv.db:
     image: 'postgres:18.6'
+    restart: unless-stopped
     env_file: ./nrv.env
     ports:
       - '5532:5432'
@@ -50,6 +53,7 @@ services:
 
   adminer:
     image: adminer
+    restart: unless-stopped
     ports:
       - '8880:8080'
     networks:
