@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="css/main.css">
     <script type="module" src="js/navigation-auth.js"></script>
     <script type="module" src="js/panier.js"></script>
+    <script type="module" src="js/valider-commande.js"></script>
 </head>
 <body>
     <header class="auth-navigation" data-navigation-auth>
@@ -15,6 +17,7 @@
         <nav aria-label="Navigation principale">
             <a href="index.html">Programme</a>
             <a href="panier.html">🛒 Panier</a>
+            <a href="mes-billets.html">Mes billets</a>
 
             <span data-auth-invite>
                 <a href="connexion.html" data-lien-connexion>
@@ -46,68 +49,104 @@
     <main class="page-panier">
         <h1>Mon panier</h1>
 
-        <p class="message" id="panier-message" role="status">Chargement du panier...</p>
+        <p class="message" id="panier-message" role="status">
+            Chargement du panier...
+        </p>
 
         <p class="panier-verrouille" id="panier-verrouille" role="status" hidden>
             Une commande est en attente de paiement pour ce panier :
             il ne peut plus être modifié.
+            <a id="panier-payer" href="paiement.html">Payer la commande</a>
         </p>
 
-        <section class="panier-section" id="panier-billets" aria-labelledby="panier-billets-titre" hidden>
+        <section
+            class="panier-section"
+            id="panier-billets"
+            aria-labelledby="panier-billets-titre"
+            hidden
+        >
             <h2 id="panier-billets-titre">Billets</h2>
             <ul class="panier-liste" id="panier-billets-liste"></ul>
         </section>
 
-        <section class="panier-section" id="panier-pass" aria-labelledby="panier-pass-titre" hidden>
+        <section
+            class="panier-section"
+            id="panier-pass"
+            aria-labelledby="panier-pass-titre"
+            hidden
+        >
             <h2 id="panier-pass-titre">Pass 3 jours</h2>
             <ul class="panier-liste" id="panier-pass-liste"></ul>
         </section>
 
-        <section class="panier-total" id="panier-total" aria-labelledby="panier-total-titre" hidden>
+        <section
+            class="panier-total"
+            id="panier-total"
+            aria-labelledby="panier-total-titre"
+            hidden
+        >
             <h2 id="panier-total-titre">Récapitulatif</h2>
+
             <p class="panier-total-ligne">
                 <span>Nombre de billets</span>
                 <strong id="panier-nombre-billets"></strong>
             </p>
+
             <p class="panier-total-ligne panier-total-ligne--montant">
                 <span>Montant total</span>
                 <strong id="panier-montant-total"></strong>
             </p>
+
+            <div class="panier-validation" id="panier-validation" hidden>
+                <button
+                    class="auth-bouton valider-panier"
+                    id="panier-valider"
+                    type="button"
+                >
+                    Valider la commande
+                </button>
+            </div>
+
+            <p
+                class="auth-message"
+                id="panier-valider-message"
+                role="status"
+                hidden
+            ></p>
         </section>
     </main>
 
-
     <template id="panier-ligne-template">
-    <li class="panier-element">
-        <div class="panier-element-infos">
-            <h3 class="panier-element-nom"></h3>
-            <p class="panier-element-date"></p>
-            <p class="panier-element-detail"></p>
+        <li class="panier-element">
+            <div class="panier-element-infos">
+                <h3 class="panier-element-nom"></h3>
+                <p class="panier-element-date"></p>
+                <p class="panier-element-detail"></p>
 
-            <div class="panier-quantite">
-                <label>
-                    Quantité :
-                    <input
-                        type="number"
-                        class="panier-quantite-input"
-                        min="1"
-                        step="1"
-                        required
+                <div class="panier-quantite">
+                    <label>
+                        Quantité :
+                        <input
+                            type="number"
+                            class="panier-quantite-input"
+                            min="1"
+                            step="1"
+                            required
+                        >
+                    </label>
+
+                    <button
+                        type="button"
+                        class="auth-bouton panier-quantite-enregistrer"
                     >
-                </label>
-
-                <button
-                    type="button"
-                    class="auth-bouton panier-quantite-enregistrer"
-                >
-                    Modifier
-                </button>
+                        Modifier
+                    </button>
+                </div>
             </div>
-        </div>
 
-        <p class="panier-element-montant"></p>
-    </li>
-</template>
+            <p class="panier-element-montant"></p>
+        </li>
+    </template>
 
     <template id="panier-pass-template">
         <li class="panier-element panier-element--pass">
@@ -118,10 +157,9 @@
                 <p class="panier-element-detail panier-pass-avant"></p>
                 <p class="panier-element-detail panier-pass-remise"></p>
             </div>
+
             <p class="panier-element-montant"></p>
         </li>
     </template>
-
-    
 </body>
 </html>

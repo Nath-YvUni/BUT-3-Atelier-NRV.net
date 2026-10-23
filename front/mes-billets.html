@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NRV.net - Mes billets</title>
+
+    <link rel="stylesheet" href="css/main.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script type="module" src="js/navigation-auth.js"></script>
+    <script type="module" src="js/mes-billets.js"></script>
+</head>
+<body>
+
+    <header class="auth-navigation" data-navigation-auth>
+        <a class="auth-marque" href="index.html">NRV.net</a>
+
+        <nav aria-label="Navigation principale">
+            <a href="index.html">Programme</a>
+            <a href="panier.html">🛒 Panier</a>
+            <a href="mes-billets.html">Mes billets</a>
+
+            <span data-auth-invite>
+                <a href="connexion.html" data-lien-connexion>
+                    Connexion / inscription
+                </a>
+            </span>
+
+            <span data-auth-connecte hidden>
+                <span>Bonjour <span data-auth-nom></span></span>
+
+                <button
+                    class="auth-bouton auth-bouton--secondaire"
+                    type="button"
+                    data-auth-deconnexion
+                >
+                    Se déconnecter
+                </button>
+            </span>
+        </nav>
+
+        <p
+            class="auth-message"
+            data-auth-message
+            role="status"
+            hidden
+        ></p>
+    </header>
+
+    <main class="page-panier">
+        <h1>Mes billets</h1>
+
+        <p class="message" id="billets-message" role="status">
+            Chargement de vos billets...
+        </p>
+
+        <section
+            class="panier-section"
+            id="billets-section"
+            aria-labelledby="billets-titre"
+            hidden
+        >
+            <h2 id="billets-titre">Mes achats</h2>
+            <ul class="panier-liste" id="billets-liste"></ul>
+        </section>
+    </main>
+
+    <template id="billet-template">
+    <li class="billet-item">
+        <a class="panier-element billet-lien" href="#">
+            <div class="panier-element-infos">
+                <h3 class="billet-nom"></h3>
+                <p class="billet-date"></p>
+                <p class="billet-tarif"></p>
+                <p class="billet-quantite"></p>
+                <p class="billet-reference"></p>
+            </div>
+
+            <p class="panier-element-montant billet-prix"></p>
+        </a>
+    </li>
+</template>
+
+</body>
+</html>

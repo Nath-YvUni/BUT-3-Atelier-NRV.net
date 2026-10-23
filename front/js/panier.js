@@ -199,6 +199,7 @@ async function chargerPanier() {
         }
 
         afficherPanier(resultat.data);
+        document.dispatchEvent(new CustomEvent('nrv-panier-charge', { detail: resultat.data }));
     } catch (erreur) {
         if (numeroRequete !== requeteCourante) {
             return;

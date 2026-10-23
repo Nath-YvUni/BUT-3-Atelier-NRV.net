@@ -27,6 +27,9 @@ function destinationRetour() {
             '/index.html',
             '/soiree.html',
             '/panier.html',
+            '/paiement.html',
+            '/mes-billets.html',
+            '/billet.html',
         ];
 
         if (

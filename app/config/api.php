@@ -23,11 +23,18 @@ use Slim\Psr7\Factory\ResponseFactory;
 
 use nrv\adapters\controllers\actions\AjouterLignePanierAction;
 use nrv\adapters\controllers\actions\AjouterPassPanierAction;
+use nrv\adapters\controllers\actions\AjouterCommandeAction;
+use nrv\adapters\controllers\actions\GetCommandeAction;
+use nrv\adapters\controllers\actions\PayerCommandeAction;
+use nrv\application\ports\api\ServiceCommandeInterface;
 use nrv\application\ports\api\ServicePanierInterface;
 
 use nrv\adapters\controllers\actions\GetTarifsAction;
 use nrv\application\ports\api\ServiceTarifInterface;
 
+use nrv\adapters\controllers\actions\GetBilletByTokenAction;
+use nrv\adapters\controllers\actions\GetBilletsByUserAction;
+use nrv\application\ports\api\ServiceBilletInterface;
 
 return [
 
@@ -81,6 +88,36 @@ return [
     AjouterPassPanierAction::class => function (ContainerInterface $c) {
         return new AjouterPassPanierAction(
             $c->get(ServicePanierInterface::class)
+        );
+    },
+
+    AjouterCommandeAction::class => function (ContainerInterface $c) {
+        return new AjouterCommandeAction(
+            $c->get(ServiceCommandeInterface::class)
+        );
+    },
+
+    GetCommandeAction::class => function (ContainerInterface $c) {
+        return new GetCommandeAction(
+            $c->get(ServiceCommandeInterface::class)
+        );
+    },
+
+    GetBilletByTokenAction::class => function (ContainerInterface $c) {
+        return new GetBilletByTokenAction(
+            $c->get(ServiceBilletInterface::class)
+        );
+    },
+
+    GetBilletsByUserAction::class => function (ContainerInterface $c) {
+        return new GetBilletsByUserAction(
+            $c->get(ServiceBilletInterface::class)
+        );
+    },
+
+    PayerCommandeAction::class => function (ContainerInterface $c) {
+        return new PayerCommandeAction(
+            $c->get(ServiceCommandeInterface::class)
         );
     },
 
