@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace nrv\application\usecases;
 
+use nrv\application\dto\CommandeDTO;
 use nrv\application\dto\CommandeDetailDTO;
 use nrv\application\dto\PaiementDTO;
 use nrv\application\exceptions\CommandeEnAttenteException;
@@ -28,7 +29,10 @@ final class ServiceCommande implements ServiceCommandeInterface
 
     public function getUserCommandes(int $utilisateurId): array
     {
-        return $this->commandeRepository->findbyUser($utilisateurId);
+        return array_map(
+            fn(Commande $commande): array => CommandeDTO::fromEntity($commande)->toArray(),
+            $this->commandeRepository->findByUser($utilisateurId)
+        );
     }
 
     #[Override]
