@@ -724,6 +724,21 @@ body {
     }
 }
 
+.panier-validation {
+    margin-top: 1.25rem;
+
+    .valider-panier {
+        width: 100%;
+    }
+
+    &-note {
+        margin: 0.5rem 0 0;
+        font-size: 0.875rem;
+        text-align: center;
+        color: $gris;
+    }
+}
+
 .auth-navigation,
 .auth-page,
 .page-panier {
