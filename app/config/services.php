@@ -30,6 +30,11 @@ use nrv\application\usecases\ServiceTarif;
 use nrv\adapters\spi\repositories\PDOPanierRepository;
 use nrv\adapters\spi\repositories\PDOTarifRepository;
 
+use nrv\application\ports\spi\CommandeRepositoryInterface;
+use nrv\application\ports\api\ServiceCommandeInterface;
+use nrv\application\usecases\ServiceCommande;
+use nrv\adapters\spi\repositories\PDOCommandeRepository;
+
 // ── services métier et repositories ─
 return [
 
@@ -93,6 +98,15 @@ return [
             $c->get(PanierRepositoryInterface::class),
             $c->get(SoireeRepositoryInterface::class),
             $c->get(TarifRepositoryInterface::class)
+        );
+    },
+    CommandeRepositoryInterface::class => function (ContainerInterface $c) {
+        return new PDOCommandeRepository($c->get('nrv.pdo'));
+    },
+    ServiceCommandeInterface::class => function (ContainerInterface $c) {
+        return new ServiceCommande(
+            $c->get(CommandeRepositoryInterface::class),
+            $c->get(PanierRepositoryInterface::class)
         );
     },
 ];

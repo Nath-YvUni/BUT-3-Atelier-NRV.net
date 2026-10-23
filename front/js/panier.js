@@ -164,6 +164,7 @@ async function chargerPanier() {
         }
 
         afficherPanier(resultat.data);
+        document.dispatchEvent(new CustomEvent('nrv-panier-charge', { detail: resultat.data }));
     } catch (erreur) {
         if (numeroRequete !== requeteCourante) {
             return;
@@ -187,5 +188,7 @@ window.addEventListener('nrv-auth-change', () => {
         redirigerVersConnexion();
     }
 });
+
+document.addEventListener('nrv-commande-creee', chargerPanier);
 
 chargerPanier();

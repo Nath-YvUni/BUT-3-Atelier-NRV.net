@@ -1,103 +1,111 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NRV.net - Mon panier</title>
-    <link rel="stylesheet" href="css/main.css">
-    <script type="module" src="js/navigation-auth.js"></script>
-    <script type="module" src="js/panier.js"></script>
-</head>
-<body>
-    <header class="auth-navigation" data-navigation-auth>
-        <a class="auth-marque" href="index.html">NRV.net</a>
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>NRV.net - Mon panier</title>
+        <link rel="stylesheet" href="css/main.css">
+        <script type="module" src="js/navigation-auth.js"></script>
+        <script type="module" src="js/panier.js"></script>
+        <script type="module" src="js/valider-commande.js"></script>
+    </head>
+    <body>
+        <header class="auth-navigation" data-navigation-auth>
+            <a class="auth-marque" href="index.html">NRV.net</a>
 
-        <nav aria-label="Navigation principale">
-            <a href="index.html">Programme</a>
-            <a href="panier.html">🛒 Panier</a>
+            <nav aria-label="Navigation principale">
+                <a href="index.html">Programme</a>
+                <a href="panier.html">🛒 Panier</a>
 
-            <span data-auth-invite>
-                <a href="connexion.html" data-lien-connexion>
-                    Connexion / inscription
-                </a>
-            </span>
+                <span data-auth-invite>
+                    <a href="connexion.html" data-lien-connexion>
+                        Connexion / inscription
+                    </a>
+                </span>
 
-            <span data-auth-connecte hidden>
-                <span>Bonjour <span data-auth-nom></span></span>
+                <span data-auth-connecte hidden>
+                    <span>Bonjour <span data-auth-nom></span></span>
 
-                <button
-                    class="auth-bouton auth-bouton--secondaire"
-                    type="button"
-                    data-auth-deconnexion
-                >
-                    Se déconnecter
-                </button>
-            </span>
-        </nav>
+                    <button
+                        class="auth-bouton auth-bouton--secondaire"
+                        type="button"
+                        data-auth-deconnexion
+                    >
+                        Se déconnecter
+                    </button>
+                </span>
+            </nav>
 
-        <p
-            class="auth-message"
-            data-auth-message
-            role="status"
-            hidden
-        ></p>
-    </header>
+            <p
+                class="auth-message"
+                data-auth-message
+                role="status"
+                hidden
+            ></p>
+        </header>
 
-    <main class="page-panier">
-        <h1>Mon panier</h1>
+        <main class="page-panier">
+            <h1>Mon panier</h1>
 
-        <p class="message" id="panier-message" role="status">Chargement du panier...</p>
+            <p class="message" id="panier-message" role="status">Chargement du panier...</p>
 
-        <p class="panier-verrouille" id="panier-verrouille" role="status" hidden>
-            Une commande est en attente de paiement pour ce panier :
-            il ne peut plus être modifié.
-        </p>
-
-        <section class="panier-section" id="panier-billets" aria-labelledby="panier-billets-titre" hidden>
-            <h2 id="panier-billets-titre">Billets</h2>
-            <ul class="panier-liste" id="panier-billets-liste"></ul>
-        </section>
-
-        <section class="panier-section" id="panier-pass" aria-labelledby="panier-pass-titre" hidden>
-            <h2 id="panier-pass-titre">Pass 3 jours</h2>
-            <ul class="panier-liste" id="panier-pass-liste"></ul>
-        </section>
-
-        <section class="panier-total" id="panier-total" aria-labelledby="panier-total-titre" hidden>
-            <h2 id="panier-total-titre">Récapitulatif</h2>
-            <p class="panier-total-ligne">
-                <span>Nombre de billets</span>
-                <strong id="panier-nombre-billets"></strong>
+            <p class="panier-verrouille" id="panier-verrouille" role="status" hidden>
+                Une commande est en attente de paiement pour ce panier :
+                il ne peut plus être modifié.
             </p>
-            <p class="panier-total-ligne panier-total-ligne--montant">
-                <span>Montant total</span>
-                <strong id="panier-montant-total"></strong>
-            </p>
-        </section>
-    </main>
 
-    <template id="panier-ligne-template">
-        <li class="panier-element">
-            <div class="panier-element-infos">
-                <h3 class="panier-element-nom"></h3>
-                <p class="panier-element-date"></p>
-                <p class="panier-element-detail"></p>
-            </div>
-            <p class="panier-element-montant"></p>
-        </li>
-    </template>
+            <section class="panier-section" id="panier-billets" aria-labelledby="panier-billets-titre" hidden>
+                <h2 id="panier-billets-titre">Billets</h2>
+                <ul class="panier-liste" id="panier-billets-liste"></ul>
+            </section>
 
-    <template id="panier-pass-template">
-        <li class="panier-element panier-element--pass">
-            <div class="panier-element-infos">
-                <h3 class="panier-element-nom">Pass 3 jours</h3>
-                <p class="panier-element-detail panier-pass-tarif"></p>
-                <ul class="panier-pass-soirees"></ul>
-                <p class="panier-element-detail panier-pass-avant"></p>
-                <p class="panier-element-detail panier-pass-remise"></p>
-            </div>
-            <p class="panier-element-montant"></p>
-        </li>
-    </template>
-</body>
-</html>
+            <section class="panier-section" id="panier-pass" aria-labelledby="panier-pass-titre" hidden>
+                <h2 id="panier-pass-titre">Pass 3 jours</h2>
+                <ul class="panier-liste" id="panier-pass-liste"></ul>
+            </section>
+
+            <section class="panier-total" id="panier-total" aria-labelledby="panier-total-titre" hidden>
+                <h2 id="panier-total-titre">Récapitulatif</h2>
+                <p class="panier-total-ligne">
+                    <span>Nombre de billets</span>
+                    <strong id="panier-nombre-billets"></strong>
+                </p>
+                <p class="panier-total-ligne panier-total-ligne--montant">
+                    <span>Montant total</span>
+                    <strong id="panier-montant-total"></strong>
+                </p>
+
+                <div class="panier-validation" id="panier-validation" hidden>
+                    <button class="auth-bouton valider-panier" id="panier-valider" type="button">Valider la commande</button>
+                </div>
+
+                <p class="auth-message" id="panier-valider-message" role="status" hidden></p>
+            </section>
+        </main>
+
+        <template id="panier-ligne-template">
+            <li class="panier-element">
+                <div class="panier-element-infos">
+                    <h3 class="panier-element-nom"></h3>
+                    <p class="panier-element-date"></p>
+                    <p class="panier-element-detail"></p>
+                </div>
+                <p class="panier-element-montant"></p>
+            </li>
+        </template>
+
+        <template id="panier-pass-template">
+            <li class="panier-element panier-element--pass">
+                <div class="panier-element-infos">
+                    <h3 class="panier-element-nom">Pass 3 jours</h3>
+                    <p class="panier-element-detail panier-pass-tarif"></p>
+                    <ul class="panier-pass-soirees"></ul>
+                    <p class="panier-element-detail panier-pass-avant"></p>
+                    <p class="panier-element-detail panier-pass-remise"></p>
+                </div>
+                <p class="panier-element-montant"></p>
+            </li>
+        </template>
+
+    </body>
+    </html>
