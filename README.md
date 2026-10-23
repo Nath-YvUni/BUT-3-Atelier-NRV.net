@@ -48,6 +48,8 @@ Prérequis : Docker et Docker Compose, Node.js (pour compiler le SCSS du front).
    | Adminer    | http://localhost:8880 (serveur : `nrv.db`) |
    | PostgreSQL | `localhost:5532`                           |
 
+   Ces ports peuvent être changés dans un fichier `.env` à la racine, créé à partir de `.env.dist`.
+
 ## Comptes de test
 
 Créés par `app/sql/nrv.data.sql`. Mot de passe commun à tous les comptes : `password`.
