@@ -35,6 +35,11 @@ use nrv\application\ports\api\ServiceCommandeInterface;
 use nrv\application\usecases\ServiceCommande;
 use nrv\adapters\spi\repositories\PDOCommandeRepository;
 
+use nrv\application\ports\spi\StatistiqueRepositoryInterface;
+use nrv\application\ports\api\ServiceStatistiqueInterface;
+use nrv\application\usecases\ServiceStatistique;
+use nrv\adapters\spi\repositories\PDOStatistiqueRepository;
+
 // ── services métier et repositories ─
 return [
 
@@ -107,6 +112,18 @@ return [
         return new ServiceCommande(
             $c->get(CommandeRepositoryInterface::class),
             $c->get(PanierRepositoryInterface::class)
+        );
+    },
+
+    StatistiqueRepositoryInterface::class => function (ContainerInterface $c) {
+        return new PDOStatistiqueRepository(
+            $c->get('nrv.pdo')
+        );
+    },
+
+    ServiceStatistiqueInterface::class => function (ContainerInterface $c) {
+        return new ServiceStatistique(
+            $c->get(StatistiqueRepositoryInterface::class)
         );
     },
 ];
