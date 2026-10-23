@@ -81,4 +81,24 @@ final readonly class Panier
 
         return $total;
     }
+
+    public function billetsParSoiree(): array
+    {
+        $billets = [];
+
+        foreach ($this->lignes as $ligne) {
+            $soireeId = $ligne->getSoiree()->getId();
+            $billets[$soireeId] = ($billets[$soireeId] ?? 0) + $ligne->getQuantite();
+        }
+
+        foreach ($this->pass as $pass) {
+            foreach ($pass->getSoirees() as $soiree) {
+                $billets[$soiree->getId()] = ($billets[$soiree->getId()] ?? 0) + 1;
+            }
+        }
+
+        ksort($billets);
+
+        return $billets;
+    }
 }

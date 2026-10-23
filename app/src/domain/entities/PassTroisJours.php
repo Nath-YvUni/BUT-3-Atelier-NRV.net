@@ -56,4 +56,16 @@ final readonly class PassTroisJours
     {
         return $this->montantAvantRemise() - $this->montantRemise();
     }
+
+    public function prixBillets(): array
+    {
+        $nombre = $this->nombreBillets();
+        $prix = intdiv($this->sousTotal(), $nombre);
+        $reste = $this->sousTotal() % $nombre;
+
+        return array_map(
+            fn(int $rang): int => $prix + ($rang < $reste ? 1 : 0),
+            range(0, $nombre - 1)
+        );
+    }
 }

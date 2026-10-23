@@ -18,6 +18,8 @@ use nrv\adapters\controllers\actions\AjouterPassPanierAction;
 use nrv\adapters\controllers\actions\GetTarifsAction;
 use nrv\adapters\controllers\actions\GetPanierAction;
 use nrv\adapters\controllers\actions\AjouterCommandeAction;
+use nrv\adapters\controllers\actions\GetCommandeAction;
+use nrv\adapters\controllers\actions\PayerCommandeAction;
 
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__, '.env');
 $dotenv->load();
@@ -80,6 +82,14 @@ $app->post('/api/panier/pass', AjouterPassPanierAction::class)
 
 $app->post('/api/commandes', AjouterCommandeAction::class)
     ->setName('ajouter-commande')
+    ->add(AuthentificationMiddleware::class);
+
+$app->get('/api/commandes/{id}', GetCommandeAction::class)
+    ->setName('commande-detail')
+    ->add(AuthentificationMiddleware::class);
+
+$app->post('/api/commandes/{id}/paiement', PayerCommandeAction::class)
+    ->setName('commande-paiement')
     ->add(AuthentificationMiddleware::class);
 
 

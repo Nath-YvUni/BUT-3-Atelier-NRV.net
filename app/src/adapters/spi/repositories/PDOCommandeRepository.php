@@ -7,6 +7,11 @@ use nrv\application\exceptions\RepositoryInternalException;
 use nrv\application\ports\spi\CommandeRepositoryInterface;
 use nrv\domain\entities\Commande;
 use nrv\application\exceptions\PanierVideException;
+use nrv\domain\entities\LignePanier;
+use nrv\domain\entities\Panier;
+use nrv\domain\entities\PassTroisJours;
+use nrv\domain\entities\SoireeResume;
+use nrv\domain\entities\Tarif;
 use Override;
 
 final class PDOCommandeRepository implements CommandeRepositoryInterface
@@ -204,6 +209,274 @@ public function commander(int $utilisateurId, array $donnees): bool
 
         throw $e;
     }
+}
+
+#[Override]
+public function payer(int $commandeId, Panier $panier): array
+{
+    $transaction = !$this->pdo->inTransaction();
+
+    try {
+        if ($transaction) {
+            $this->pdo->beginTransaction();
+        }
+
+        $commande = $this->executer(
+            'SELECT "statut" FROM "commande" WHERE "id" = :id FOR UPDATE',
+            ['id' => $commandeId]
+        );
+
+        if ($commande[0]['statut'] !== 'en_attente') {
+            if ($transaction) {
+                $this->pdo->commit();
+            }
+
+            return [];
+        }
+
+        $demandes = $panier->billetsParSoiree();
+        $ids = '{' . implode(',', array_keys($demandes)) . '}';
+
+        $this->executer(
+            'SELECT "id" FROM "soiree" WHERE "id" = ANY(CAST(:ids AS integer[])) ORDER BY "id" FOR UPDATE',
+            ['ids' => $ids]
+        );
+
+        $soirees = $this->executer(
+            <<<'SQL'
+                SELECT s."id", s."nom", s."capacite", COUNT(b."id") AS vendues
+                FROM "soiree" s
+                LEFT JOIN "billet" b ON b."soiree_id" = s."id"
+                WHERE s."id" = ANY(CAST(:ids AS integer[]))
+                GROUP BY s."id"
+                ORDER BY s."id"
+                SQL,
+            ['ids' => $ids]
+        );
+
+        $manques = [];
+
+        foreach ($soirees as $soiree) {
+            $disponibles = max(0, (int) $soiree['capacite'] - (int) $soiree['vendues']);
+            $demandees = $demandes[(int) $soiree['id']];
+
+            if ($demandees > $disponibles) {
+                $manques[] = [
+                    'soiree_id' => (int) $soiree['id'],
+                    'nom' => $soiree['nom'],
+                    'quantite_demandee' => $demandees,
+                    'places_disponibles' => $disponibles,
+                ];
+            }
+        }
+
+        if ($manques !== []) {
+            $this->changerStatut($commandeId, 'refusee');
+
+            if ($transaction) {
+                $this->pdo->commit();
+            }
+
+            return $manques;
+        }
+
+        foreach ($panier->getLignes() as $ligne) {
+            for ($i = 0; $i < $ligne->getQuantite(); $i++) {
+                $this->creerBillet(
+                    $commandeId,
+                    $ligne->getSoiree()->getId(),
+                    $ligne->getTarif()->getId(),
+                    null,
+                    $ligne->getTarif()->getPrix()
+                );
+            }
+        }
+
+        foreach ($panier->getPass() as $pass) {
+            $this->executer(
+                'UPDATE "pass_trois_jours" SET "commande_id" = :commande_id WHERE "id" = :id',
+                ['commande_id' => $commandeId, 'id' => $pass->getId()]
+            );
+
+            foreach (array_map(null, $pass->getSoirees(), $pass->prixBillets()) as [$soiree, $prix]) {
+                $this->creerBillet(
+                    $commandeId,
+                    $soiree->getId(),
+                    $pass->getTarif()->getId(),
+                    $pass->getId(),
+                    $prix
+                );
+            }
+        }
+
+        $this->changerStatut($commandeId, 'payee');
+
+        $this->executer(
+            'DELETE FROM "panier" WHERE "id" = :id',
+            ['id' => $panier->getId()]
+        );
+
+        if ($transaction) {
+            $this->pdo->commit();
+        }
+
+        return [];
+    } catch (\PDOException $e) {
+        if ($transaction && $this->pdo->inTransaction()) {
+            $this->pdo->rollBack();
+        }
+
+        throw new RepositoryInternalException('Erreur lors du paiement de la commande.', 0, $e);
+    }
+}
+
+#[Override]
+public function trouverContenuPaye(int $commandeId): array
+{
+    try {
+        $lignes = $this->executer(
+            <<<'SQL'
+                SELECT
+                    MIN(b."id")          AS id,
+                    COUNT(*)             AS quantite,
+                    s."id"               AS soiree_id,
+                    s."nom"              AS soiree_nom,
+                    s."date_heure_debut" AS soiree_date,
+                    t."id"               AS tarif_id,
+                    t."categorie"        AS tarif_categorie,
+                    b."prix"             AS tarif_prix
+                FROM "billet" b
+                JOIN "soiree" s ON s."id" = b."soiree_id"
+                JOIN "tarif" t ON t."id" = b."tarif_id"
+                WHERE b."commande_id" = :commande_id
+                  AND b."pass_id" IS NULL
+                GROUP BY s."id", t."id", b."prix"
+                ORDER BY s."date_heure_debut", t."id"
+                SQL,
+            ['commande_id' => $commandeId]
+        );
+
+        $pass = $this->executer(
+            <<<'SQL'
+                SELECT
+                    pt."id",
+                    pt."taux_remise",
+                    t."id"        AS tarif_id,
+                    t."categorie" AS tarif_categorie,
+                    t."prix"      AS tarif_prix
+                FROM "pass_trois_jours" pt
+                JOIN "tarif" t ON t."id" = pt."tarif_id"
+                WHERE pt."commande_id" = :commande_id
+                ORDER BY pt."id"
+                SQL,
+            ['commande_id' => $commandeId]
+        );
+
+        $soireesPass = $this->executer(
+            <<<'SQL'
+                SELECT
+                    ps."pass_id",
+                    s."id"               AS soiree_id,
+                    s."nom"              AS soiree_nom,
+                    s."date_heure_debut" AS soiree_date
+                FROM "pass_soiree" ps
+                JOIN "pass_trois_jours" pt ON pt."id" = ps."pass_id"
+                JOIN "soiree" s ON s."id" = ps."soiree_id"
+                WHERE pt."commande_id" = :commande_id
+                ORDER BY s."date_heure_debut", s."id"
+                SQL,
+            ['commande_id' => $commandeId]
+        );
+    } catch (\PDOException $e) {
+        throw new RepositoryInternalException('Erreur lors de la lecture de la commande.', 0, $e);
+    }
+
+    $soireesParPass = [];
+
+    foreach ($soireesPass as $ligne) {
+        $soireesParPass[(int) $ligne['pass_id']][] = $this->soiree($ligne);
+    }
+
+    return [
+        'lignes' => array_map(
+            fn(array $ligne): LignePanier => new LignePanier(
+                (int) $ligne['id'],
+                $this->soiree($ligne),
+                $this->tarif($ligne),
+                (int) $ligne['quantite']
+            ),
+            $lignes
+        ),
+        'pass' => array_map(
+            fn(array $ligne): PassTroisJours => new PassTroisJours(
+                (int) $ligne['id'],
+                $this->tarif($ligne),
+                Centimes::depuisDecimal($ligne['taux_remise']),
+                $soireesParPass[(int) $ligne['id']] ?? []
+            ),
+            $pass
+        ),
+    ];
+}
+
+#[Override]
+public function compterBillets(int $commandeId): int
+{
+    try {
+        $resultat = $this->executer(
+            'SELECT COUNT(*) AS nombre FROM "billet" WHERE "commande_id" = :commande_id',
+            ['commande_id' => $commandeId]
+        );
+    } catch (\PDOException $e) {
+        throw new RepositoryInternalException('Erreur lors de la lecture des billets.', 0, $e);
+    }
+
+    return (int) $resultat[0]['nombre'];
+}
+
+private function changerStatut(int $commandeId, string $statut): void
+{
+    $this->executer(
+        'UPDATE "commande" SET "statut" = :statut WHERE "id" = :id',
+        ['statut' => $statut, 'id' => $commandeId]
+    );
+}
+
+private function creerBillet(int $commandeId, int $soireeId, int $tarifId, ?int $passId, int $prix): void
+{
+    $this->executer(
+        <<<'SQL'
+            INSERT INTO "billet" ("commande_id", "soiree_id", "tarif_id", "pass_id", "reference", "token", "prix")
+            VALUES (:commande_id, :soiree_id, :tarif_id, :pass_id, :reference, :token, :prix)
+            SQL,
+        [
+            'commande_id' => $commandeId,
+            'soiree_id' => $soireeId,
+            'tarif_id' => $tarifId,
+            'pass_id' => $passId,
+            'reference' => 'BIL-' . date('Y') . '-' . strtoupper(bin2hex(random_bytes(4))),
+            'token' => bin2hex(random_bytes(32)),
+            'prix' => Centimes::versDecimal($prix),
+        ]
+    );
+}
+
+private function soiree(array $ligne): SoireeResume
+{
+    return new SoireeResume(
+        (int) $ligne['soiree_id'],
+        (string) $ligne['soiree_nom'],
+        new \DateTimeImmutable($ligne['soiree_date'])
+    );
+}
+
+private function tarif(array $ligne): Tarif
+{
+    return new Tarif(
+        (int) $ligne['tarif_id'],
+        (string) $ligne['tarif_categorie'],
+        Centimes::depuisDecimal($ligne['tarif_prix'])
+    );
 }
 
 private function executer(string $sql, array $parametres): array

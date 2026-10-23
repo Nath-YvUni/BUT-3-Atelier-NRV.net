@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NRV.net - Paiement</title>
+    <link rel="stylesheet" href="css/main.css">
+    <script type="module" src="js/navigation-auth.js"></script>
+    <script type="module" src="js/paiement.js"></script>
+</head>
+<body>
+    <header class="auth-navigation" data-navigation-auth>
+        <a class="auth-marque" href="index.html">NRV.net</a>
+
+        <nav aria-label="Navigation principale">
+            <a href="index.html">Programme</a>
+
+            <a href="panier.html">🛒 Panier</a>
+
+            <span data-auth-invite>
+                <a href="connexion.html" data-lien-connexion>
+                    Connexion / inscription
+                </a>
+            </span>
+
+            <span data-auth-connecte hidden>
+                <span>Bonjour <span data-auth-nom></span></span>
+
+                <button
+                    class="auth-bouton auth-bouton--secondaire"
+                    type="button"
+                    data-auth-deconnexion
+                >
+                    Se déconnecter
+                </button>
+            </span>
+        </nav>
+
+        <p
+            class="auth-message"
+            data-auth-message
+            role="status"
+            hidden
+        ></p>
+    </header>
+
+    <main class="page-paiement">
+        <h1>Paiement</h1>
+
+        <p class="message" id="paiement-message" role="status">Chargement de la commande...</p>
+
+        <div class="paiement-grille" id="paiement-contenu" hidden>
+            <section class="paiement-carte" aria-labelledby="paiement-carte-titre">
+                <h2 id="paiement-carte-titre">Carte bancaire</h2>
+
+                <form id="form-paiement">
+                    <div class="auth-champ">
+                        <label for="paiement-numero">Numéro de carte</label>
+                        <input
+                            id="paiement-numero"
+                            name="numero_carte"
+                            inputmode="numeric"
+                            autocomplete="cc-number"
+                            placeholder="1234 5678 9012 3456"
+                            required
+                        >
+                    </div>
+
+                    <div class="paiement-carte-ligne">
+                        <div class="auth-champ">
+                            <label for="paiement-expiration">Date d'expiration</label>
+                            <input
+                                id="paiement-expiration"
+                                name="expiration"
+                                autocomplete="cc-exp"
+                                placeholder="MM/AA"
+                                required
+                            >
+                        </div>
+
+                        <div class="auth-champ">
+                            <label for="paiement-cryptogramme">Code de sécurité</label>
+                            <input
+                                id="paiement-cryptogramme"
+                                name="cryptogramme"
+                                inputmode="numeric"
+                                autocomplete="cc-csc"
+                                placeholder="123"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <button class="auth-bouton" type="submit" id="paiement-bouton">Payer</button>
+                </form>
+            </section>
+
+            <section class="paiement-recapitulatif" aria-labelledby="paiement-reference">
+                <h2 id="paiement-reference"></h2>
+                <ul class="paiement-liste" id="paiement-liste"></ul>
+                <p class="paiement-total">
+                    <span>Total</span>
+                    <strong id="paiement-total"></strong>
+                </p>
+            </section>
+        </div>
+
+        <p class="auth-message auth-message--erreur" id="paiement-erreur" role="alert" hidden></p>
+
+        <section class="paiement-confirmation" id="paiement-confirmation" aria-labelledby="paiement-confirmation-titre" hidden>
+            <h2 id="paiement-confirmation-titre">Commande validée !</h2>
+            <p id="paiement-confirmation-texte"></p>
+        </section>
+    </main>
+</body>
+</html>
