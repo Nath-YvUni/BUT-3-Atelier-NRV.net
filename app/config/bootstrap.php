@@ -20,6 +20,8 @@ use nrv\adapters\controllers\actions\GetPanierAction;
 use nrv\adapters\controllers\actions\AjouterCommandeAction;
 use nrv\adapters\controllers\actions\GetCommandeAction;
 use nrv\adapters\controllers\actions\PayerCommandeAction;
+use nrv\adapters\controllers\actions\GetStatistiquesAction;
+use nrv\adapters\controllers\middlewares\GestionnaireMiddleware;
 
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__, '.env');
 $dotenv->load();
@@ -68,7 +70,7 @@ $app->get('/api/me', ProfilAction::class)
     ->setName('auth-profil')
     ->add(AuthentificationMiddleware::class);
 
-    $app->get('/api/panier', GetPanierAction::class)
+$app->get('/api/panier', GetPanierAction::class)
     ->setName('panier-consulter')
     ->add(AuthentificationMiddleware::class);
 
@@ -92,6 +94,9 @@ $app->post('/api/commandes/{id}/paiement', PayerCommandeAction::class)
     ->setName('commande-paiement')
     ->add(AuthentificationMiddleware::class);
 
-
+$app->get('/api/admin/statistiques', GetStatistiquesAction::class)
+    ->setName('admin-statistiques')
+    ->add(GestionnaireMiddleware::class)
+    ->add(AuthentificationMiddleware::class);
 
 return $app;
