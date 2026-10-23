@@ -32,6 +32,9 @@ use nrv\application\ports\api\ServicePanierInterface;
 use nrv\adapters\controllers\actions\GetTarifsAction;
 use nrv\application\ports\api\ServiceTarifInterface;
 
+use nrv\adapters\controllers\actions\GetStatistiquesAction;
+use nrv\adapters\controllers\middlewares\GestionnaireMiddleware;
+use nrv\application\ports\api\ServiceStatistiqueInterface;
 use nrv\adapters\controllers\actions\GetBilletByTokenAction;
 use nrv\adapters\controllers\actions\GetBilletsByUserAction;
 use nrv\application\ports\api\ServiceBilletInterface;
@@ -129,4 +132,15 @@ return [
         );
     },
 
+    GetStatistiquesAction::class => function (ContainerInterface $c) {
+        return new GetStatistiquesAction(
+            $c->get(ServiceStatistiqueInterface::class)
+        );
+    },
+
+    GestionnaireMiddleware::class => function (ContainerInterface $c) {
+        return new GestionnaireMiddleware(
+            new ResponseFactory()
+        );
+    },
 ];

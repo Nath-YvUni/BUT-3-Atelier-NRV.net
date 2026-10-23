@@ -94,6 +94,7 @@ formulaire.addEventListener('submit', async (evenement) => {
             },
         });
 
+        window.dispatchEvent(new Event('nrv-panier-modifie'));
         afficherMessage(texteConfirmation(quantite, resultat.data));
         champQuantite.value = '1';
     } catch (erreur) {

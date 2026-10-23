@@ -22,6 +22,8 @@ use nrv\adapters\controllers\actions\ModifierQuantitePanierAction;
 use nrv\adapters\controllers\actions\AjouterCommandeAction;
 use nrv\adapters\controllers\actions\GetCommandeAction;
 use nrv\adapters\controllers\actions\PayerCommandeAction;
+use nrv\adapters\controllers\actions\GetStatistiquesAction;
+use nrv\adapters\controllers\middlewares\GestionnaireMiddleware;
 use nrv\adapters\controllers\actions\GetBilletByTokenAction;
 use nrv\adapters\controllers\actions\GetBilletsByUserAction;
 
@@ -102,6 +104,10 @@ $app->post('/api/commandes/{id}/paiement', PayerCommandeAction::class)
     ->setName('commande-paiement')
     ->add(AuthentificationMiddleware::class);
 
+$app->get('/api/admin/statistiques', GetStatistiquesAction::class)
+    ->setName('admin-statistiques')
+    ->add(GestionnaireMiddleware::class)
+    ->add(AuthentificationMiddleware::class);
 $app->get('/api/billets/{token}', GetBilletByTokenAction::class)
     ->setName('billet-detail')
     ->add(AuthentificationMiddleware::class);

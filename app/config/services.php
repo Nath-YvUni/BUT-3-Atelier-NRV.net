@@ -40,6 +40,10 @@ use nrv\application\ports\api\ServiceCommandeInterface;
 use nrv\application\usecases\ServiceCommande;
 use nrv\adapters\spi\repositories\PDOCommandeRepository;
 
+use nrv\application\ports\spi\StatistiqueRepositoryInterface;
+use nrv\application\ports\api\ServiceStatistiqueInterface;
+use nrv\application\usecases\ServiceStatistique;
+use nrv\adapters\spi\repositories\PDOStatistiqueRepository;
 use nrv\adapters\controllers\actions\GetBilletByTokenAction;
 use nrv\adapters\controllers\actions\GetBilletsByUserAction;
 
@@ -141,6 +145,18 @@ return [
     GetBilletsByUserAction::class => function (ContainerInterface $c) {
         return new GetBilletsByUserAction(
             $c->get(ServiceBilletInterface::class)
+        );
+    },
+
+    StatistiqueRepositoryInterface::class => function (ContainerInterface $c) {
+        return new PDOStatistiqueRepository(
+            $c->get('nrv.pdo')
+        );
+    },
+
+    ServiceStatistiqueInterface::class => function (ContainerInterface $c) {
+        return new ServiceStatistique(
+            $c->get(StatistiqueRepositoryInterface::class)
         );
     },
 ];
