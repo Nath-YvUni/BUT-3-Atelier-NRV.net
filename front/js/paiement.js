@@ -17,6 +17,7 @@ const total = document.getElementById('paiement-total');
 const erreur = document.getElementById('paiement-erreur');
 const confirmation = document.getElementById('paiement-confirmation');
 const texteConfirmation = document.getElementById('paiement-confirmation-texte');
+const ligneTemplate = document.getElementById('paiement-ligne-template');
 
 const libellesCategories = {
     normal: 'normal',
@@ -37,15 +38,12 @@ function redirigerVersConnexion() {
 }
 
 function creerElement(libelle, montant) {
-    const li = document.createElement('li');
-    const texte = document.createElement('span');
-    const valeur = document.createElement('span');
+    const element = ligneTemplate.content.cloneNode(true);
 
-    texte.textContent = libelle;
-    valeur.textContent = euros.format(Number(montant));
-    li.append(texte, valeur);
+    element.querySelector('.paiement-ligne-libelle').textContent = libelle;
+    element.querySelector('.paiement-ligne-montant').textContent = euros.format(Number(montant));
 
-    return li;
+    return element;
 }
 
 function afficherCommande(commande) {

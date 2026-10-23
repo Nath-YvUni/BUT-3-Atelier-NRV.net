@@ -14,6 +14,7 @@ const compteur = document.getElementById('ajout-pass-compteur');
 const selectTarif = document.getElementById('ajout-pass-tarif');
 const boutonAjouter = formulaire.querySelector('button[type="submit"]');
 const message = document.getElementById('ajout-pass-message');
+const optionTemplate = document.getElementById('ajout-pass-option-template');
 
 const libellesCategories = {
     normal: 'Tarif normal',
@@ -68,38 +69,21 @@ function mettreAJourSelection() {
 }
 
 function creerOption(soiree) {
-    const li = document.createElement('li');
-    const label = document.createElement('label');
-    const caseSoiree = document.createElement('input');
-    const nom = document.createElement('span');
-    const date = document.createElement('span');
+    const element = optionTemplate.content.cloneNode(true);
+    const caseSoiree = element.querySelector('input');
 
-    caseSoiree.type = 'checkbox';
-    caseSoiree.name = 'soiree_ids';
     caseSoiree.value = soiree.id;
     caseSoiree.dataset.complete = String(soiree.complete);
     caseSoiree.checked = soiree.id === soireeCourante && !soiree.complete;
 
-    nom.className = 'ajout-pass-nom';
-    nom.textContent = soiree.nom;
+    element.querySelector('.ajout-pass-nom').textContent = soiree.nom;
+    element.querySelector('.ajout-pass-date').textContent = formaterDate(soiree.date_heure_debut);
 
-    date.className = 'ajout-pass-date';
-    date.textContent = formaterDate(soiree.date_heure_debut);
-
-    label.className = 'ajout-pass-option';
-    label.append(caseSoiree, nom, date);
-
-    if (soiree.complete) {
-        const badge = document.createElement('span');
-
-        badge.className = 'badge';
-        badge.textContent = 'Complet';
-        label.append(badge);
+    if (!soiree.complete) {
+        element.querySelector('.badge').remove();
     }
 
-    li.append(label);
-
-    return li;
+    return element;
 }
 
 function remplirTarifs(tarifs) {
