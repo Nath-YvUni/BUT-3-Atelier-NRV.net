@@ -91,7 +91,7 @@
                         <dd id="backoffice-recette"></dd>
                     </div>
 
-                    <div>
+                    <div class="backoffice-indicateur-remplissage">
                         <dt>Remplissage global</dt>
                         <dd id="backoffice-remplissage"></dd>
                     </div>
@@ -120,6 +120,7 @@
                         <tbody id="backoffice-soirees"></tbody>
                     </table>
                 </div>
+                <div class="backoffice-cartes" id="backoffice-cartes"></div>
             </section>
         </main>
     </div>
@@ -144,5 +145,24 @@
             <td class="backoffice-soiree-recette"></td>
         </tr>
     </template>
+    <template id="backoffice-carte-template">
+    <article class="backoffice-carte">
+        <div class="backoffice-carte-entete">
+            <h2>
+                <a class="backoffice-soiree-nom" href="#"></a>
+            </h2>
+
+            <p class="backoffice-date"></p>
+
+            <strong class="backoffice-soiree-recette"></strong>
+        </div>
+
+        <div class="backoffice-jauge">
+            <progress></progress>
+            <span class="backoffice-places"></span>
+            <span class="backoffice-complet" hidden>Complet</span>
+        </div>
+    </article>
+</template>
 </body>
 </html>
