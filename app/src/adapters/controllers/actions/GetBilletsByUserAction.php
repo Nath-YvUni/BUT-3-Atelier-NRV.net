@@ -30,15 +30,10 @@ final class GetBilletsByUserAction
             return $rs->withHeader('Content-Type', 'application/json');
         }
 
-
-
-        error_log('UTILISATEUR : ' . json_encode($utilisateur));
-
         $billets = $this->serviceBillet->getUserBillets(
             (int) $utilisateur['id']
         );
 
-        error_log('NOMBRE BILLETS : ' . count($billets));
 
         $rs->getBody()->write(json_encode([
             'data' => $billets
