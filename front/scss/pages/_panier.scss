@@ -21,10 +21,7 @@
 .panier-verrouille {
     margin: 0 0 1.5rem;
     padding: 0.75rem 1rem;
-    background-color: $blanc;
-    border: 1px solid $bordure;
-    border-left: 4px solid $noir;
-    border-radius: $rayon-champ;
+    @include carte($rayon-champ);
 
     a {
         font-weight: 500;
