@@ -14,6 +14,9 @@ const totalBillets = document.getElementById('backoffice-billets');
 const recetteTotale = document.getElementById('backoffice-recette');
 const remplissageGlobal = document.getElementById('backoffice-remplissage');
 
+const listeCartes = document.getElementById('backoffice-cartes');
+const templateCarte = document.getElementById('backoffice-carte-template');
+
 const nombres = new Intl.NumberFormat('fr-FR');
 
 const euros = new Intl.NumberFormat('fr-FR', {
@@ -34,6 +37,12 @@ const dates = new Intl.DateTimeFormat('fr-FR', {
     minute: '2-digit',
 });
 
+const datesCourtes = new Intl.DateTimeFormat('fr-FR', {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'long',
+});
+
 let requeteCourante = 0;
 
 function redirigerVersConnexion() {
@@ -47,24 +56,27 @@ function redirigerVersConnexion() {
 function masquerContenu() {
     contenu.hidden = true;
     listeSoirees.replaceChildren();
+    listeCartes.replaceChildren();
 
     totalBillets.textContent = '';
     recetteTotale.textContent = '';
     remplissageGlobal.textContent = '';
 }
 
-function creerLigne(soiree, datesParId) {
-    const ligne = template.content.cloneNode(true);
+function creerLigne(soiree, datesParId, mobile = false) {
+    const modele = mobile ? templateCarte : template;
+    const ligne = modele.content.cloneNode(true);
 
     const lien = ligne.querySelector('.backoffice-soiree-nom');
     lien.textContent = soiree.nom;
     lien.href = `soiree.html?id=${encodeURIComponent(soiree.id)}`;
 
     const dateHeure = datesParId.get(soiree.id);
+    const formatDate = mobile ? datesCourtes : dates;
 
     ligne.querySelector('.backoffice-date').textContent =
         dateHeure
-            ? dates.format(new Date(dateHeure))
+            ? formatDate.format(new Date(dateHeure))
             : 'Non renseignée';
 
     const jauge = ligne.querySelector('progress');
@@ -80,10 +92,12 @@ function creerLigne(soiree, datesParId) {
         `Places vendues pour ${soiree.nom}`
     );
 
+    const separateur = mobile ? '/' : ' / ';
+
     ligne.querySelector('.backoffice-places').textContent =
-        `${nombres.format(soiree.places_vendues)} / ${
-            nombres.format(soiree.capacite)
-        }`;
+        nombres.format(soiree.places_vendues)
+        + separateur
+        + nombres.format(soiree.capacite);
 
     const complet = ligne.querySelector('.backoffice-complet');
 
@@ -92,8 +106,13 @@ function creerLigne(soiree, datesParId) {
         ? 'Indisponible'
         : 'Complet';
 
-    ligne.querySelector('.backoffice-disponibles').textContent =
-        nombres.format(soiree.places_disponibles);
+    const disponibles = ligne.querySelector('.backoffice-disponibles');
+
+    if (disponibles) {
+        disponibles.textContent = nombres.format(
+            soiree.places_disponibles
+        );
+    }
 
     ligne.querySelector('.backoffice-soiree-recette').textContent =
         euros.format(Number(soiree.recette));
@@ -131,6 +150,12 @@ function afficherStatistiques(statistiques, soireesProgramme) {
     listeSoirees.replaceChildren(
         ...statistiques.soirees.map(
             (soiree) => creerLigne(soiree, datesParId)
+        )
+    );
+
+    listeCartes.replaceChildren(
+        ...statistiques.soirees.map(
+            (soiree) => creerLigne(soiree, datesParId, true)
         )
     );
 
