@@ -12,7 +12,9 @@ use nrv\application\exceptions\ValidationException;
 use nrv\application\ports\api\ServiceCommandeInterface;
 use nrv\application\ports\spi\CommandeRepositoryInterface;
 use nrv\application\ports\spi\PanierRepositoryInterface;
+use nrv\application\ports\api\ServiceBilletInterface;
 use nrv\domain\entities\Commande;
+use nrv\domain\entities\Panier;
 use Override;
 
 final class ServiceCommande implements ServiceCommandeInterface
@@ -20,15 +22,17 @@ final class ServiceCommande implements ServiceCommandeInterface
     public function __construct(
         private CommandeRepositoryInterface $commandeRepository,
         private PanierRepositoryInterface $panierRepository,
+        private ServiceBilletInterface $serviceBillet
     ) {
     }
 
-    public function getUserCommandes(int $utilisateurId) : array{
+    public function getUserCommandes(int $utilisateurId): array
+    {
         return $this->commandeRepository->findbyUser($utilisateurId);
     }
 
     #[Override]
-    public function getCommandeById(int $utilisateurId, int $commandeId) : array
+    public function getCommandeById(int $utilisateurId, int $commandeId): array
     {
         $commande = $this->commande($utilisateurId, $commandeId);
 
@@ -43,7 +47,7 @@ final class ServiceCommande implements ServiceCommandeInterface
     }
 
     #[Override]
-    public function creerCommande(int $utilisateurId, array $donnees) : array
+    public function creerCommande(int $utilisateurId, array $donnees): array
     {
         if (!$this->commandeRepository->commander($utilisateurId, $donnees)) {
             throw new CommandeEnAttenteException();
@@ -59,17 +63,22 @@ final class ServiceCommande implements ServiceCommandeInterface
         return CommandeDetailDTO::fromEntities($commande, $panier->getLignes(), $panier->getPass())->toArray();
     }
 
+
     #[Override]
-    public function payerCommande(int $utilisateurId, int $commandeId, array $donnees) : array
+    public function payerCommande(int $utilisateurId, int $commandeId, array $donnees): array
     {
         $commande = $this->commande($utilisateurId, $commandeId);
 
         $this->validerCarte($donnees);
 
         if ($commande->getStatut() === 'en_attente') {
+            $panier = $this->panierRepository->trouverParUtilisateur($utilisateurId);
+
             $manques = $this->commandeRepository->payer(
                 $commandeId,
-                $this->panierRepository->trouverParUtilisateur($utilisateurId)
+                $panier,
+                fn(int $id, Panier $panier) =>
+                    $this->serviceBillet->genererBillets($id, $panier)
             );
 
             if ($manques !== []) {
@@ -85,7 +94,8 @@ final class ServiceCommande implements ServiceCommandeInterface
         )->toArray();
     }
 
-    private function commande(int $utilisateurId, int $commandeId) : Commande
+
+    private function commande(int $utilisateurId, int $commandeId): Commande
     {
         $commande = $this->commandeRepository->findById($utilisateurId, $commandeId);
 
@@ -96,7 +106,7 @@ final class ServiceCommande implements ServiceCommandeInterface
         return $commande;
     }
 
-    private function validerCarte(array $donnees) : void
+    private function validerCarte(array $donnees): void
     {
         $formats = [
             'numero_carte' => ['/^[0-9]{16}$/D', 'Le numéro de carte doit contenir 16 chiffres.'],

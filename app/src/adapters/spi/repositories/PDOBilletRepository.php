@@ -100,18 +100,16 @@ final class PDOBilletRepository implements BilletRepositoryInterface
             }
 
             $this->pdo->prepare(<<<'SQL'
-                UPDATE "billet" b
-                SET "reference" = 'BIL-'
-                || to_char(c."date_commande", 'YYYY')
-                || '-'
-                || CASE WHEN b."id" < 10000
-                        THEN lpad(b."id"::text, 4, '0')
-                        ELSE b."id"::text
-                   END
-                FROM "commande" c
+                UPDATE "billet" AS b
+                SET "reference" =
+                    'BIL-' ||
+                    EXTRACT(YEAR FROM c."date_commande")::text ||
+                    '-' ||
+                    LPAD(b."id"::text, 4, '0')
+                FROM "commande" AS c
                 WHERE c."id" = b."commande_id"
-                  AND b."commande_id" = :commande_id
-                  AND b."reference" LIKE 'TMP-%'
+                AND b."commande_id" = :commande_id
+                AND b."reference" LIKE 'TMP-%'
                 SQL)->execute(['commande_id' => $commandeId]);
 
             if ($transactionPropre) {
