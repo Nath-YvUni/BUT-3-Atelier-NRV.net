@@ -189,6 +189,7 @@ formulaire.addEventListener('submit', async (evenement) => {
             },
         });
 
+        window.dispatchEvent(new Event('nrv-panier-modifie'));
         afficherMessage(texteConfirmation(resultat.data));
         reinitialiserSelection();
     } catch (erreur) {

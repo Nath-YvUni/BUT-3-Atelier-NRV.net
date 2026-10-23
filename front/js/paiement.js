@@ -129,6 +129,7 @@ formulaire.addEventListener('submit', async (evenement) => {
             },
         });
 
+        window.dispatchEvent(new Event('nrv-panier-modifie'));
         const paiement = resultat.data;
 
         contenu.hidden = true;
