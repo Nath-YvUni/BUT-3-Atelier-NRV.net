@@ -108,34 +108,24 @@ Pour les routes du backoffice, il faut également vérifier que l'utilisateur po
 | Méthode | Route                          | Description                      |
 | ------- | ------------------------------ | -------------------------------- |
 | GET     | `/api/spectacles`              | Lister et filtrer les spectacles |
-| GET     | `/api/spectacles/{id}`         | Consulter un spectacle           |
 | GET     | `/api/soirees`                 | Lister les soirées               |
 | GET     | `/api/soirees/{id}`            | Consulter une soirée             |
-| GET     | `/api/styles`                  | Lister les styles musicaux       |
 | GET     | `/api/tarifs`                  | Consulter les tarifs             |
-| GET     | `/api/lieux`                   | Lister les lieux                 |
-| GET     | `/api/artistes`                | Lister les artistes              |
 | POST    | `/api/utilisateurs`            | Créer un compte                  |
 | POST    | `/api/auth/connexion`          | Se connecter                     |
 | GET     | `/api/me`                      | Consulter son profil             |
 | GET     | `/api/panier`                  | Consulter son panier             |
 | POST    | `/api/panier/lignes`           | Ajouter des billets              |
 | PATCH   | `/api/panier/lignes/{id}`      | Modifier une quantité            |
-| DELETE  | `/api/panier/lignes/{id}`      | Supprimer une ligne              |
 | POST    | `/api/panier/pass`             | Ajouter un pass                  |
-| DELETE  | `/api/panier/pass/{id}`        | Supprimer un pass                |
-| DELETE  | `/api/panier`                  | Vider son panier                 |
 | POST    | `/api/commandes`               | Créer une commande               |
-| GET     | `/api/commandes`               | Lister ses commandes             |
 | GET     | `/api/commandes/{id}`          | Consulter une commande           |
 | POST    | `/api/commandes/{id}/paiement` | Simuler un paiement              |
-| GET     | `/api/commandes/{id}/billets`  | Récupérer les billets            |
+| GET     | `/api/billets`                 | Lister ses billets               |
 | GET     | `/api/billets/{token}`         | Consulter un billet              |
 | GET     | `/api/admin/statistiques`      | Consulter les ventes             |
-| POST    | `/api/admin/soirees`           | Créer une soirée                 |
-| POST    | `/api/admin/spectacles`        | Créer un spectacle               |
 
-Filtres prévus pour les spectacles : `date`, `style_id`, `page`, `limit`.
+Filtres disponibles pour les spectacles : `date`, `style_id`.
 
 Les paramètres, formats JSON et exemples sont disponibles dans la
 [documentation complète de l’API](Documents/API/contrat-api-nrv.md).
