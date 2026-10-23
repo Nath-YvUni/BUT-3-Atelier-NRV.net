@@ -844,6 +844,39 @@ body {
     }
 }
 
+.panier-quantite {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin-top: 1rem;
+
+    label {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+    }
+
+    &-input {
+        width: 4rem;
+        padding: 0.5rem;
+        border: 0.0625rem solid #ccc;
+        border-radius: 0.3rem;
+        text-align: center;
+    }
+
+    &-enregistrer {
+        padding: 0.5rem 1rem;
+        background: #c62828;
+        color: white;
+        border: none;
+        border-radius: 0.3rem;
+
+        &:hover {
+            background: #a51f1f;
+        }
+    }
+}
+
 
 .page-billet {
     max-width: 50rem;

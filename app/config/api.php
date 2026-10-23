@@ -7,6 +7,8 @@ use Psr\Container\ContainerInterface;
 use nrv\adapters\controllers\actions\GetSpectaclesAction;
 use nrv\application\ports\api\ServiceSpectacleInterface;
 
+use nrv\adapters\controllers\actions\ModifierQuantitePanierAction;
+
 use nrv\adapters\controllers\actions\GetDetailsSoireeAction;
 use nrv\adapters\controllers\actions\GetSoireesAction;
 use nrv\application\ports\api\ServiceSoireeInterface;
@@ -51,6 +53,10 @@ return [
 
     GetPanierAction::class => function (ContainerInterface $c) {
         return new GetPanierAction($c->get(ServicePanierInterface::class));
+    },
+
+    ModifierQuantitePanierAction::class => function (ContainerInterface $c) {
+        return new ModifierQuantitePanierAction($c->get(ServicePanierInterface::class));
     },
 
     InscriptionAction::class => function (ContainerInterface $c) {
@@ -122,4 +128,5 @@ return [
             new ResponseFactory()
         );
     },
+
 ];
