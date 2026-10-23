@@ -93,6 +93,7 @@ $app->get('/api/commandes/{id}', GetCommandeAction::class)
 $app->post('/api/commandes/{id}/paiement', PayerCommandeAction::class)
     ->setName('commande-paiement')
     ->add(AuthentificationMiddleware::class);
+
 $app->get('/api/billets/{token}', GetBilletByTokenAction::class)
     ->setName('billet-detail')
     ->add(AuthentificationMiddleware::class);
