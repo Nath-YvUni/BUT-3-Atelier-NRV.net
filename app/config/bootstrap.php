@@ -20,6 +20,8 @@ use nrv\adapters\controllers\actions\GetPanierAction;
 use nrv\adapters\controllers\actions\AjouterCommandeAction;
 use nrv\adapters\controllers\actions\GetCommandeAction;
 use nrv\adapters\controllers\actions\PayerCommandeAction;
+use nrv\adapters\controllers\actions\GetBilletByTokenAction;
+use nrv\adapters\controllers\actions\GetBilletsByUserAction;
 
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__, '.env');
 $dotenv->load();
@@ -68,7 +70,7 @@ $app->get('/api/me', ProfilAction::class)
     ->setName('auth-profil')
     ->add(AuthentificationMiddleware::class);
 
-    $app->get('/api/panier', GetPanierAction::class)
+$app->get('/api/panier', GetPanierAction::class)
     ->setName('panier-consulter')
     ->add(AuthentificationMiddleware::class);
 
@@ -91,7 +93,13 @@ $app->get('/api/commandes/{id}', GetCommandeAction::class)
 $app->post('/api/commandes/{id}/paiement', PayerCommandeAction::class)
     ->setName('commande-paiement')
     ->add(AuthentificationMiddleware::class);
+$app->get('/api/billets/{token}', GetBilletByTokenAction::class)
+    ->setName('billet-detail')
+    ->add(AuthentificationMiddleware::class);
 
+$app->get('/api/billets', GetBilletsByUserAction::class)
+    ->setName('billets-list')
+    ->add(AuthentificationMiddleware::class);
 
 
 return $app;

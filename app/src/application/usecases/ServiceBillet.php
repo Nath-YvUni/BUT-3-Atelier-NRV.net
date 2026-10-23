@@ -8,6 +8,7 @@ use nrv\application\exceptions\BilletIntrouvableException;
 use nrv\application\ports\api\ServiceBilletInterface;
 use nrv\application\ports\spi\BilletRepositoryInterface;
 use nrv\domain\entities\Panier;
+use nrv\domain\entities\Billet;
 
 final class ServiceBillet implements ServiceBilletInterface
 {
@@ -17,6 +18,19 @@ final class ServiceBillet implements ServiceBilletInterface
         private BilletRepositoryInterface $billets,
     ) {
     }
+
+
+    public function getUserBillets(int $utilisateurId): array
+    {
+        $billets = $this->billets->findAllByUser($utilisateurId);
+
+        return array_map(
+            fn(Billet $billet): array =>
+                BilletDTO::fromEntity($billet)->toArray(),
+            $billets
+        );
+    }
+
 
     public function genererBillets(int $commandeId, Panier $panier): void
     {

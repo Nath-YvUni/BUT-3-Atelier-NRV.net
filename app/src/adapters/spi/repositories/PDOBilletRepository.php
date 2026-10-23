@@ -15,6 +15,70 @@ final class PDOBilletRepository implements BilletRepositoryInterface
     {
     }
 
+
+    public function findAllByUser(int $utilisateurId): array
+    {
+        try {
+            $statement = $this->pdo->prepare(<<<'SQL'
+            SELECT
+                b."id",
+                b."reference",
+                b."token",
+                b."prix",
+                u."nom" AS acheteur,
+                s."id" AS soiree_id,
+                s."nom" AS soiree_nom,
+                s."date_heure_debut" AS soiree_date,
+                t."id" AS tarif_id,
+                t."categorie" AS tarif_categorie,
+                t."prix" AS tarif_prix
+            FROM "billet" b
+            INNER JOIN "commande" c ON c."id" = b."commande_id"
+            INNER JOIN "utilisateur" u ON u."id" = c."utilisateur_id"
+            INNER JOIN "soiree" s ON s."id" = b."soiree_id"
+            INNER JOIN "tarif" t ON t."id" = b."tarif_id"
+            WHERE c."utilisateur_id" = :utilisateur_id
+              AND c."statut" = 'payee'
+            ORDER BY s."date_heure_debut", b."id"
+            SQL);
+
+            $statement->execute([
+                'utilisateur_id' => $utilisateurId
+            ]);
+
+            $lignes = $statement->fetchAll(\PDO::FETCH_ASSOC);
+
+            return array_map(
+                fn(array $ligne): Billet => new Billet(
+                    (int) $ligne['id'],
+                    (string) $ligne['reference'],
+                    trim((string) $ligne['token']),
+                    (string) $ligne['acheteur'],
+                    new SoireeResume(
+                        (int) $ligne['soiree_id'],
+                        (string) $ligne['soiree_nom'],
+                        new \DateTimeImmutable($ligne['soiree_date'])
+                    ),
+                    new Tarif(
+                        (int) $ligne['tarif_id'],
+                        (string) $ligne['tarif_categorie'],
+                        Centimes::depuisDecimal($ligne['tarif_prix'])
+                    ),
+                    Centimes::depuisDecimal($ligne['prix'])
+                ),
+                $lignes
+            );
+
+        } catch (\PDOException $e) {
+            throw new RepositoryInternalException(
+                'Erreur lors de la récupération des billets.',
+                0,
+                $e
+            );
+        }
+    }
+
+
     public function trouverParToken(string $token): ?Billet
     {
         try {

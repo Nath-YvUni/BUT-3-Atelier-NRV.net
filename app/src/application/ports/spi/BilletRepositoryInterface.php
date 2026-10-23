@@ -7,6 +7,7 @@ use nrv\domain\entities\Billet;
 
 interface BilletRepositoryInterface
 {
+    public function findAllByUser(int $utilisateurId): array;
     public function trouverParToken(string $token): ?Billet;
 
     public function creerPourCommande(int $commandeId, array $billets): void;
