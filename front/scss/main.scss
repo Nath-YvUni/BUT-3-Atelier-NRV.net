@@ -636,6 +636,11 @@ body {
     border: 1px solid $bordure;
     border-left: 4px solid $noir;
     border-radius: 0.25rem;
+
+    a {
+        font-weight: 500;
+        color: $noir;
+    }
 }
 
 .panier-section {
@@ -739,9 +744,93 @@ body {
     }
 }
 
+.page-paiement {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+
+    > h1 {
+        margin: 0 0 1.5rem;
+        font-size: 28px;
+    }
+
+    .message {
+        text-align: center;
+        color: $gris;
+    }
+}
+
+.paiement-grille {
+    display: grid;
+    gap: 1.5rem;
+
+    @media (min-width: 768px) {
+        grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+        align-items: start;
+    }
+}
+
+.paiement-carte,
+.paiement-recapitulatif,
+.paiement-confirmation {
+    padding: 1.5rem;
+    background-color: $blanc;
+    border: 1px solid $bordure;
+    border-radius: 0.625rem;
+
+    h2 {
+        margin: 0 0 1rem;
+        font-size: 1.25rem;
+    }
+}
+
+.paiement-carte {
+    form {
+        display: grid;
+        gap: 1rem;
+    }
+
+    &-ligne {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+    }
+}
+
+.paiement-liste {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid $bordure;
+    }
+}
+
+.paiement-total {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0.75rem 0 0;
+    font-size: 1.25rem;
+}
+
+.paiement-confirmation {
+    text-align: center;
+
+    p {
+        margin: 0;
+    }
+}
+
 .auth-navigation,
 .auth-page,
-.page-panier {
+.page-panier,
+.page-paiement {
     a:focus-visible,
     button:focus-visible,
     input:focus-visible {
