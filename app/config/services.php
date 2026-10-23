@@ -8,6 +8,7 @@ use nrv\application\ports\api\ServiceSpectacleInterface;
 use nrv\adapters\spi\repositories\PDOSpectacleRepository;
 use nrv\application\usecases\ServiceSpectacle;
 
+
 use nrv\application\usecases\ServiceSoiree;
 use nrv\application\ports\api\ServiceSoireeInterface;
 use nrv\application\ports\spi\SoireeRepositoryInterface;
@@ -27,6 +28,10 @@ use nrv\application\ports\api\ServicePanierInterface;
 use nrv\application\usecases\ServicePanier;
 use nrv\application\ports\api\ServiceTarifInterface;
 use nrv\application\usecases\ServiceTarif;
+use nrv\application\ports\api\ServiceBilletInterface;
+use nrv\application\ports\spi\BilletRepositoryInterface;
+use nrv\application\usecases\ServiceBillet;
+use nrv\adapters\spi\repositories\PDOBilletRepository;
 use nrv\adapters\spi\repositories\PDOPanierRepository;
 use nrv\adapters\spi\repositories\PDOTarifRepository;
 
@@ -39,6 +44,8 @@ use nrv\application\ports\spi\StatistiqueRepositoryInterface;
 use nrv\application\ports\api\ServiceStatistiqueInterface;
 use nrv\application\usecases\ServiceStatistique;
 use nrv\adapters\spi\repositories\PDOStatistiqueRepository;
+use nrv\adapters\controllers\actions\GetBilletByTokenAction;
+use nrv\adapters\controllers\actions\GetBilletsByUserAction;
 
 // ── services métier et repositories ─
 return [
@@ -108,10 +115,36 @@ return [
     CommandeRepositoryInterface::class => function (ContainerInterface $c) {
         return new PDOCommandeRepository($c->get('nrv.pdo'));
     },
+
+
+    BilletRepositoryInterface::class => function (ContainerInterface $c) {
+        return new PDOBilletRepository($c->get('nrv.pdo'));
+    },
+
+    ServiceBilletInterface::class => function (ContainerInterface $c) {
+        return new ServiceBillet(
+            $c->get(BilletRepositoryInterface::class)
+        );
+    },
+
+
     ServiceCommandeInterface::class => function (ContainerInterface $c) {
         return new ServiceCommande(
             $c->get(CommandeRepositoryInterface::class),
-            $c->get(PanierRepositoryInterface::class)
+            $c->get(PanierRepositoryInterface::class),
+            $c->get(ServiceBilletInterface::class)
+        );
+    },
+
+    GetBilletByTokenAction::class => function (ContainerInterface $c) {
+        return new GetBilletByTokenAction(
+            $c->get(ServiceBilletInterface::class)
+        );
+    },
+
+    GetBilletsByUserAction::class => function (ContainerInterface $c) {
+        return new GetBilletsByUserAction(
+            $c->get(ServiceBilletInterface::class)
         );
     },
 

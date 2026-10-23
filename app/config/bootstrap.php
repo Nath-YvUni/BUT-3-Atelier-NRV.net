@@ -17,11 +17,16 @@ use nrv\adapters\controllers\actions\AjouterLignePanierAction;
 use nrv\adapters\controllers\actions\AjouterPassPanierAction;
 use nrv\adapters\controllers\actions\GetTarifsAction;
 use nrv\adapters\controllers\actions\GetPanierAction;
+
+use nrv\adapters\controllers\actions\ModifierQuantitePanierAction;
 use nrv\adapters\controllers\actions\AjouterCommandeAction;
 use nrv\adapters\controllers\actions\GetCommandeAction;
 use nrv\adapters\controllers\actions\PayerCommandeAction;
 use nrv\adapters\controllers\actions\GetStatistiquesAction;
 use nrv\adapters\controllers\middlewares\GestionnaireMiddleware;
+use nrv\adapters\controllers\actions\GetBilletByTokenAction;
+use nrv\adapters\controllers\actions\GetBilletsByUserAction;
+
 
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__, '.env');
 $dotenv->load();
@@ -82,6 +87,11 @@ $app->post('/api/panier/pass', AjouterPassPanierAction::class)
     ->setName('panier-ajout-pass')
     ->add(AuthentificationMiddleware::class);
 
+
+$app->patch('/api/panier/lignes/{id}', ModifierQuantitePanierAction::class)
+    ->setName('panier-modifier-quantite')
+    ->add(AuthentificationMiddleware::class);
+
 $app->post('/api/commandes', AjouterCommandeAction::class)
     ->setName('ajouter-commande')
     ->add(AuthentificationMiddleware::class);
@@ -98,5 +108,13 @@ $app->get('/api/admin/statistiques', GetStatistiquesAction::class)
     ->setName('admin-statistiques')
     ->add(GestionnaireMiddleware::class)
     ->add(AuthentificationMiddleware::class);
+$app->get('/api/billets/{token}', GetBilletByTokenAction::class)
+    ->setName('billet-detail')
+    ->add(AuthentificationMiddleware::class);
+
+$app->get('/api/billets', GetBilletsByUserAction::class)
+    ->setName('billets-list')
+    ->add(AuthentificationMiddleware::class);
+
 
 return $app;

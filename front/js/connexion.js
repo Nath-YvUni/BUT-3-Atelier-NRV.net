@@ -29,6 +29,8 @@ function destinationRetour() {
             '/panier.html',
             '/paiement.html',
             '/backoffice.html',
+            '/mes-billets.html',
+            '/billet.html',
         ];
 
         if (

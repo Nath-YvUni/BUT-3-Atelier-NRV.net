@@ -5,6 +5,7 @@ use nrv\application\exceptions\CommandeEnAttenteException;
 use nrv\application\exceptions\PanierVideException;
 use nrv\application\ports\spi\CommandeRepositoryInterface;
 use nrv\application\ports\spi\PanierRepositoryInterface;
+use nrv\application\ports\api\ServiceBilletInterface;
 use nrv\application\usecases\ServiceCommande;
 use nrv\domain\entities\Commande;
 use nrv\domain\entities\LignePanier;
@@ -44,7 +45,13 @@ function panierCommande(): Panier
 beforeEach(function () {
     $this->commandes = $this->createMock(CommandeRepositoryInterface::class);
     $this->paniers = $this->createMock(PanierRepositoryInterface::class);
-    $this->service = new ServiceCommande($this->commandes, $this->paniers);
+    $this->billets = $this->createMock(ServiceBilletInterface::class);
+
+    $this->service = new ServiceCommande(
+        $this->commandes,
+        $this->paniers,
+        $this->billets
+    );
 });
 
 test('crée la commande et la renvoie avec le contenu du panier', function () {

@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NRV.net - Mon billet</title>
+
+    <link rel="stylesheet" href="css/main.css">
+
+    <script type="module" src="js/navigation-auth.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script type="module" src="js/billet.js"></script>
+</head>
+<body>
+
+    <header class="auth-navigation" data-navigation-auth>
+        <a class="auth-marque" href="index.html">NRV.net</a>
+
+        <nav aria-label="Navigation principale">
+            <a href="index.html">Programme</a>
+            <a href="panier.html">Panier</a>
+            <a href="mes-billets.html">Mes billets</a>
+        </nav>
+    </header>
+
+    <main class="page-billet">
+        <a href="mes-billets.html" class="billet-retour">
+            Retour à mes billets
+        </a>
+
+        <p id="billet-message" role="status">
+            Chargement du billet...
+        </p>
+
+        <article id="billet-detail" class="billet-detail" hidden>
+            <h1>NRV.net - Billet</h1>
+
+            <h2 id="billet-nom"></h2>
+            <p id="billet-date"></p>
+            <p id="billet-acheteur"></p>
+            <p id="billet-tarif"></p>
+            <p id="billet-prix"></p>
+            <p id="billet-reference"></p>
+
+            <div id="billet-qrcode"></div>
+        </article>
+
+        <button
+            type="button"
+            class="auth-bouton billet-imprimer"
+            id="billet-imprimer"
+            hidden
+        >
+            Imprimer ce billet
+        </button>
+    </main>
+
+</body>
+</html>
