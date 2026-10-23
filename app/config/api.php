@@ -30,6 +30,10 @@ use nrv\application\ports\api\ServicePanierInterface;
 use nrv\adapters\controllers\actions\GetTarifsAction;
 use nrv\application\ports\api\ServiceTarifInterface;
 
+use nrv\adapters\controllers\actions\GetBilletByTokenAction;
+use nrv\adapters\controllers\actions\GetBilletsByUserAction;
+use nrv\application\ports\api\ServiceBilletInterface;
+
 return [
 
     GetSpectaclesAction::class => function (ContainerInterface $c) {
@@ -90,6 +94,18 @@ return [
     GetCommandeAction::class => function (ContainerInterface $c) {
         return new GetCommandeAction(
             $c->get(ServiceCommandeInterface::class)
+        );
+    },
+
+    GetBilletByTokenAction::class => function (ContainerInterface $c) {
+        return new GetBilletByTokenAction(
+            $c->get(ServiceBilletInterface::class)
+        );
+    },
+
+    GetBilletsByUserAction::class => function (ContainerInterface $c) {
+        return new GetBilletsByUserAction(
+            $c->get(ServiceBilletInterface::class)
         );
     },
 

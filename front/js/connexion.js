@@ -28,6 +28,8 @@ function destinationRetour() {
             '/soiree.html',
             '/panier.html',
             '/paiement.html',
+            '/mes-billets.html',
+            '/billet.html',
         ];
 
         if (
