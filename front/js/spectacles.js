@@ -10,6 +10,10 @@ const filtreStyle = document.getElementById('filtre-style');
 
 let datesInitialisees = false;
 let requeteCourante = 0;
+const taillePage = 8;
+let pageCourante = 1;
+const pagination = document.getElementById('pagination');
+let spectaclesAffiches = [];
 
 function versDate(date) {
     return new Date(`${date}T00:00`);
@@ -115,6 +119,40 @@ function remplirStyles(spectacles) {
     );
 }
 
+function creerBoutonPage(numero) {
+    const bouton = document.createElement('button');
+    bouton.type = 'button';
+    bouton.textContent = numero;
+
+    if (numero === pageCourante) {
+        bouton.classList.add('actif');
+    }
+
+    bouton.addEventListener('click', () => {
+        pageCourante = numero;
+        afficherPage();
+    });
+
+    return bouton;
+}
+
+function afficherPage() {
+    const debut = (pageCourante - 1) * taillePage;
+    const tranche = spectaclesAffiches.slice(debut, debut + taillePage);
+
+    liste.replaceChildren(...tranche.map(creerSpectacle));
+
+    const nbPages = Math.ceil(spectaclesAffiches.length / taillePage);
+
+    if (nbPages <= 1) {
+        pagination.replaceChildren(); 
+        return;
+    }
+
+    const numeros = Array.from({ length: nbPages }, (_, i) => i + 1);
+    pagination.replaceChildren(...numeros.map(creerBoutonPage));
+}
+
 async function chargerSpectacles(date = '', styleId = '') {
     const numeroRequete = ++requeteCourante;
 
@@ -122,6 +160,7 @@ async function chargerSpectacles(date = '', styleId = '') {
     message.textContent = 'Chargement des spectacles...';
     compteur.textContent = '';
     liste.replaceChildren();
+    pagination.replaceChildren();
 
     const parametres = new URLSearchParams();
 
@@ -178,7 +217,12 @@ async function chargerSpectacles(date = '', styleId = '') {
         }
 
         message.hidden = true;
-        liste.replaceChildren(...spectacles.map(creerSpectacle));
+
+        spectaclesAffiches = spectacles;
+        pageCourante = 1;
+        afficherPage();
+
+
     } catch (e) {
         if (numeroRequete !== requeteCourante) {
             return;
