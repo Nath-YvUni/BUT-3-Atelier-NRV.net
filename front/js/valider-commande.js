@@ -6,11 +6,7 @@ import {
 const validation = document.getElementById('panier-validation');
 const bouton = document.getElementById('panier-valider');
 const message = document.getElementById('panier-valider-message');
-
-const euros = new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'EUR',
-});
+const lienPaiement = document.getElementById('panier-payer');
 
 function afficherMessage(texte, erreur = false) {
     message.textContent = texte;
@@ -28,6 +24,10 @@ document.addEventListener('nrv-panier-charge', (evenement) => {
     const panier = evenement.detail;
 
     validation.hidden = panier.modifiable === false || panier.nombre_billets === 0;
+
+    if (panier.commande_en_attente_id !== null) {
+        lienPaiement.href = `paiement.html?commande=${panier.commande_en_attente_id}`;
+    }
 });
 
 bouton.addEventListener('click', async () => {
@@ -40,14 +40,7 @@ bouton.addEventListener('click', async () => {
             authentifie: true,
         });
 
-        const commande = resultat.data;
-
-        afficherMessage(
-            `Commande ${commande.reference} créée : `
-            + `${euros.format(Number(commande.montant_total))} en attente de paiement.`
-        );
-
-        document.dispatchEvent(new CustomEvent('nrv-commande-creee', { detail: commande }));
+        location.assign(`paiement.html?commande=${resultat.data.id}`);
     } catch (erreur) {
         if (erreur instanceof ErreurApi && erreur.statut === 401) {
             redirigerVersConnexion();
@@ -55,7 +48,6 @@ bouton.addEventListener('click', async () => {
         }
 
         afficherMessage(erreur.message, true);
-    } finally {
         bouton.disabled = false;
     }
 });
