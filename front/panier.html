@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="css/main.css">
         <script type="module" src="js/navigation-auth.js"></script>
         <script type="module" src="js/panier.js"></script>
+        <script type="module" src="js/valider-commande.js"></script>
     </head>
     <body>
         <header class="auth-navigation" data-navigation-auth>
@@ -73,6 +74,12 @@
                     <span>Montant total</span>
                     <strong id="panier-montant-total"></strong>
                 </p>
+
+                <div class="panier-validation" id="panier-validation" hidden>
+                    <button class="auth-bouton valider-panier" id="panier-valider" type="button">Valider la commande</button>
+                </div>
+
+                <p class="auth-message" id="panier-valider-message" role="status" hidden></p>
             </section>
         </main>
 
@@ -99,8 +106,6 @@
                 <p class="panier-element-montant"></p>
             </li>
         </template>
-
-        <a href="index.html"><button class="valider-panier" type="button">Valider le panier</button></a>
 
     </body>
     </html>
