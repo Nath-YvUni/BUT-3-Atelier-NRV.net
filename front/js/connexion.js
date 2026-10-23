@@ -28,6 +28,7 @@ function destinationRetour() {
             '/soiree.html',
             '/panier.html',
             '/paiement.html',
+            '/backoffice.html',
         ];
 
         if (
