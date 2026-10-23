@@ -1,0 +1,275 @@
+@use '../abstracts' as *;
+
+.page-soiree {
+    @include conteneur(77rem, 1.5rem 1rem);
+
+    .bouton-retour {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $noir;
+        text-decoration: none;
+        background-color: $blanc;
+        border: 1px solid $bordure;
+        border-radius: $rayon-champ;
+        transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+
+        &:hover {
+            border-color: $gris;
+            box-shadow: 0 0.25rem 0.75rem rgba($noir, 0.08);
+            transform: translateX(-0.125rem);
+        }
+
+        &:focus-visible {
+            @include contour-focus(0.125rem, 0.125rem);
+        }
+    }
+
+    .message {
+        text-align: center;
+        color: $gris;
+    }
+}
+
+.ajout-panier,
+.ajout-pass {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    @include carte;
+
+    h2 {
+        margin: 0 0 1rem;
+        font-size: 1.25rem;
+    }
+
+    form {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .ajout-panier-champ {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        label {
+            font-weight: 500;
+        }
+
+        select,
+        input {
+            @include champ-saisie;
+        }
+    }
+
+    select:focus-visible,
+    input:focus-visible,
+    button:focus-visible {
+        @include contour-focus;
+    }
+
+    @include masquer-hidden;
+}
+
+.ajout-panier form {
+    @include a-partir-de(moyen) {
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto;
+        align-items: end;
+    }
+}
+
+.ajout-pass {
+    .ajout-pass-entete {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+
+        h2 {
+            margin: 0 0 0.25rem;
+        }
+
+        p {
+            margin: 0;
+            color: $gris;
+        }
+    }
+
+    form {
+        margin-top: 1.5rem;
+
+        @include a-partir-de(moyen) {
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: end;
+        }
+    }
+
+    .ajout-pass-soirees {
+        grid-column: 1 / -1;
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+        border: 0;
+
+        legend {
+            margin-bottom: 0.5rem;
+            padding: 0;
+            font-weight: 500;
+        }
+    }
+
+    .ajout-pass-compteur {
+        margin-left: 0.5rem;
+        font-weight: 400;
+        color: $gris;
+    }
+
+    .ajout-pass-liste {
+        display: grid;
+        gap: 0.5rem;
+        @include liste-sans-puces;
+
+        @include a-partir-de(moyen) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    .ajout-pass-option {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        column-gap: 0.75rem;
+        min-height: 2.75rem;
+        padding: 0.625rem 0.75rem;
+        border: 1px solid $bordure;
+        border-radius: $rayon-champ;
+        cursor: pointer;
+        transition: border-color 0.25s ease, background-color 0.25s ease;
+
+        input {
+            grid-row: 1 / span 2;
+            width: 1.125rem;
+            height: 1.125rem;
+            margin: 0;
+            accent-color: $noir;
+        }
+
+        .ajout-pass-nom,
+        .ajout-pass-date {
+            grid-column: 2;
+        }
+
+        .ajout-pass-nom {
+            font-weight: 500;
+        }
+
+        .ajout-pass-date {
+            font-size: 0.875rem;
+            color: $gris;
+        }
+
+        .badge {
+            grid-column: 3;
+            grid-row: 1 / span 2;
+        }
+
+        &:has(input:checked) {
+            background-color: $fond;
+            border-color: $noir;
+        }
+
+        &:has(input:disabled) {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+    }
+}
+
+.soiree-detail {
+    .nom {
+        margin: 0;
+        font-size: 1.75rem;
+    }
+
+    .thematique {
+        margin: 0.25rem 0 0;
+        font-size: 1rem;
+        font-weight: 400;
+        color: $gris;
+    }
+
+    .date,
+    .lieu,
+    .capacite,
+    .tarif {
+        display: inline-block;
+        margin: 1rem 0.5rem 0 0;
+        padding: 0.375rem 0.875rem;
+        font-size: 0.875rem;
+        @include carte(62.4375rem);
+    }
+
+    h3 {
+        margin: 2rem 0 0.5rem;
+        font-size: 1.125rem;
+    }
+
+    .artistes-soiree {
+        margin: 0;
+        color: $gris;
+    }
+
+    .liste-spectacles {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(17.5rem, 1fr));
+        gap: 1rem;
+        @include liste-sans-puces(1rem 0 0);
+    }
+}
+
+.spectacle {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 1rem;
+    @include carte;
+
+    .titre {
+        margin: 0;
+        font-size: 1.125rem;
+    }
+
+    p {
+        margin: 0;
+        font-size: 0.875rem;
+        color: $gris;
+    }
+
+    .video {
+        margin-top: 0.5rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $noir;
+        text-decoration: none;
+        background-color: $fond;
+        border: 1px solid $bordure;
+        border-radius: $rayon-champ;
+        transition: border-color 0.25s ease, box-shadow 0.25s ease;
+
+        &:hover {
+            border-color: $gris;
+            box-shadow: 0 0.25rem 0.75rem rgba($noir, 0.12);
+        }
+
+        &:focus-visible {
+            @include contour-focus(0.125rem, 0.125rem);
+        }
+    }
+}

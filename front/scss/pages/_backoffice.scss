@@ -1,0 +1,341 @@
+@use '../abstracts' as *;
+
+body.backoffice {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.backoffice-layout {
+    display: grid;
+    flex: 1;
+    grid-template-columns: minmax(0, 1fr);
+
+    @include masquer-hidden;
+
+    a:focus-visible,
+    button:focus-visible,
+    [tabindex]:focus-visible {
+        @include contour-focus;
+    }
+
+    @include a-partir-de(large) {
+        grid-template-columns: 13rem minmax(0, 1fr);
+    }
+}
+
+.backoffice-menu {
+    padding: 1.5rem;
+    color: $blanc;
+    background-color: $noir;
+
+    strong {
+        display: block;
+        font-size: 1.125rem;
+    }
+
+    nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    a {
+        display: block;
+        padding: 0.75rem;
+        color: $blanc;
+        text-decoration: none;
+        border-radius: $rayon-champ;
+
+        &:hover,
+        &[aria-current="page"] {
+            background-color: rgba($blanc, 0.15);
+        }
+
+        &:focus-visible {
+            outline-color: $blanc;
+        }
+    }
+
+    @include a-partir-de(large) {
+        nav {
+            flex-direction: column;
+        }
+    }
+
+    @include jusqu-a(petit) {
+        display: none;
+    }
+}
+
+.page-backoffice {
+    min-width: 0;
+    padding: 1.5rem;
+
+    h1 {
+        margin: 0;
+        font-size: 1.75rem;
+    }
+
+    > [role="status"] {
+        margin: 1.5rem 0;
+        color: $gris;
+    }
+
+    @include a-partir-de(large) {
+        padding: 2rem;
+    }
+
+    @include jusqu-a(petit) {
+        padding: 1rem;
+    }
+}
+
+.backoffice-entete {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    p {
+        margin: 0.5rem 0 0;
+        color: $gris;
+    }
+}
+
+.backoffice-indicateurs {
+    display: grid;
+    gap: 1rem;
+    margin: 0 0 1.5rem;
+
+    > div {
+        min-width: 0;
+        padding: 1.25rem;
+        @include carte;
+    }
+
+    dt {
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        color: $gris;
+    }
+
+    dd {
+        margin: 0;
+        font-size: 1.75rem;
+        font-weight: 700;
+        overflow-wrap: anywhere;
+    }
+
+    @include a-partir-de(petit) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    @include jusqu-a(petit) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+
+        > div {
+            padding: 0.875rem;
+        }
+
+        dt {
+            font-size: 0.8125rem;
+        }
+
+        dd {
+            font-size: clamp(1rem, 4vw, 1.35rem);
+        }
+
+        .backoffice-indicateur-remplissage {
+            display: none;
+        }
+    }
+}
+
+.backoffice-tableau {
+    overflow-x: auto;
+    @include carte;
+
+    table {
+        width: 100%;
+        min-width: 44rem;
+        border-collapse: collapse;
+    }
+
+    caption {
+        padding: 1.25rem;
+        font-weight: 700;
+        text-align: left;
+    }
+
+    th,
+    td {
+        padding: 1rem;
+        text-align: left;
+        vertical-align: middle;
+        border-bottom: 1px solid $bordure;
+    }
+
+    thead th {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $gris;
+    }
+
+    tbody tr:last-child > * {
+        border-bottom: 0;
+    }
+
+    th:last-child,
+    td:last-child {
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    a {
+        color: $noir;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    @include jusqu-a(petit) {
+        display: none;
+    }
+}
+
+.backoffice-date {
+    font-size: 0.875rem;
+    color: $gris;
+}
+
+.backoffice-jauge {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 12rem;
+
+    progress {
+        flex: 1;
+        width: 6rem;
+        height: 0.5rem;
+        overflow: hidden;
+        appearance: none;
+        color: $noir;
+        background-color: $gris-clair;
+        border: 0;
+        border-radius: 1rem;
+
+        &::-webkit-progress-bar {
+            background-color: $gris-clair;
+        }
+
+        &::-webkit-progress-value {
+            background-color: $noir;
+        }
+
+        &::-moz-progress-bar {
+            background-color: $noir;
+        }
+    }
+}
+
+.backoffice-places {
+    white-space: nowrap;
+    font-size: 0.875rem;
+}
+
+.backoffice-complet {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    background-color: $fond;
+    border: 1px solid $bordure;
+    border-radius: $rayon-champ;
+}
+
+.backoffice-cartes {
+    display: none;
+
+    @include jusqu-a(petit) {
+        display: grid;
+        gap: 1rem;
+    }
+}
+
+@include jusqu-a(petit) {
+    .backoffice-carte {
+        min-width: 0;
+        padding: 1rem;
+        @include carte;
+
+        a {
+            color: $noir;
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .backoffice-carte-entete {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        column-gap: 0.75rem;
+        row-gap: 0.25rem;
+
+        h2 {
+            grid-column: 1;
+            grid-row: 1;
+            min-width: 0;
+            margin: 0;
+            font-size: 1rem;
+            overflow-wrap: anywhere;
+        }
+
+        .backoffice-date {
+            grid-column: 1;
+            grid-row: 2;
+            margin: 0;
+            font-size: 0.8125rem;
+
+            &::first-letter {
+                text-transform: uppercase;
+            }
+        }
+
+        .backoffice-soiree-recette {
+            grid-column: 2;
+            grid-row: 1 / span 2;
+            align-self: center;
+            font-size: 0.9375rem;
+            white-space: nowrap;
+        }
+    }
+
+    .backoffice-carte .backoffice-jauge {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0.5rem;
+        min-width: 0;
+        margin-top: 1rem;
+
+        progress {
+            width: 100%;
+            min-width: 0;
+        }
+
+        .backoffice-complet {
+            grid-column: 1 / -1;
+            justify-self: start;
+        }
+    }
+}

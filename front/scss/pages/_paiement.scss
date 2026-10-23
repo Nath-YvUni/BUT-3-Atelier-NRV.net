@@ -1,0 +1,74 @@
+@use '../abstracts' as *;
+
+.page-paiement {
+    @include conteneur(60rem, 2rem 1rem);
+
+    > h1 {
+        margin: 0 0 1.5rem;
+        font-size: 28px;
+    }
+
+    .message {
+        text-align: center;
+        color: $gris;
+    }
+}
+
+.paiement-grille {
+    display: grid;
+    gap: 1.5rem;
+
+    @include a-partir-de(moyen) {
+        grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+        align-items: start;
+    }
+}
+
+.paiement-carte,
+.paiement-recapitulatif,
+.paiement-confirmation {
+    padding: 1.5rem;
+    @include carte;
+
+    h2 {
+        margin: 0 0 1rem;
+        font-size: 1.25rem;
+    }
+}
+
+.paiement-carte {
+    form {
+        display: grid;
+        gap: 1rem;
+    }
+
+    &-ligne {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+    }
+}
+
+.paiement-liste {
+    @include liste-sans-puces;
+
+    li {
+        @include ligne-repartie;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid $bordure;
+    }
+}
+
+.paiement-total {
+    @include ligne-repartie;
+    margin: 0.75rem 0 0;
+    font-size: 1.25rem;
+}
+
+.paiement-confirmation {
+    text-align: center;
+
+    p {
+        margin: 0;
+    }
+}
