@@ -7,6 +7,7 @@ Thumbs.db
 .vscode/
 
 # Secrets / environnement (on ne versionne que les .dist)
+/.env
 /nrv.env
 /app/config/.env
 
