@@ -22,6 +22,18 @@ function initialiserNavigation() {
         '[data-lien-connexion]'
     );
 
+    const lienBackoffice = document.createElement('a');
+
+    lienBackoffice.href = 'backoffice.html';
+    lienBackoffice.textContent = 'Back-office';
+    lienBackoffice.hidden = true;
+
+    if (location.pathname.endsWith('/backoffice.html')) {
+        lienBackoffice.setAttribute('aria-current', 'page');
+    }
+
+    connecte.prepend(lienBackoffice);
+
     const retour = location.pathname.endsWith('/connexion.html')
         ? 'index.html'
         : location.pathname + location.search;
@@ -36,6 +48,7 @@ function initialiserNavigation() {
 
         invite.hidden = true;
         connecte.hidden = true;
+        lienBackoffice.hidden = true;
         message.hidden = true;
         nom.textContent = '';
 
@@ -63,6 +76,7 @@ function initialiserNavigation() {
             }
 
             nom.textContent = profil.nom;
+            lienBackoffice.hidden = profil.role !== 'gestionnaire';
             connecte.hidden = false;
             message.hidden = true;
         } catch (erreur) {
